@@ -16,8 +16,15 @@ class Outgoing:
         }
         self.logs = Logs(self.url, self.headers)
         self.reports = Reports(self.url, self.headers)
+        self.request = Request(self.url, self.headers)
     
-    def request_update(self):
+class Request():
+    def __init__(self, url, headers):
+        self.endpoints = Settings.Endpoints()
+        self.url = url
+        self.headers = headers
+
+    def zones(self):
         url = _url(self.url, self.endpoints.Zones.get_all)
         try:
             response = requests.get(url, headers=self.headers)
@@ -25,6 +32,15 @@ class Outgoing:
             return response.json()
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to request update: {e}")
+    
+    def parking_zones(self):
+        url = _url(self.url, self.endpoints.Zones.get_parking)
+        try:
+            response = requests.get(url, headers=self.headers)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Failed to request parking zones: {e}")
 
 
 class Logs():

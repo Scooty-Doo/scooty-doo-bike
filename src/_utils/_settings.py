@@ -1,9 +1,15 @@
+import os
+
 class Settings:
     
-    class SpeedSettings:
+    class Position:
+        default_longitude = 0.0
+        default_latitude = 0.0
+
+    class Speed:
         max_speed = 20
 
-    class BatterySettings:
+    class Battery:
         drain_per_minute = 0.05
         drain_factor_usage_mode = 1.0
         drain_factor_sleep_mode = 0.5
@@ -12,7 +18,7 @@ class Settings:
         minimum_battery_level_for_usage = 20.0
 
     class Endpoints:
-        backend_url = 'http://localhost:8000'
+        backend_url = os.getenv("BACKEND_URL", "http://localhost:8000")
 
         class Bikes:
             endpoint = 'v1/bikes'
@@ -48,5 +54,5 @@ class Settings:
             create = f'{endpoint}'
             get = f'{endpoint}/{{id}}'
 
-    class ReportSettings:
+    class Report:
         report_interval = 5

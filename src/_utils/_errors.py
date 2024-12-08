@@ -28,6 +28,11 @@ class InvalidModeError(Exception):
     def __init__(self, message="Invalid mode."):
         super().__init__(message)
 
+class InitializationError(Exception):
+    """Custom error raised when an object is not initialized properly."""
+    def __init__(self, message="Object not initialized properly. Missing required environment variables."):
+        super().__init__(message)
+
 class Errors():
     @staticmethod
     def not_parking_zone():
@@ -51,3 +56,7 @@ class Errors():
     @staticmethod
     def invalid_mode():
         raise InvalidModeError()
+
+    @staticmethod
+    def initialization_error():
+        raise InitializationError()

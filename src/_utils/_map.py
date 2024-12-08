@@ -45,6 +45,11 @@ class Map:
             zone = Map.Zone.get(zones, position)
             if zone and zone['zone_type'] == 'charging': # TODO: called "charging"?
                 return True
+            
+        @staticmethod
+        def get_deployment_zone(parking_zones):
+            # TODO: pick a parking zone at random and return it
+            pass
 
     class Zones:
         @staticmethod

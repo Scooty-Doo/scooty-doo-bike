@@ -5,19 +5,25 @@ import time
 
 class Brain:
     def __init__(self, bike_id,  
-                 longitude, latitude, 
-                 token=None,
-                 zones=None,
+                 longitude=None, 
+                 latitude=None, 
+                 token=None
                  ):
-        self.bike = Bike(bike_id, longitude, latitude, zones)
+        self.bike = Bike(bike_id, longitude, latitude)
         self.outgoing = Outgoing(token)
         self.running = True
-        self.settings = Settings.ReportSettings()
+        
+        if self._is_not_deployed():
+            parking_zones = self.request_parking_zones()
+            self.bike.deploy(parking_zones)
+
+    def _is_not_deployed(self):
+        return self.bike.position.current == (Settings.Position.default_longitude, Settings.Position.default_latitude)
 
     def run(self):
         while self.running:
             self.send_report()
-            time.sleep(self.settings.report_interval)
+            time.sleep(Settings.Report.report_interval)
     
     def terminate(self):
         self.running = False
@@ -41,3 +47,9 @@ class Brain:
     def send_reports(self):
         reports = self.bike.reports.get()
         self.outgoing.reports.send(reports)
+
+    def request_zones(self):
+        return self.outgoing.request.zones()
+    
+    def request_parking_zones(self):
+        return self.outgoing.request.parking_zones()

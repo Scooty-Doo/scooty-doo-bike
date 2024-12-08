@@ -3,7 +3,7 @@ from .._utils._settings import Settings
 
 class Speed:
     def __init__(self):
-        self.settings = Settings.SpeedSettings()
+        self.settings = Settings.Speed()
         self.current = 0
         self.max = self.settings.max_speed
 

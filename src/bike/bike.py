@@ -14,10 +14,10 @@ from ._speed import Speed
 
 class Bike:
     def __init__(self, bike_id,  
-                 longitude, latitude,
-                 zones=None,):
+                 longitude, 
+                 latitude):
         self.bike_id = bike_id
-        self.zones = Map.Zones.load() if not zones else zones
+        self.zones = Map.Zones.load()
         self.battery = Battery()
         self.position = Position(longitude, latitude)
         self.logs = Logs()
@@ -25,7 +25,7 @@ class Bike:
         self.mode = Mode()
         self.speed = Speed()
         self.user = None
-        self.reports.add(self.mode.current, self.position.current, self.speed.current)
+        self.report()
 
     def unlock(self, user_id=None):
         """User unlocks the bike and can start using it."""
@@ -67,13 +67,21 @@ class Bike:
         # calculate total time or change battery consumption to distance instead of time?
         # but then maybe no simple simulation speed up?
         #self.position.change(actual_destination[0], actual_destination[1])
-        self.speed.limit()                                          # Set speed to speed limit at new position        
+        self.speed.limit(self.zones, self.position.current)       
         self.report()
 
     def relocate(self, longitude, latitude):
         """Relocate the bike to a new position."""
         self.position.change(longitude, latitude)
+        self.speed.limit(self.zones, self.position.current)
+        self.report()
         # ... except no battery drain
+    
+    def deploy(self, parking_zones):
+        deployment_zone = Map.Zone.get_deployment_zone(parking_zones)
+        deployment_position = None # TODO: get a position within the deployment zone
+        self.position.change(deployment_position[0], deployment_position[1])
+
 
     def check(self):
         # Check if bike needs maintenance

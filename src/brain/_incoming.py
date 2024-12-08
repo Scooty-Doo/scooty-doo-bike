@@ -1,5 +1,3 @@
-from ..bike.bike import Bike
-from ._outgoing import Outgoing
 from .._utils._errors import AlreadyUnlockedError, AlreadyLockedError, NotParkingZoneError
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException, Depends
@@ -100,9 +98,10 @@ def report(request: ReportRequest, brain = Depends(get_brain)):
 
 
 class UpdateRequest(BaseModel):
-    zones: list
+    pass
 
 @app.post("/update")
 def update(request: UpdateRequest, brain = Depends(get_brain)):
-    brain.bike.update(request.zones)
+    zones = brain.request_zones()
+    brain.bike.update(zones)
     return {"message": "Zones updated"}

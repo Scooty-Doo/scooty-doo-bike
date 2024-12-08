@@ -5,7 +5,7 @@ import math
 class Battery:
     def __init__(self, battery_level=100.0):
         self.level = battery_level
-        self.settings = Settings.BatterySettings()
+        self.settings = Settings.Battery()
 
     def update(self, settings):
         for key, value in settings.__dict__.items():
@@ -14,11 +14,11 @@ class Battery:
     def charge(self, desired_level=100.0):
         charging_left = desired_level - self.level
         if self.level == 100.0:
-            return Errors.fully_charged()
+            raise Errors.fully_charged()
         if charging_left <= 0:
             minutes_spent = 0
             return minutes_spent
-        minutes_spent = math.ceil(charging_left / self.settings.recharge_per_minute) # recharge_per_minute is a setting
+        minutes_spent = math.ceil(charging_left / self.settings.recharge_per_minute)
         self.level = desired_level
         return minutes_spent
 
