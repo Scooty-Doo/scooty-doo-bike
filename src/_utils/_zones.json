@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "zone_name": "zone1",
+        "zone_type": "parking",
+        "city": "city1",
+        "boundary": ""
+    },
+    {
+        "id": 2,
+        "zone_name": "zone2",
+        "zone_type": "parking",
+        "city": "city1",
+        "boundary": ""
+    },
+    {
+        "id": 3,
+        "zone_name": "zone3",
+        "zone_type": "parking",
+        "city": "city1",
+        "boundary": ""
+    }
+]
