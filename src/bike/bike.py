@@ -18,6 +18,7 @@ class Bike:
                  latitude):
         self.bike_id = bike_id
         self.zones = Map.Zones.load()
+        self.parking_zones = Map.Zones.Parking.load()
         self.battery = Battery()
         self.position = Position(longitude, latitude)
         self.logs = Logs()
@@ -94,11 +95,13 @@ class Bike:
         if not Map.Zone.is_charging_zone(self.zones, self.position.current):
             raise Errors.not_charging_zone()
         minutes_spent = self.battery.charge(desired_level)
+        # TODO: Sleep as many seconds as minutes spent? Here or in battery? 
         self.report()
         return minutes_spent
 
     def report(self):
         self.reports.add(self.mode.current, self.position.current, self.speed.current)
 
-    def update(self, zones):
-        self.zones = zones
+    def update(self, zones=None, parking_zones=None):
+        self.zones = zones if zones else self.zones
+        self.parking_zones = parking_zones if parking_zones else self.parking_zones

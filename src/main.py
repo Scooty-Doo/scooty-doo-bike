@@ -16,6 +16,11 @@ def help():
             Optional Environment Variables:
             - LONGITUDE: The longitude of the bike's starting position. (Note: Bike can deploy itself.)
             - LATITUDE: The latitude of the bike's starting position. (Note: Bike can deploy itself.)
+          
+            Other Information:
+            - srd/_utils/_zones.json: The zones file contains default zones for the map 
+                (and should probably be included in Docker container).
+            - 
           """)
 
 if __name__ == "__main__":

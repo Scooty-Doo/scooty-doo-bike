@@ -4,6 +4,7 @@ import json
 import os
 
 ZONES_FILENAME = '_zones.json'
+PARKING_ZONES_FILENAME = '_parking_zones.json'
 
 # _zones.json
 # [
@@ -34,16 +35,16 @@ class Map:
             return 0
 
         @staticmethod
-        def is_parking_zone(zones, position):
-            zone = Map.Zone.get(zones, position)
-            if zone and zone['zone_type'] == 'parking': # TODO: called "parking"?
+        def is_parking_zone(parking_zones, position):
+            zone = Map.Zone.get(parking_zones, position)
+            if zone and zone in parking_zones:
                 return True
             pass
 
         @staticmethod
-        def is_charging_zone(zones, position):
-            zone = Map.Zone.get(zones, position)
-            if zone and zone['zone_type'] == 'charging': # TODO: called "charging"?
+        def is_charging_zone(parking_zones, position):
+            zone = Map.Zone.get(parking_zones, position)
+            if zone and zone in parking_zones:
                 return True
             
         @staticmethod
@@ -59,3 +60,12 @@ class Map:
             with open(file_path) as f:
                 zones = json.load(f)
             return zones
+    
+        class Parking:
+            @staticmethod
+            def load():
+                current_directory = os.path.dirname(__file__)
+                file_path = os.path.join(current_directory, PARKING_ZONES_FILENAME)
+                with open(file_path) as f:
+                    zones = json.load(f)
+                return zones
