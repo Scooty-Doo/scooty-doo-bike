@@ -8,3 +8,4 @@ venv/
 !README.md
 *.coverage
 *.pytest_cache/
+htmlcov/
