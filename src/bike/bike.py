@@ -58,9 +58,9 @@ class Bike:
         destination = (longitude, latitude)
         current_zone = Map.Zone.get(self.zones, self.position.current)
         destination_zone = Map.Zone.get(self.zones, destination)
-        route = Route.get(self.zones, current_zone, destination_zone)
+        route = Route.get_route_zones(self.zones, current_zone, destination_zone)
         duration = Route.get_duration(self.zone_types, route)
-        total_reports = Reports.calculate_total_reports_in_duration(duration)
+        total_reports = Reports.reports_needed(duration)
         for report_index in range(total_reports):
             self.battery.drain(Settings.Report.report_interval, self.mode.current)
             current_position = Route.get_position(route, total_reports, report_index)
@@ -68,7 +68,10 @@ class Bike:
             self.speed.limit(self.zones, self.position.current)      
             self.report()
             Clock.sleep(Settings.Report.report_interval)
-        self.check() 
+        route_linestring = Route.get_route_linestring(route)
+        self.user.trip.add_route(route_linestring)
+        self.logs.update(self.user.trip)
+        self.check()
 
     def relocate(self, longitude, latitude):
         """Relocate the bike to a new position without draining the battery."""
@@ -90,14 +93,14 @@ class Bike:
         if not Map.Zone.is_charging_zone(self.zones, self.position.current):
             raise Errors.not_charging_zone()
         duration = self.battery.get_charge_time(desired_level)
-        total_reports = Reports.calculate_total_reports_in_duration(duration)
+        total_reports = Reports.reports_needed(duration)
         for _ in range(total_reports):
             self.battery.charge(Settings.Report.report_interval)
             self.report()
             Clock.sleep(Settings.Report.report_interval)
 
     def report(self):
-        self.reports.add(self.mode.current, self.position.current, self.speed.current)
+        self.reports.add(self.mode.current, self.position.current, self.speed.current, self.battery.level)
 
     def update(self, zones=None, zone_types=None):
         self.zones = zones if zones else self.zones

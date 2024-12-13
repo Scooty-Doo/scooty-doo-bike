@@ -5,7 +5,7 @@ import math
 class Route:
 
     @staticmethod
-    def get(zones, start_zone, end_zone):
+    def get_route_zones(zones, start_zone, end_zone):
         start_centroid = wkt_loads(start_zone['boundary']).centroid
         end_centroid = wkt_loads(end_zone['boundary']).centroid
         route = LineString([start_centroid, end_centroid])
@@ -16,6 +16,14 @@ class Route:
                 intersecting_zones.append(zone)
         sorted_zones = sorted(intersecting_zones, key=lambda zone: route.project(wkt_loads(zone['boundary']).centroid))
         return sorted_zones
+    
+    def get_route_linestring(route):
+        linestring = []
+        for zone in route:
+            boundary = wkt_loads(zone['boundary'])
+            centroid = boundary.centroid
+            linestring.append((centroid.x, centroid.y))
+        return linestring
     
     @staticmethod
     def get_duration(zone_types, route):

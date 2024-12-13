@@ -18,3 +18,6 @@ class Trip:
         self.distance = distance # TODO: keep?
         self.duration = duration # TODO: keep?
         self.route = route # TODO: keep?
+    
+    def add_route(self, linestring):
+        self.route = linestring
