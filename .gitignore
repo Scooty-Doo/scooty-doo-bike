@@ -6,3 +6,5 @@ __pycache__/
 venv/
 *.md
 !README.md
+*.coverage
+*.pytest_cache/
