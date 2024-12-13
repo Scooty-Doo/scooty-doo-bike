@@ -9,7 +9,7 @@ class Speed:
 
     def limit(self, zones, position):
         """Set current speed to speed limit."""
-        return Map.Zone.speed_limit(zones, position)
+        return Map.Zone.get_speed_limit(zones, position)
     
     def terminate(self):
         self.current = 0

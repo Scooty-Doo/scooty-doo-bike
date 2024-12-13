@@ -1,7 +1,7 @@
 from ._outgoing import Outgoing
 from ..bike.bike import Bike
 from .._utils._settings import Settings
-import time
+from .._utils._clock import Clock
 
 class Brain:
     def __init__(self, bike_id,  
@@ -23,7 +23,7 @@ class Brain:
     def run(self):
         while self.running:
             self.send_report()
-            time.sleep(Settings.Report.report_interval)
+            Clock.sleep(Settings.Report.report_interval)
     
     def terminate(self):
         self.running = False

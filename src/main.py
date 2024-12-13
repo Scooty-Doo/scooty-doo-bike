@@ -20,7 +20,7 @@ def help():
             Other Information:
             - srd/_utils/_zones.json: The zones file contains default zones for the map 
                 (and should probably be included in Docker container).
-            - 
+            - same for _utils/_parking_zones.json
           """)
 
 if __name__ == "__main__":

@@ -1,51 +1,53 @@
-from ._map import Map
-from geopy.distance import geodesic
-# TODO: Can use a simpler calculation since city travel.
-# TODO: But need to know how coordinates/position looks?
+from shapely.geometry import LineString
+from shapely.wkt import loads as wkt_loads
+import math
 
 class Route:
-    def __init__(self):
-        pass
 
-    # Route defined as a list of distance-speed pairs.
-    # TODO: understand the zone structure (boundary etc.)
-    # TODO: then implement the rest
-    # NOTE: atm no way to get speed limit for zone from REST API?
-
-    def get_route(self, zones, position, destination):
-        route = []
-        current_position = position
-        while current_position != destination:
-            speed = Map.Zone.speed_limit(zones, current_position)
-            next_zone = self._calculate_next_zone(current_position, destination)
-            if not next_zone:
-                break
-            start_of_next_zone = next_zone[0]
-            distance = self._get_distance(current_position, start_of_next_zone)
-            leg = (distance, speed)
-            route.append(leg)
-            current_position = start_of_next_zone
-        final_distance = self._get_distance(current_position, destination)
-        final_speed = Map.Zone.get(zones, destination).speed_limit
-        final_leg = (final_distance, final_speed)
-        route.append(final_leg)
-        return route
+    @staticmethod
+    def get(zones, start_zone, end_zone):
+        start_centroid = wkt_loads(start_zone['boundary']).centroid
+        end_centroid = wkt_loads(end_zone['boundary']).centroid
+        route = LineString([start_centroid, end_centroid])
+        intersecting_zones = []
+        for zone in zones:
+            boundary = wkt_loads(zone['boundary'])
+            if route.intersects(boundary):
+                intersecting_zones.append(zone)
+        sorted_zones = sorted(intersecting_zones, key=lambda zone: route.project(wkt_loads(zone['boundary']).centroid))
+        return sorted_zones
     
-    def _calculate_next_zone(self):
-        pass
-
-    def _get_distance(self, position, destination):
-        return int(geodesic(position, destination).meters)
+    @staticmethod
+    def get_duration(zone_types, route):
+        if len(route) < 2:
+            return 0
+        total_minutes = 0
+        for current_zone_index in range(len(route) - 1):
+            current_zone = route[current_zone_index]
+            next_zone = route[current_zone_index + 1]
+            current_centroid = wkt_loads(current_zone['boundary']).centroid
+            next_centroid = wkt_loads(next_zone['boundary']).centroid
+            distance = Route._get_distance(current_centroid, next_centroid)
+            speed = zone_types[current_zone['zone_type']]['speed_limit']
+            hours = distance / speed
+            minutes = hours * 60
+            total_minutes += minutes
+        return int(total_minutes)
     
-    def _get_route_time(self, route):
-        pass
-
-    def _get_battery_time(self):
-        pass
+    @staticmethod
+    def _get_distance(current_centroid, next_centroid):
+        return current_centroid.distance(next_centroid) / 1000
     
-    def premature_end(self, route, battery_level):
-        route_time = self._get_route_time(route)
-        battery_time = self._get_battery_time()
-        if route_time < battery_time:
-            return
-        # calculate position after X minutes en route.
+    @staticmethod
+    def get_position(route, total_reports, report_index):
+        zone_count = len(route)
+        if zone_count == 1:
+            centroid = wkt_loads(route[0]['boundary']).centroid
+            return (centroid.x, centroid.y)
+        step_size = total_reports // zone_count
+        zone_index = math.ceil(step_size * report_index)
+        zone_index = min(zone_index, zone_count - 1)
+        zone = route[zone_index]
+        centroid = wkt_loads(zone['boundary']).centroid
+        return (centroid.x, centroid.y)
+
