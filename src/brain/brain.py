@@ -14,8 +14,12 @@ class Brain:
         self.running = True
         
         if self._is_not_deployed():
-            parking_zones = self.request_parking_zones()
-            self.bike.deploy(parking_zones)
+            self.bike.deploy(self.bike.zones)
+
+        if self.bike.zones is None:
+            self.bike.zones = self.request_zones()
+        if self.bike.zone_types is None:
+            self.bike.zone_types = self.request_zone_types()
 
     def _is_not_deployed(self):
         return self.bike.position.current == (Settings.Position.default_longitude, Settings.Position.default_latitude)
@@ -51,5 +55,6 @@ class Brain:
     def request_zones(self):
         return self.outgoing.request.zones()
     
-    def request_parking_zones(self):
-        return self.outgoing.request.parking_zones()
+    def request_zone_types(self):
+        return self.outgoing.request.zone_types()
+

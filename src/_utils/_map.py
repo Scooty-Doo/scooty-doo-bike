@@ -67,6 +67,8 @@ class Map:
             file_path = os.path.join(current_directory, ZONES_FILENAME)
             with open(file_path) as f:
                 zones = json.load(f)
+                if not zones:
+                    return []
             return zones
 
         @staticmethod
@@ -88,4 +90,6 @@ class Map:
             file_path = os.path.join(current_directory, ZONE_TYPES_FILENAME)
             with open(file_path) as f:
                 zone_types = json.load(f)
+                if not zone_types:
+                    return []
             return zone_types

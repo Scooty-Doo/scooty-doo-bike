@@ -47,6 +47,7 @@ class Settings:
             update = f'{endpoint}/{{id}}'
             remove = f'{endpoint}/{{id}}'
             get_parking = f'{endpoint}/parking'
+            get_types = f'{endpoint}/types'
 
         class Users:
             endpoint = 'v1/users'

@@ -16,7 +16,8 @@ class Route:
                 intersecting_zones.append(zone)
         sorted_zones = sorted(intersecting_zones, key=lambda zone: route.project(wkt_loads(zone['boundary']).centroid))
         return sorted_zones
-    
+
+    @staticmethod
     def get_route_linestring(route):
         linestring = []
         for zone in route:

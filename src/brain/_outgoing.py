@@ -33,14 +33,14 @@ class Request():
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to request update: {e}")
     
-    def parking_zones(self):
-        url = _url(self.url, self.endpoints.Zones.get_parking)
+    def zone_types(self):
+        url = _url(self.url, self.endpoints.Zones.get_types)
         try:
             response = requests.get(url, headers=self.headers)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
-            raise Exception(f"Failed to request parking zones: {e}")
+            raise Exception(f"Failed to request zone types: {e}")
 
 
 class Logs():
