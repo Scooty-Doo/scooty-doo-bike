@@ -29,3 +29,6 @@ def mock_environment(monkeypatch):
     monkeypatch.setenv("LONGITUDE", "0.0")
     monkeypatch.setenv("LATITUDE", "0.0")
     monkeypatch.setenv("PORT", "8000")
+
+# python -m pytest
+# python -m pytest --cov=src --cov-report=html

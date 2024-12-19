@@ -1,23 +1,52 @@
 [
     {
         "id": 1,
-        "zone_name": "zone1",
         "zone_type": "parking",
-        "city": "city1",
-        "boundary": ""
+        "boundary": "POLYGON((0.000 0.000, 0.000 0.001, 0.001 0.001, 0.001 0.000, 0.000 0.000))"
     },
     {
         "id": 2,
-        "zone_name": "zone2",
-        "zone_type": "parking",
-        "city": "city1",
-        "boundary": ""
+        "zone_type": "charging",
+        "boundary": "POLYGON((0.002 0.000, 0.002 0.001, 0.003 0.001, 0.003 0.000, 0.002 0.000))"
     },
     {
         "id": 3,
-        "zone_name": "zone3",
+        "zone_type": "slow",
+        "boundary": "POLYGON((0.004 0.000, 0.004 0.001, 0.005 0.001, 0.005 0.000, 0.004 0.000))"
+    },
+    {
+        "id": 4,
+        "zone_type": "regular",
+        "boundary": "POLYGON((0.006 0.000, 0.006 0.001, 0.007 0.001, 0.007 0.000, 0.006 0.000))"
+    },
+    {
+        "id": 5,
         "zone_type": "parking",
-        "city": "city1",
-        "boundary": ""
+        "boundary": "POLYGON((0.008 0.000, 0.008 0.002, 0.010 0.002, 0.010 0.000, 0.008 0.000))"
+    },
+    {
+        "id": 6,
+        "zone_type": "regular",
+        "boundary": "POLYGON((0.011 0.000, 0.011 0.001, 0.012 0.001, 0.012 0.000, 0.011 0.000))"
+    },
+    {
+        "id": 7,
+        "zone_type": "charging",
+        "boundary": "POLYGON((0.013 0.000, 0.013 0.001, 0.014 0.001, 0.014 0.000, 0.013 0.000))"
+    },
+    {
+        "id": 8,
+        "zone_type": "slow",
+        "boundary": "POLYGON((0.015 0.000, 0.015 0.002, 0.017 0.002, 0.017 0.000, 0.015 0.000))"
+    },
+    {
+        "id": 9,
+        "zone_type": "parking",
+        "boundary": "POLYGON((0.018 0.000, 0.018 0.001, 0.019 0.001, 0.019 0.000, 0.018 0.000))"
+    },
+    {
+        "id": 10,
+        "zone_type": "regular",
+        "boundary": "POLYGON((0.020 0.000, 0.020 0.002, 0.022 0.002, 0.022 0.000, 0.020 0.000))"
     }
 ]

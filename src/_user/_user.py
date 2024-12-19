@@ -1,5 +1,5 @@
 from ._trip import Trip
-import uuid
+from uuid import uuid4 as uuid
 
 class User:
     def __init__(self, user_id=None):

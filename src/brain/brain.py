@@ -13,8 +13,9 @@ class Brain:
         self.outgoing = Outgoing(token)
         self.running = True
         
-        if self._is_not_deployed():
-            self.bike.deploy(self.bike.zones)
+        # Bike already does the below now...
+        # if self._is_not_deployed():
+        #     self.bike.deploy(self.bike.zones)
 
         if self.bike.zones is None:
             self.bike.zones = self.request_zones()
@@ -31,6 +32,7 @@ class Brain:
     
     def terminate(self):
         self.running = False
+        # TODO: clean up _zones.py and _zone_types.py?
 
     def send_log(self):
         log = self.bike.logs.last()

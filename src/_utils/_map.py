@@ -26,8 +26,9 @@ class Map:
             point = Point(position)
             for zone in zones:
                 boundary = wkt_loads(zone['boundary'])
-                if point.within(boundary):
-                    return zone 
+                if boundary.covers(point):
+                    return zone
+            return None
         
         @staticmethod
         def get_position(zone):
@@ -59,6 +60,12 @@ class Map:
             parking_zones = Map.Zones.get_parking_zones(zones)
             random_parking_zone = random.choice(parking_zones)
             return random_parking_zone
+        
+        @staticmethod
+        def get_charging_zone(zones):
+            charging_zones = Map.Zones.get_charging_zones(zones)
+            random_charging_zone = random.choice(charging_zones)
+            return random_charging_zone
 
     class Zones:
         @staticmethod
@@ -93,3 +100,8 @@ class Map:
                 if not zone_types:
                     return []
             return zone_types
+    
+    class Position:
+        @staticmethod
+        def exists(zones, position):
+            return Map.Zone.get(zones, position) is not None

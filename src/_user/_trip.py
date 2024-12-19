@@ -1,6 +1,6 @@
 
 from .._utils._clock import Clock
-import uuid
+from uuid import uuid4 as uuid
 
 class Trip:
     def __init__(self, user_id, bike_id, position):

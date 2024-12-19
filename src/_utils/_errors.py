@@ -33,6 +33,11 @@ class InitializationError(Exception):
     def __init__(self, message="Object not initialized properly. Missing required environment variables."):
         super().__init__(message)
 
+class OutOfBoundsError(Exception):
+    """Custom error raised when a bike is moved out of bounds."""
+    def __init__(self, message="This position is out of bounds. It is not in one of the zones on the map."):
+        super().__init__(message)
+
 class Errors():
     @staticmethod
     def not_parking_zone():
@@ -60,3 +65,7 @@ class Errors():
     @staticmethod
     def initialization_error():
         raise InitializationError()
+    
+    @staticmethod
+    def out_of_bounds():
+        raise OutOfBoundsError()

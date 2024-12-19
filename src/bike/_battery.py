@@ -33,10 +33,10 @@ class Battery:
             self.level -= self.settings.drain_per_minute * minutes * self.settings.drain_factor_sleep_mode
         elif mode == 'maintenance':
             self.level -= self.settings.drain_per_minute * minutes * self.settings.drain_factor_maintenance_mode
-        if self.level < 0:
-            self.level = 0
         else:
             raise Errors.invalid_mode()
+        if self.level < 0:
+            self.level = 0
 
     def is_low(self):
         return self.level < self.settings.minimum_battery_level_for_usage

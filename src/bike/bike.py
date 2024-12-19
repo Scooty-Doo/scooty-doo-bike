@@ -26,10 +26,12 @@ class Bike:
         self.mode = Mode()
         self.speed = Speed()
         self.user = None
+        if not Map.Position.exists(self.zones, self.position.current):
+            self.deploy()
         self.report()
 
     def unlock(self, user_id=None):
-        """User unlocks the bike and can start using it."""
+        """Unlock the bike."""
         if self.user:
             raise Errors.already_unlocked()
         self.user = User(user_id)
@@ -37,11 +39,11 @@ class Bike:
         self.user.start_trip(self.bike_id, self.position.current)
         trip = self.user.trip
         self.logs.add(trip)
-        self.speed.limit(self.zones, self.position.current)
-        self.reports.add(self.mode.current, self.position.current, self.speed.current)
+        self.speed.limit(self.zones, self.zone_types, self.position.current)
+        self.report()
 
     def lock(self, ignore_zone=False, maintenance=False):
-        """Locks the bike."""
+        """Lock the bike."""
         if not self.user and self.mode.is_locked():
             raise Errors.already_locked()
         if not Map.Zone.is_parking_zone(self.zones, self.position.current) and not ignore_zone:
@@ -49,12 +51,15 @@ class Bike:
         trip = self.user.trip
         self.logs.update(trip)
         self.user.end_trip(self.position.current)
+        self.user = None
         self.speed.terminate()
         self.mode.sleep() if not maintenance else self.mode.maintenance()
         self.report()
 
     def move(self, longitude, latitude):
-        """Updates the bike's position."""
+        """Move the bike to a new position."""
+        if not Map.Position.exists(self.zones, (longitude, latitude)):
+            raise Errors.out_of_bounds()
         destination = (longitude, latitude)
         current_zone = Map.Zone.get(self.zones, self.position.current)
         destination_zone = Map.Zone.get(self.zones, destination)
@@ -65,7 +70,7 @@ class Bike:
             self.battery.drain(Settings.Report.report_interval, self.mode.current)
             current_position = Route.get_position(route, total_reports, report_index)
             self.position.change(current_position[0], current_position[1])
-            self.speed.limit(self.zones, self.position.current)      
+            self.speed.limit(self.zones, self.zone_types, self.position.current)      
             self.report()
             Clock.sleep(Settings.Report.report_interval)
         route_linestring = Route.get_route_linestring(route)
@@ -75,21 +80,34 @@ class Bike:
 
     def relocate(self, longitude, latitude):
         """Relocate the bike to a new position without draining the battery."""
+        if not Map.Position.exists(self.zones, (longitude, latitude)):
+            raise Errors.out_of_bounds()
         self.position.change(longitude, latitude)
-        self.speed.limit(self.zones, self.position.current)
+        self.speed.limit(self.zones, self.zone_types, self.position.current)
         self.report()
     
     def deploy(self):
+        """Relocate the bike to a deployment zone."""
         deployment_zone = Map.Zone.get_deployment_zone(self.zones)
         deployment_position = Map.Zone.get_position(deployment_zone)
         self.position.change(deployment_position[0], deployment_position[1])
 
+    def relocate_to_charging_zone(self):
+        """Relocate the bike to a charging zone."""
+        charging_zone = Map.Zone.get_charging_zone(self.zones)
+        charging_position = Map.Zone.get_position(charging_zone)
+        self.position.change(charging_position[0], charging_position[1])
+        self.speed.limit(self.zones, self.zone_types, self.position.current)
+        self.report()
+
     def check(self):
+        """Check if the bike needs maintenance."""
         if self.battery.is_low() and self.mode.is_sleep():
             self.mode.maintenance()
             self.report()
 
     def charge(self, desired_level):
+        """Charge the bike to the desired battery level."""
         if not Map.Zone.is_charging_zone(self.zones, self.position.current):
             raise Errors.not_charging_zone()
         duration = self.battery.get_charge_time(desired_level)
@@ -100,8 +118,10 @@ class Bike:
             Clock.sleep(Settings.Report.report_interval)
 
     def report(self):
+        """Add a report."""
         self.reports.add(self.mode.current, self.position.current, self.speed.current, self.battery.level)
 
     def update(self, zones=None, zone_types=None):
+        """Update the bike's zones and zone types."""
         self.zones = zones if zones else self.zones
         self.zone_types = zone_types if zone_types else self.zone_types
