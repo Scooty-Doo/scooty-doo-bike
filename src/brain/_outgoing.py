@@ -56,7 +56,7 @@ class Logs():
         try:
             for log in logs:
                 # TODO: skicka i data-fält istället för json-fält?
-                response = requests.post(url, headers=self.headers, json=log)
+                response = requests.post(url, headers=self.headers, data=log)
                 response.raise_for_status()
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to send logs: {e}")
@@ -68,7 +68,7 @@ class Logs():
         try:
             for log in logs:
                 # TODO: skicka i data-fält istället för json-fält?
-                response = requests.put(url, headers=self.headers, json=log)
+                response = requests.put(url, headers=self.headers, data=log)
                 response.raise_for_status()
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to update logs: {e}")
@@ -86,7 +86,7 @@ class Reports():
             reports = [reports]
         try:
             # TODO: skicka i data-fält istället för json-fält?
-            response = requests.put(url, headers=self.headers, json=reports[-1]) # TODO: -1 för att bara skicka senaste reporten? här eller på annat vis?
+            response = requests.put(url, headers=self.headers, data=reports[-1]) # TODO: -1 för att bara skicka senaste reporten? här eller på annat vis?
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to send reports: {e}")
