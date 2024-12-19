@@ -2,6 +2,8 @@ from .._utils._clock import Clock
 from .._utils._settings import Settings
 import math
 
+# TODO: Create a mapper for the reports here or in Brain to output correct JSON format/structure.
+
 class Reports:
     def __init__(self):
         self.reports = []

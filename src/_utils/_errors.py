@@ -1,11 +1,17 @@
-class NotParkingZoneError(Exception):
-    """Custom error raised when bike is in a non-parking zone."""
-    def __init__(self, message="This zone is not a parking zone."):
-        super().__init__(message)
+# TODO: remove if not used
+#class NotParkingZoneError(Exception):
+#    """Custom error raised when bike is in a non-parking zone."""
+#    def __init__(self, message="This zone is not a parking zone."):
+#        super().__init__(message)
 
 class NotChargingZoneError(Exception):
     """Custom error raised when bike is not in a charging zone."""
     def __init__(self, message="This zone is not a charging zone."):
+        super().__init__(message)
+
+class PositionNotWithinZoneError(Exception):
+    """Custom error raised when a position is not within a zone."""
+    def __init__(self, message="This position is not within a zone."):
         super().__init__(message)
 
 class AlreadyUnlockedError(Exception):
@@ -39,9 +45,10 @@ class OutOfBoundsError(Exception):
         super().__init__(message)
 
 class Errors():
-    @staticmethod
-    def not_parking_zone():
-        raise NotParkingZoneError()
+    # TODO: remove if not used
+    #@staticmethod
+    #def not_parking_zone(): 
+    #    raise NotParkingZoneError()
     
     def not_charging_zone():
         raise NotChargingZoneError()
@@ -69,3 +76,7 @@ class Errors():
     @staticmethod
     def out_of_bounds():
         raise OutOfBoundsError()
+    
+    @staticmethod
+    def position_not_within_zone():
+        raise PositionNotWithinZoneError()

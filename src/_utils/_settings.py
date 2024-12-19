@@ -18,15 +18,17 @@ class Settings:
         minimum_battery_level_for_usage = 20.0
 
     class Endpoints:
-        backend_url = os.getenv("BACKEND_URL", "http://localhost:8000")
+        backend_url = os.getenv("BACKEND_URL", "http://localhost:80")
+
+        # TODO: Endpoints need to get the values through parameters (convert attribute to method) or environment (if BIKE_ID).
 
         class Bikes:
             endpoint = 'v1/bikes'
             get_all = f'{endpoint}'
-            get = f'{endpoint}' + '/{bike_id}'
+            get = f'{endpoint}' + f'/{os.getenv("BIKE_ID")}'
             add = f'{endpoint}'
-            update = f'{endpoint}' + '/{bike_id}'
-            remove = f'{endpoint}' + '/{bike_id}'
+            update = f'{endpoint}' + f'/{os.getenv("BIKE_ID")}'
+            remove = f'{endpoint}' + f'/{os.getenv("BIKE_ID")}'
         
         class Trips:
             endpoint = 'v1/trips'

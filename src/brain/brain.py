@@ -12,10 +12,6 @@ class Brain:
         self.bike = Bike(bike_id, longitude, latitude)
         self.outgoing = Outgoing(token)
         self.running = True
-        
-        # Bike already does the below now...
-        # if self._is_not_deployed():
-        #     self.bike.deploy(self.bike.zones)
 
         if self.bike.zones is None:
             self.bike.zones = self.request_zones()

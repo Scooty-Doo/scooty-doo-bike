@@ -35,6 +35,7 @@ if __name__ == "__main__":
             help()
             raise Errors.initialization_error()
 
+    # TODO: Should token be skipped as parameter and instead taken from environment? Same on Outgoing?
     brain = Brain(
         bike_id=bike_id,
         longitude=longitude,

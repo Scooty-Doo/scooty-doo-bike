@@ -56,13 +56,12 @@ def relocate(request: RelocateRequest, brain = Depends(get_brain)):
 
 
 class EndTripRequest(BaseModel):	
-    ignore_zone: bool = False
     maintenance: bool = False
 
 @app.post("/end_trip")
 def end_trip(request: EndTripRequest, brain = Depends(get_brain)):
     try:
-        brain.bike.lock(request.ignore_zone, request.maintenance)
+        brain.bike.lock(request.maintenance)
         brain.send_log()
         brain.send_report()
         return {"message": "Trip ended. Log and report sent"}

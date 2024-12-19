@@ -3,6 +3,9 @@ from src.bike.bike import Bike
 from src._utils._errors import AlreadyUnlockedError, AlreadyLockedError, NotParkingZoneError, NotChargingZoneError
 from src._utils._map import Map
 
+# TODO: Remove "ignore_zone" parameter from tests involving lock().
+# TODO: update fixtures to include city_id.
+
 @pytest.mark.usefixtures("mock_environment")
 class TestBike:
 
@@ -22,7 +25,7 @@ class TestBike:
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123)
         assert bike.mode.is_unlocked()
-        bike.lock(ignore_zone=False)
+        bike.lock()
         assert bike.mode.is_locked()
         assert bike.user is None  # Trip ended.
         with pytest.raises(AlreadyLockedError): # Attempt to lock again without unlocking should raise AlreadyLockedError.
@@ -44,7 +47,7 @@ class TestBike:
         bike.unlock(user_id=123)
         initial_battery = bike.battery.level
         charging_zone = Map.Zone.get_charging_zone(bike.zones)
-        charging_position = Map.Zone.get_position(charging_zone)
+        charging_position = Map.Zone.get_centroid_position(charging_zone)
         bike.move(charging_position[0], charging_position[1])
         assert bike.battery.level < initial_battery # Check if battery drained.
         bike.speed.limit(bike.zones, bike.zone_types, bike.position.current)
@@ -55,7 +58,7 @@ class TestBike:
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123)
         charging_zone = Map.Zone.get_charging_zone(bike.zones)
-        charging_position = Map.Zone.get_position(charging_zone)
+        charging_position = Map.Zone.get_centroid_position(charging_zone)
         bike.relocate(charging_position[0], charging_position[1])
         bike.battery.level = 50.0  # Simulate partial battery.
         bike.charge(desired_level=100.0)
