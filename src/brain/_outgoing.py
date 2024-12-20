@@ -5,6 +5,8 @@ from .._utils._settings import Settings
 def _url(url, endpoint):
     return f'{url}/{endpoint}'
 
+# TODO: kan helt refaktorera bort Logs och Reports här?
+
 class Outgoing:
     def __init__(self, token):
         self.endpoints = Settings.Endpoints()
@@ -69,7 +71,7 @@ class Logs():
         try:
             for log in logs:
                 # TODO: skicka i data-fält istället för json-fält?
-                response = requests.put(url, headers=self.headers, data=log)
+                response = requests.patch(url, headers=self.headers, data=log)
                 response.raise_for_status()
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to update logs: {e}")
@@ -88,7 +90,7 @@ class Reports():
             reports = [reports]
         try:
             # TODO: skicka i data-fält istället för json-fält?
-            response = requests.put(url, headers=self.headers, data=reports[-1]) # TODO: -1 för att bara skicka senaste reporten? här eller på annat vis?
+            response = requests.patch(url, headers=self.headers, data=reports[-1]) # TODO: -1 för att bara skicka senaste reporten? här eller på annat vis?
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to send reports: {e}")

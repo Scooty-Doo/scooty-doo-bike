@@ -33,14 +33,19 @@ class LogMapper:
     @staticmethod
     def map(log):
         LogMapper._rename(log)
+        LogMapper._add(log)
         LogMapper._remove(log)
-        LogMapper._encode_as_wkt(log)
+        LogMapper._encode(log)
         return log
 
     @staticmethod
     def _rename(log):
         if 'route' in log:
             log['path_taken'] = log['route']
+
+    @staticmethod
+    def _add(log):
+        pass
 
     @staticmethod
     def _remove(log):
@@ -50,7 +55,7 @@ class LogMapper:
             del log['distance']
     
     @staticmethod
-    def _encode_as_wkt(log):
+    def _encode(log):
         if 'path_taken' in log:
             log['path_taken'] = LineString(log['path_taken']).wkt
         if 'start_position' in log:
