@@ -37,7 +37,11 @@ class Map:
         
         @staticmethod
         def get_city_id(zone):
-            return zone['city']
+            return zone['city_id']
+        
+        @staticmethod
+        def get_zone_type(zone):
+            return zone['zone_type']
         
         @staticmethod
         def get_centroid_position(zone):
@@ -48,7 +52,7 @@ class Map:
         @staticmethod
         def get_speed_limit(zones, zone_types, position):
             zone = Map.Zone.get(zones, position)
-            zone_type = zone['zone_type']
+            zone_type = Map.Zone.get_zone_type(zone)
             speed_limit = zone_types[zone_type]['speed_limit']
             return speed_limit
 
@@ -56,20 +60,20 @@ class Map:
         #@staticmethod
         #def is_parking_zone(zones, position):
         #    zone = Map.Zone.get(zones, position)
-        #    if zone['zone_type'] == 'parking':
+        #    if Map.Zone.get_zone_type(zone) == 'parking':
         #        return True
 
         @staticmethod
         def is_charging_zone(zones, position):
             zone = Map.Zone.get(zones, position)
-            if zone['zone_type'] == 'charging':
+            if Map.Zone.get_zone_type(zone) == 'charging':
                 return True
         
         # TODO: remove if not used
         #@staticmethod
         #def is_forbidden_zone(zones, position):
         #    zone = Map.Zone.get(zones, position)
-        #    if zone['zone_type'] == 'forbidden':
+        #    if Map.Zone.get_zone_type(zone) == 'forbidden':
         #        return True
             
         @staticmethod
@@ -97,22 +101,20 @@ class Map:
         
         @staticmethod
         def get_zones_with_city_id(zones, city_id):
-            return [zone for zone in zones if zone['city'] == city_id]
+            return [zone for zone in zones if Map.Zone.get_city_id(zone) == city_id]
 
-        # TODO: remove if not used
-        #@staticmethod
-        #def get_parking_zones(zones):
-        #    return [zone for zone in zones if zone['zone_type'] == 'parking']
+        @staticmethod
+        def get_parking_zones(zones):
+            return [zone for zone in zones if Map.Zone.get_zone_type(zone) == 'parking']
         
-        # TODO: remove if not used
-        #@staticmethod
-        #def get_charging_zones(zones):
-        #    return [zone for zone in zones if zone['zone_type'] == 'charging']
+        @staticmethod
+        def get_charging_zones(zones):
+            return [zone for zone in zones if Map.Zone.get_zone_type(zone) == 'charging']
         
         # TODO: remove if not used
         #@staticmethod
         #def get_slow_zones(zones):
-        #    return [zone for zone in zones if zone['zone_type'] == 'slow']
+        #    return [zone for zone in zones if Map.Zone.get_zone_type(zone) == 'slow']
 
     class ZoneTypes:
         @staticmethod

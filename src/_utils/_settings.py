@@ -3,8 +3,8 @@ import os
 class Settings:
     
     class Position:
-        default_longitude = 0.0
-        default_latitude = 0.0
+        default_longitude = float(0.0)
+        default_latitude = float(0.0)
 
     class Speed:
         max_speed = 20

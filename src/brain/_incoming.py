@@ -1,4 +1,4 @@
-from .._utils._errors import AlreadyUnlockedError, AlreadyLockedError, NotParkingZoneError
+from .._utils._errors import AlreadyUnlockedError, AlreadyLockedError
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException, Depends
 

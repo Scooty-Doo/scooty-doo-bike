@@ -2,7 +2,6 @@ import threading
 import os
 import uvicorn
 from ._utils._errors import Errors
-from ._utils._map import Map
 from ._utils._settings import Settings
 from .brain.brain import Brain
 from .brain._incoming import app, get_brain
@@ -25,8 +24,8 @@ def help():
 
 if __name__ == "__main__":
     bike_id = os.getenv("BIKE_ID")
-    longitude = float(os.getenv("LONGITUDE", Settings.Position.default_longitude))
-    latitude = float(os.getenv("LATITUDE", Settings.Position.default_latitude))
+    longitude = Settings.Position.default_longitude if not os.getenv("LONGITUDE", "") else os.getenv("LONGITUDE")
+    latitude = Settings.Position.default_latitude if not os.getenv("LATITUDE", "") else os.getenv("LATITUDE")
     token = os.getenv("TOKEN")
 
     required = [bike_id, token]
