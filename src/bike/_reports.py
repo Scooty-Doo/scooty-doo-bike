@@ -29,7 +29,7 @@ class ReportMapper:
     def map(report):
         ReportMapper._rename(report)
         ReportMapper._remove(report)
-        ReportMapper._encode_as_wkt(report)
+        ReportMapper._encode(report)
         return report
 
     @staticmethod
@@ -55,7 +55,7 @@ class ReportMapper:
         #    del report['speed']
     
     @staticmethod
-    def _encode_as_wkt(report):
+    def _encode(report):
         if 'path_taken' in report:
             report['path_taken'] = LineString(report['path_taken']).wkt
         if 'start_position' in report:
