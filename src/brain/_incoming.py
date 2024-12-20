@@ -19,9 +19,11 @@ class StartTripRequest(BaseModel):
 def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
     try:
         brain.bike.unlock(request.user_id)
-        brain.send_log()
-        brain.send_report()
-        return {"message": "Trip started. Log and report sent."}
+        return {
+            "message": "Trip started.",
+            "data": {
+                "report": brain.bike.reports.last(),
+                "log": brain.bike.logs.last()}}
     except AlreadyUnlockedError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
@@ -35,8 +37,10 @@ class MoveRequest(BaseModel):
 def move(request: MoveRequest, brain = Depends(get_brain)):
     try:
         brain.bike.move(request.longitude, request.latitude)
-        brain.send_report()
-        return {"message": "Moved and battery drained. Report sent."}
+        return {
+            "message": "Moved and battery drained. Report sent.",
+            "data": {
+                "report": brain.bike.reports.last()}}
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
@@ -49,8 +53,10 @@ class RelocateRequest(BaseModel):
 def relocate(request: RelocateRequest, brain = Depends(get_brain)):
     try:
         brain.bike.relocate(request.longitude, request.latitude)
-        brain.send_report()
-        return {"message": "Relocated. Report sent."}
+        return {
+            "message": "Relocated. Report sent.", 
+            "data": {
+                "report": brain.bike.reports.last()}}
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
@@ -62,12 +68,12 @@ class EndTripRequest(BaseModel):
 def end_trip(request: EndTripRequest, brain = Depends(get_brain)):
     try:
         brain.bike.lock(request.maintenance)
-        brain.send_log()
-        brain.send_report()
-        return {"message": "Trip ended. Log and report sent"}
+        return {
+            "message": "Trip ended. Log and report sent",
+            "data": {
+                "log": brain.bike.logs.last(),
+                "report": brain.bike.reports.last()}}
     except AlreadyLockedError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    except NotParkingZoneError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal Server Error")
@@ -80,8 +86,10 @@ class CheckRequest(BaseModel):
 def check(request: CheckRequest, brain = Depends(get_brain)):
     try:
         brain.bike.check()
-        brain.send_report()
-        return {"message": "Bike checked. Report sent"}
+        return {
+            "message": "Bike checked. Report sent",
+            "data": {
+                "report": brain.bike.reports.last()}}
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
@@ -92,8 +100,10 @@ class ReportRequest(BaseModel):
 @app.get("/report")
 def report(request: ReportRequest, brain = Depends(get_brain)):
     brain.bike.report()
-    brain.send_report()
-    return {"message": "Report created and sent"}
+    return {
+        "message": "Report created and sent",
+        "data": {
+            "report": brain.bike.reports.last()}}
 
 
 class UpdateRequest(BaseModel):
@@ -102,5 +112,6 @@ class UpdateRequest(BaseModel):
 @app.post("/update")
 def update(request: UpdateRequest, brain = Depends(get_brain)):
     zones = brain.request_zones()
-    brain.bike.update(zones)
-    return {"message": "Zones updated"}
+    zone_types = brain.request_zone_types()
+    brain.bike.update(zones=zones, zone_types=zone_types)
+    return {"message": "Zones and zone types updated"}

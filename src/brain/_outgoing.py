@@ -49,6 +49,7 @@ class Logs():
         self.url = url
         self.headers = headers
 
+    # TODO: Refactor this away?
     def send(self, logs: Union[Dict, List[Dict]]):
         url = _url(self.url, self.endpoints.Trips.start)
         if isinstance(logs, dict):
@@ -80,6 +81,7 @@ class Reports():
         self.url = url
         self.headers = headers
     
+    # TODO: refactor this away?
     def send(self, reports: Union[Dict, List[Dict]]):
         url = _url(self.url, self.endpoints.Bikes.update)
         if isinstance(reports, dict):
