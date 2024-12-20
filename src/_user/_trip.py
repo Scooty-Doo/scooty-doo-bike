@@ -1,12 +1,11 @@
 
 from .._utils._clock import Clock
-from uuid import uuid4 as uuid
 
 class Trip:
-    def __init__(self, user_id, bike_id, position):
+    def __init__(self, user_id, bike_id, trip_id, position):
         self.user_id = user_id
         self.bike_id = bike_id
-        self.trip_id = uuid()
+        self.trip_id = trip_id
         self.start_time = Clock.now()
         self.start_longitude = position[0]
         self.start_latitude = position[1]

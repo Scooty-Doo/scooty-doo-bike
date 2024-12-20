@@ -34,13 +34,13 @@ class Bike:
         self.status = Status(self)
         self.report()
 
-    def unlock(self, user_id=None):
+    def unlock(self, user_id, trip_id):
         """Unlock the bike."""
         if self.user:
             raise Errors.already_unlocked()
         self.user = User(user_id)
         self.mode.usage()
-        self.user.start_trip(self.bike_id, self.position.current)
+        self.user.start_trip(self.bike_id, trip_id, self.position.current)
         trip = self.user.trip
         self.logs.add(trip)
         self.speed.limit(self.city.zones, self.zone_types, self.position.current)

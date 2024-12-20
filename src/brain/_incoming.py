@@ -14,11 +14,12 @@ def get_brain():
 
 class StartTripRequest(BaseModel):
     user_id: int
+    trip_id: int
 
 @app.post("/start_trip")
 def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
     try:
-        brain.bike.unlock(request.user_id)
+        brain.bike.unlock(request.user_id, request.trip_id)
         return {
             "message": "Trip started.",
             "data": {
