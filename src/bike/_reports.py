@@ -8,9 +8,8 @@ class Reports:
     def __init__(self):
         self.reports = []
 
-    def add(self, mode, position, speed, battery_level):
-        timestamp = Clock.now()
-        self.reports.append({"mode": mode, "position": position, "speed": speed, "timestamp": timestamp, "battery_level": battery_level})
+    def add(self, status):
+        self.reports.append(status)
     
     def get(self):
         return self.reports

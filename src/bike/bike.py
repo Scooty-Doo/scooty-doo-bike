@@ -11,6 +11,7 @@ from ._reports import Reports
 from ._mode import Mode
 from ._speed import Speed
 from ._city import City
+from ._status import Status
 
 class Bike:
     def __init__(self, bike_id,  
@@ -30,6 +31,7 @@ class Bike:
         self.city.switch(self.zones, self.position.current)
         if not Map.Position.is_within_zone(self.city.zones, self.position.current):
             self.deploy()
+        self.status = Status(self)
         self.report()
 
     def unlock(self, user_id=None):
@@ -108,6 +110,9 @@ class Bike:
         if self.battery.is_low() and self.mode.is_sleep():
             self.mode.maintenance()
             self.report()
+        if not Map.Position.is_within_zone(self.city.zones, self.position.current):
+            self.mode.maintenance()
+            self.report()
 
     def charge(self, desired_level):
         """Charge the bike to the desired battery level."""
@@ -122,7 +127,7 @@ class Bike:
 
     def report(self):
         """Add a report."""
-        self.reports.add(self.mode.current, self.position.current, self.speed.current, self.battery.level)
+        self.reports.add(self.status.get(self))
 
     def update(self, zones=None, zone_types=None):
         """Update the bike's zones and zone types."""
