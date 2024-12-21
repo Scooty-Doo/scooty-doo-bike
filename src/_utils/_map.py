@@ -53,6 +53,7 @@ class Map:
         @staticmethod
         def get_speed_limit(zones, zone_types, position):
             zone = Map.Zone.get(zones, position)
+            zone = zone if zone else Map.Position.get_closest_zone(zones, position)
             zone_type = Map.Zone.get_zone_type(zone)
             speed_limit = zone_types[zone_type]['speed_limit']
             return speed_limit
@@ -152,3 +153,31 @@ class Map:
                     shortest_distance = distance
                     closest_zone = zone
             return closest_zone
+        
+        @staticmethod
+        def get_distance(start_position, end_position):
+            def _convert_to_kilometers(distance):
+                return distance / 1000
+            start_point = Point(start_position)
+            end_point = Point(end_position)
+            distance = start_point.distance(end_point)
+            return _convert_to_kilometers(distance)
+
+        @staticmethod
+        def get_position_after_minutes_travelled(start_position, end_position, minutes_travelled, speed):
+            def _get_distance_travelled(speed, minutes_travelled):
+                return speed * (minutes_travelled / 60)
+            def _calculate_fraction_of_distance_travelled(distance_travelled, distance):
+                return distance_travelled / distance
+            def _calculate_final_position(start_position, end_position, distance_travelled, distance):
+                fraction_of_distance_travelled = _calculate_fraction_of_distance_travelled(distance_travelled, distance)
+                x1, y1 = start_position
+                x2, y2 = end_position
+                x = x1 + (x2 - x1) * fraction_of_distance_travelled
+                y = y1 + (y2 - y1) * fraction_of_distance_travelled
+                return (x, y)
+            distance = Map.Position.get_distance(start_position, end_position)
+            distance_travelled = _get_distance_travelled(speed, minutes_travelled)
+            if distance_travelled >= distance:
+                return end_position
+            return _calculate_final_position(start_position, end_position, distance_travelled, distance)

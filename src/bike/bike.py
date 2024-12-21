@@ -29,8 +29,8 @@ class Bike:
         self.user = None
         self.city = City()
         self.city.switch(self.zones, self.position.current)
-        if not Map.Position.is_within_zone(self.city.zones, self.position.current):
-            self.deploy()
+        #if not Map.Position.is_within_zone(self.city.zones, self.position.current):
+        #    self.deploy()
         self.status = Status(self)
         self.report()
 
@@ -60,27 +60,61 @@ class Bike:
         self.mode.sleep() if not maintenance else self.mode.maintenance()
         self.report()
 
-    def move(self, longitude, latitude):
-        """Move the bike to a new position."""
-        if not Map.Position.is_within_zone(self.city.zones, (longitude, latitude)):
-            raise Errors.out_of_bounds()
-        destination = (longitude, latitude)
-        current_zone = Map.Zone.get(self.city.zones, self.position.current)
-        destination_zone = Map.Zone.get(self.city.zones, destination)
-        route = Route.get_route_zones(self.city.zones, current_zone, destination_zone)
-        duration = Route.get_duration(self.zone_types, route)
-        total_reports = Reports.reports_needed(duration)
-        for report_index in range(total_reports):
-            self.battery.drain(Settings.Report.report_interval, self.mode.current)
-            current_position = Route.get_position(route, total_reports, report_index)
-            self.position.change(current_position[0], current_position[1])
-            self.speed.limit(self.city.zones, self.zone_types, self.position.current)      
-            self.report()
-            Clock.sleep(Settings.Report.report_interval)
-        route_linestring = Route.get_route_linestring(route)
-        self.user.trip.add_route(route_linestring)
-        self.logs.update(self.user.trip)
-        self.check()
+    # TODO: uppdatera bike.move() och Route metoder 
+    # + alla move kommandon under en trip bildar en linestring 
+    # + move ska kunna ta en linestring argument och följer då denna
+    # + kan kombinera move(position) med move(linestring) genom att samtliga move kommandon under en trip bildar en linestring
+    # + för en move(position) räkna bara avstånd och minuter raka vägen mellan A och B med default speed om ej zone (eller speed från närmaste zone)
+    # + för en move(linestring) kör move(position) för varje position i linestringen. Rekursivt anropa move(position) för varje position i linestringen?
+
+    def move(self, position_or_linestring, ignore_zone=True): # TODO: behövs ignore_zone? för åka till forbidden_zone?
+        """Move the bike to a new position or follow a linestring."""
+        def _move(position):
+            speed = self.speed.default
+            distance = Map.Position.get_distance(self.position.current, position)
+            duration = distance / speed
+            total_reports = Reports.reports_needed(duration)
+            for report_index in range(total_reports):
+                minutes_travelled = Settings.Report.report_interval * report_index
+                self.battery.drain(Settings.Report.report_interval, self.mode.current)
+                current_position = Map.Position.get_position_after_minutes_travelled(self.position.current, position, minutes_travelled, speed)
+                self.position.change(current_position[0], current_position[1])
+                self.speed.limit(self.city.zones, self.zone_types, self.position.current)
+                self.report()
+                Clock.sleep(Settings.Report.report_interval)
+            self.user.trip.add_movement(self.position.current)
+            self.logs.update(self.user.trip)
+            self.check()
+
+        if isinstance(position_or_linestring, tuple):
+            _move(position_or_linestring, ignore_zone)
+        elif isinstance(position_or_linestring, list):
+            for position in position_or_linestring:
+                _move(position, ignore_zone)
+        else:
+            pass # TODO: raise custom error
+
+    # def move(self, longitude, latitude, ignore_zone=True):
+    #     """Move the bike to a new position."""
+    #     if not ignore_zone and not Map.Position.is_within_zone(self.city.zones, (longitude, latitude)):
+    #         raise Errors.out_of_bounds()
+    #     destination = (longitude, latitude)
+    #     current_zone = Map.Zone.get(self.city.zones, self.position.current)
+    #     destination_zone = Map.Zone.get(self.city.zones, destination)
+    #     route = Route.get_route_zones(self.city.zones, current_zone, destination_zone)
+    #     duration = Route.get_duration(self.zone_types, route)
+    #     total_reports = Reports.reports_needed(duration)
+    #     for report_index in range(total_reports):
+    #         self.battery.drain(Settings.Report.report_interval, self.mode.current)
+    #         current_position = Route.get_position(route, total_reports, report_index)
+    #         self.position.change(current_position[0], current_position[1])
+    #         self.speed.limit(self.city.zones, self.zone_types, self.position.current)      
+    #         self.report()
+    #         Clock.sleep(Settings.Report.report_interval)
+    #     route_linestring = Route.get_route_linestring(route)
+    #     self.user.trip.add_route(route_linestring)
+    #     self.logs.update(self.user.trip)
+    #     self.check()
 
     def relocate(self, longitude, latitude, ignore_zone=True):
         """Relocate the bike to a new position without draining the battery."""

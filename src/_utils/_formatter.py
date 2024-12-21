@@ -1,4 +1,5 @@
 from shapely.geometry import Point, LineString
+import math
 
 class Formatter:
 
@@ -68,3 +69,5 @@ class Formatter:
             entry['end_position'] = _remove_space(entry['end_position'])
         if 'last_position' in entry:
             entry['last_position'] = _remove_space(entry['last_position'])
+        if 'battery_lvl' in entry:
+            entry['battery_lvl'] = math.ceil(entry['battery_lvl'])

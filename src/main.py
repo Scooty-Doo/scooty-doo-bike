@@ -22,6 +22,9 @@ def help():
             - same for _utils/_parking_zones.json
           """)
 
+# TODO: Gör så att den tankar in miljövariabler från .env som default.
+# men kan överskrivas med CLI?
+
 if __name__ == "__main__":
     bike_id = os.getenv("BIKE_ID")
     longitude = Settings.Position.default_longitude if not os.getenv("LONGITUDE", "") else os.getenv("LONGITUDE")

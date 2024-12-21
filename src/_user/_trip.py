@@ -8,13 +8,11 @@ class Trip:
         self.id = trip_id
         self.start_time = Clock.now()
         self.start_position = position
+        self.route = [self.start_position]
 
-    def end_trip(self, position, route=None, distance=None, duration=None):
+    def end_trip(self, position):
         self.end_time = Clock.now()
         self.end_position = position
-        self.distance = distance # TODO: keep?
-        self.duration = duration # TODO: keep?
-        self.route = route # TODO: keep?
     
-    def add_route(self, linestring):
-        self.route = linestring
+    def add_movement(self, position):
+        self.route.append(position)
