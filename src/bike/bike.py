@@ -46,11 +46,11 @@ class Bike:
         self.speed.limit(self.city.zones, self.zone_types, self.position.current)
         self.report()
 
-    def lock(self, maintenance=False):
+    def lock(self, maintenance=False, ignore_zone=True):
         """Lock the bike."""
         if not self.user and self.mode.is_locked():
             raise Errors.already_locked()
-        if not Map.Position.is_within_zone(self.city.zones, self.position.current):
+        if not ignore_zone and not Map.Position.is_within_zone(self.city.zones, self.position.current):
             raise Errors.position_not_within_zone()
         trip = self.user.trip
         self.logs.update(trip)

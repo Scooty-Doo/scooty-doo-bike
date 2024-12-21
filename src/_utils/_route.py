@@ -4,6 +4,11 @@ import math
 
 class Route:
 
+    # TODO: uppdatera bike.move() och Route metoder 
+    # + alla move kommandon under en trip bildar en linestring 
+    # + move ska kunna ta en linestring argument och följer då denna
+    # + kan kombinera move(position) med move(linestring) genom att samtliga move kommandon under en trip bildar en linestring
+
     @staticmethod
     def get_route_zones(zones, start_zone, end_zone):
         start_centroid = wkt_loads(start_zone['boundary']).centroid
