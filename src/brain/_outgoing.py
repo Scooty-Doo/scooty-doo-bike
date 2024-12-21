@@ -6,8 +6,6 @@ from .._utils._settings import Settings
 def _url(url, endpoint):
     return f'{url}/{endpoint}'
 
-# TODO: kan helt refaktorera bort Logs och Reports här?
-
 class Outgoing:
     def __init__(self, token):
         self.endpoints = Settings.Endpoints()
@@ -52,7 +50,6 @@ class Logs():
         self.url = url
         self.headers = headers
 
-    # TODO: Refactor this away?
     def send(self, logs: Union[Dict, List[Dict]]):
         url = _url(self.url, self.endpoints.Trips.start)
         if isinstance(logs, dict):
@@ -81,8 +78,7 @@ class Reports():
         self.endpoints = Settings.Endpoints()
         self.url = url
         self.headers = headers
-    
-    # TODO: refactor this away?
+
     def send(self, reports: Union[Dict, List[Dict]]):
         url = _url(self.url, self.endpoints.Bikes.update)
         if isinstance(reports, dict):

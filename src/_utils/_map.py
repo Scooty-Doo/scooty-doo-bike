@@ -31,10 +31,9 @@ class Map:
                     return zone
             return None
         
-        # TODO: remove if not used
-        #@staticmethod
-        #def has_city_id(zone, city_id):
-        #    return Map.Zone.get_city_id(zone) == city_id
+        @staticmethod
+        def has_city_id(zone, city_id):
+            return Map.Zone.get_city_id(zone) == city_id
         
         @staticmethod
         def get_city_id(zone):

@@ -86,28 +86,6 @@ class Bike:
         else:
             pass # TODO: raise custom error
 
-    # def move(self, longitude, latitude, ignore_zone=True):
-    #     """Move the bike to a new position."""
-    #     if not ignore_zone and not Map.Position.is_within_zone(self.city.zones, (longitude, latitude)):
-    #         raise Errors.out_of_bounds()
-    #     destination = (longitude, latitude)
-    #     current_zone = Map.Zone.get(self.city.zones, self.position.current)
-    #     destination_zone = Map.Zone.get(self.city.zones, destination)
-    #     route = Route.get_route_zones(self.city.zones, current_zone, destination_zone)
-    #     duration = Route.get_duration(self.zone_types, route)
-    #     total_reports = Reports.reports_needed(duration)
-    #     for report_index in range(total_reports):
-    #         self.battery.drain(Settings.Report.report_interval, self.mode.current)
-    #         current_position = Route.get_position(route, total_reports, report_index)
-    #         self.position.change(current_position[0], current_position[1])
-    #         self.speed.limit(self.city.zones, self.zone_types, self.position.current)      
-    #         self.report()
-    #         Clock.sleep(Settings.Report.report_interval)
-    #     route_linestring = Route.get_route_linestring(route)
-    #     self.user.trip.add_route(route_linestring)
-    #     self.logs.update(self.user.trip)
-    #     self.check()
-
     def relocate(self, longitude, latitude, ignore_zone=True):
         """Relocate the bike to a new position without draining the battery."""
         if not ignore_zone and not Map.Position.is_within_zone(self.zones, (longitude, latitude)):
@@ -136,9 +114,10 @@ class Bike:
         if self.battery.is_low() and self.mode.is_sleep():
             self.mode.maintenance()
             self.report()
-        if not Map.Position.is_within_zone(self.city.zones, self.position.current):
+        if not Map.Zone.has_city_id(Map.Position.get_closest_zone(self.city.zones, self.position.current), self.city.id):
             self.mode.maintenance()
             self.report()
+            raise Errors.out_of_bounds()
 
     def charge(self, desired_level):
         """Charge the bike to the desired battery level."""
