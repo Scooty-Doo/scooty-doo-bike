@@ -50,12 +50,12 @@ class Logs():
         self.url = url
         self.headers = headers
 
-    def send(self, logs: Union[Dict, List[Dict]]):
+    def send(self, log: Union[Dict, List[Dict]]):
         url = _url(self.url, self.endpoints.Trips.start)
-        if isinstance(logs, dict):
-            logs = [logs]
+        if isinstance(log, dict):
+            log = [log]
         try:
-            for log in logs:
+            for log in log:
                 response = requests.post(url, headers=self.headers, data=json.dumps(log))
                 response.raise_for_status()
         except requests.exceptions.RequestException as e:
@@ -84,7 +84,8 @@ class Reports():
         if isinstance(reports, dict):
             reports = [reports]
         try:
-            response = requests.patch(url, headers=self.headers, data=json.dumps(reports[-1])) # TODO: -1 för att bara skicka senaste reporten? här eller på annat vis?
-            response.raise_for_status()
+            for report in reports:
+                response = requests.patch(url, headers=self.headers, data=json.dumps(report))
+                response.raise_for_status()
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to send reports: {e}")

@@ -21,7 +21,7 @@ class Formatter:
     
     @staticmethod
     def _is_report(entry):
-        return 'position' in entry
+        return 'mode' in entry
 
     @staticmethod
     def _rename(entry, is_log=False, is_report=False):
@@ -33,6 +33,7 @@ class Formatter:
                 entry['last_position'] = entry.pop('position')
             if 'battery_level' in entry:
                 entry['battery_lvl'] = entry.pop('battery_level')
+        return entry
 
     @staticmethod
     def _add(entry, is_log=False, is_report=False):
@@ -42,6 +43,7 @@ class Formatter:
             if 'mode' in entry:
                 entry['is_available'] = True if entry['mode'] == 'sleeping' else False
                 entry.pop('mode')
+        return entry
 
     @staticmethod
     def _remove(entry, is_log=False, is_report=False):
@@ -59,6 +61,7 @@ class Formatter:
                 del entry['speed']
             if 'id' in entry:
                 del entry['id']
+        return entry
 
     @staticmethod
     def _encode(entry, is_log=False, is_report=False):
@@ -76,6 +79,7 @@ class Formatter:
         if is_report:
             if 'last_position' in entry:
                 entry['last_position'] = Point(entry['last_position']).wkt
+        return entry
     
     @staticmethod
     def _format(entry, is_log=False, is_report=False):
@@ -93,3 +97,4 @@ class Formatter:
                 entry['last_position'] = _remove_space(entry['last_position'])
             if 'battery_lvl' in entry:
                 entry['battery_lvl'] = math.ceil(entry['battery_lvl'])
+        return entry
