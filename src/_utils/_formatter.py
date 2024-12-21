@@ -21,8 +21,6 @@ class Formatter:
             entry['last_position'] = entry.pop('position')
         if 'battery_level' in entry:
             entry['battery_lvl'] = entry.pop('battery_level')
-        if 'bike_id' in entry:
-            entry['id'] = entry.pop('bike_id')
 
     @staticmethod
     def _add(entry):

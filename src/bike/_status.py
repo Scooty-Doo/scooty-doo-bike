@@ -6,7 +6,7 @@ class Status:
         self.update(bike)
 
     def update(self, bike):
-        self.bike_id = bike.bike_id
+        self.id = bike.bike_id
         self.mode = bike.mode.current
         self.battery_level = bike.battery.level
         self.speed = bike.speed.current
