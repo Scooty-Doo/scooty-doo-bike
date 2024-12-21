@@ -59,13 +59,6 @@ class Bike:
         self.mode.sleep() if not maintenance else self.mode.maintenance()
         self.report()
 
-    # TODO: uppdatera bike.move() och Route metoder 
-    # + alla move kommandon under en trip bildar en linestring 
-    # + move ska kunna ta en linestring argument och följer då denna
-    # + kan kombinera move(position) med move(linestring) genom att samtliga move kommandon under en trip bildar en linestring
-    # + för en move(position) räkna bara avstånd och minuter raka vägen mellan A och B med default speed om ej zone (eller speed från närmaste zone)
-    # + för en move(linestring) kör move(position) för varje position i linestringen. Rekursivt anropa move(position) för varje position i linestringen?
-
     def move(self, position_or_linestring, ignore_zone=True): # TODO: behövs ignore_zone? för åka till forbidden_zone?
         """Move the bike to a new position or follow a linestring."""
         def _move(position):

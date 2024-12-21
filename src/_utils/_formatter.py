@@ -48,8 +48,10 @@ class Formatter:
 
     @staticmethod
     def _encode(entry):
-        if 'path_taken' in entry:
+        if 'path_taken' in entry and len(entry['path_taken']) > 1:
             entry['path_taken'] = LineString(entry['path_taken']).wkt
+        else:
+            entry['path_taken'] = None
         if 'start_position' in entry:
             entry['start_position'] = Point(entry['start_position']).wkt
         if 'end_position' in entry:
@@ -61,7 +63,7 @@ class Formatter:
     def _format(entry):
         def _remove_space(string):
             return string.replace(" ", "", 1)
-        if 'path_taken' in entry:
+        if 'path_taken' in entry and entry['path_taken'] is not None:
             entry['path_taken'] = _remove_space(entry['path_taken'])
         if 'start_position' in entry:
             entry['start_position'] = _remove_space(entry['start_position'])
