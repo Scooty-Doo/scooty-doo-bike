@@ -62,7 +62,6 @@ if __name__ == "__main__":
 # BIKE_ID=1 TOKEN=token python -m src.main
 
 # TODO: Create Docker related files.
-# TODO: Create class for mapping bike reports/logs etc. to backend API expected format (e.g. Messages, Formatter or Mapper class).
 # TODO: Does authentication work as it is? Token not through parameter but through environment variable only in classes (Brain, Outgoing etc.)
 # TODO: Utöka testning + uppdatera existerande tester i Bike.
 # TODO: Ordna linting.

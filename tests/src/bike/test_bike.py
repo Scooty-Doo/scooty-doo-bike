@@ -3,9 +3,6 @@ from src.bike.bike import Bike
 from src._utils._errors import AlreadyUnlockedError, AlreadyLockedError, NotChargingZoneError
 from src._utils._map import Map
 
-# TODO: Remove "ignore_zone" parameter from tests involving lock().
-# TODO: update fixtures to include city_id.
-
 @pytest.mark.usefixtures("mock_environment")
 class TestBike:
 
