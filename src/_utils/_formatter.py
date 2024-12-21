@@ -1,6 +1,11 @@
 from shapely.geometry import Point, LineString
 import math
 
+# TODO: make sure path_taken is not included in report
+# TODO: make sure that booleans are lower()
+# TODO: id need not be included in report
+# TODO: separate into report and log formatters to avoid side effects
+
 class Formatter:
 
     @staticmethod
