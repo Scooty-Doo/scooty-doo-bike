@@ -1,6 +1,7 @@
 from .._utils._errors import AlreadyUnlockedError, AlreadyLockedError
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException, Depends
+from typing import Union
 
 app = FastAPI()
 
@@ -31,13 +32,12 @@ def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 class MoveRequest(BaseModel):
-    longitude: float
-    latitude: float
+    position_or_linestring: Union[tuple, list[tuple]]
 
 @app.post("/move")
 def move(request: MoveRequest, brain = Depends(get_brain)):
     try:
-        brain.bike.move(request.longitude, request.latitude)
+        brain.bike.move(request.position_or_linestring)
         return {
             "message": "Moved and battery drained. Report sent.",
             "data": {
