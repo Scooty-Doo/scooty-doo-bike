@@ -50,8 +50,7 @@ if __name__ == "__main__":
             return brain
         
         app.dependency_overrides[get_brain] = brain_dependency_override
-        port = int(os.getenv("PORT", "8000"))
-        # TODO: ordna så att port är 8000 + bike_id
+        port = 8000 + int(bike_id)
         uvicorn.run(app, host="0.0.0.0", port=port)
 
     brain_thread_instance = threading.Thread(target=brain_thread)
@@ -60,7 +59,7 @@ if __name__ == "__main__":
 
     start_fastapi()
 
-# BIKE_ID=bike_1 TOKEN=token python -m src.main
+# BIKE_ID=1 TOKEN=token python -m src.main
 
 # TODO: Create Docker related files.
 # TODO: Create class for mapping bike reports/logs etc. to backend API expected format (e.g. Messages, Formatter or Mapper class).

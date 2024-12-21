@@ -10,7 +10,7 @@ from src._utils._map import Map
 class TestBike:
 
     def test_unlocking_bike(self, mock_zones, mock_zone_types):
-        bike = Bike(bike_id="bike_1", longitude=0.0, latitude=0.0)
+        bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         assert bike.mode.is_locked()
         assert bike.user is None
@@ -21,7 +21,7 @@ class TestBike:
             bike.unlock(user_id=456, trip_id=789)
 
     def test_locking_bike_in_parking_zone(self, mock_zones, mock_zone_types):
-        bike = Bike(bike_id="bike_1", longitude=0.0, latitude=0.0)
+        bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
         assert bike.mode.is_unlocked()
@@ -37,7 +37,7 @@ class TestBike:
             bike.lock()
 
     def test_moving_bike(self, mock_zones, mock_zone_types):
-        bike = Bike(bike_id="bike_1", longitude=0.0, latitude=0.0)
+        bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
         initial_battery = bike.battery.level
@@ -49,7 +49,7 @@ class TestBike:
         assert bike.speed.current == mock_zone_types["charging"]["speed_limit"]
 
     def test_charging_in_charging_zone(self, mock_zones, mock_zone_types):
-        bike = Bike(bike_id="bike_1", longitude=0.0, latitude=0.0)
+        bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
         charging_zone = Map.Zone.get_charging_zone(bike.zones)
@@ -60,14 +60,14 @@ class TestBike:
         assert bike.battery.level == 100.0
 
     def test_charging_outside_charging_zone(self, mock_zones, mock_zone_types):
-        bike = Bike(bike_id="bike_1", longitude=0.0, latitude=0.0)
+        bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
         with pytest.raises(NotChargingZoneError):
             bike.charge(desired_level=100.0)
 
     def test_maintenance_mode_when_battery_is_low(self, mock_zones, mock_zone_types):
-        bike = Bike(bike_id="bike_1", longitude=0.0, latitude=0.0)
+        bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
         bike.battery.level = 15.0 # Drain battery to below threshold.
