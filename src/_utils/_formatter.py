@@ -9,25 +9,27 @@ class Formatter:
         Formatter._remove(entry)
         Formatter._encode(entry)
         Formatter._format(entry)
+        return entry
 
     @staticmethod
     def _rename(entry):
         # LOG
         if 'route' in entry:
-            entry['path_taken'] = entry['route']
+            entry['path_taken'] = entry.pop('route')
         # REPORT
         if 'position' in entry:
-            entry['last_position'] = entry['position']
+            entry['last_position'] = entry.pop('position')
         if 'battery_level' in entry:
-            entry['battery_lvl'] = entry['battery_level']
+            entry['battery_lvl'] = entry.pop('battery_level')
         if 'bike_id' in entry:
-            entry['id'] = entry['bike_id']
+            entry['id'] = entry.pop('bike_id')
 
     @staticmethod
     def _add(entry):
         # REPORT
         if 'mode' in entry:
             entry['is_available'] = True if entry['mode'] == 'sleeping' else False
+            entry.pop('mode')
 
     @staticmethod
     def _remove(entry):

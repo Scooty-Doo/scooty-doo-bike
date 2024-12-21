@@ -7,14 +7,13 @@ class Reports:
         self.reports = []
 
     def add(self, status):
-        status = Formatter.format(status)
         self.reports.append(status)
     
     def get(self):
-        return self.reports
+        return [Formatter.format(report) for report in self.reports]
     
     def last(self):
-        return self.reports[-1]
+        return Formatter.format(self.reports[-1])
     
     @staticmethod
     def reports_needed(duration) -> int:

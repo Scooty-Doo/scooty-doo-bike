@@ -31,4 +31,5 @@ def mock_environment(monkeypatch):
     monkeypatch.setenv("PORT", "8000")
 
 # python -m pytest
+# python -m pytest -s
 # python -m pytest --cov=src --cov-report=html

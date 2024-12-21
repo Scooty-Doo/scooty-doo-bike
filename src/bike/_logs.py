@@ -5,7 +5,7 @@ class Logs:
         self.logs = []
 
     def add(self, trip):
-        log = Formatter.format(trip.__dict__)
+        log = trip.__dict__
         if self._exists(log):
             index = self._get_log_index(log)
             self.logs[index] = log
@@ -16,10 +16,10 @@ class Logs:
         self.add(trip)
 
     def get(self):
-        return self.logs
+        return [Formatter.format(log) for log in self.logs]
     
     def last(self):
-        return self.logs[-1]
+        return Formatter.format(self.logs[-1])
 
     def _exists(self, log):
         return any([log["id"] == entry["id"] for entry in self.logs])
