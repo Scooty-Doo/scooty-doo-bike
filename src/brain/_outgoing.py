@@ -56,7 +56,7 @@ class Logs():
             logs = [logs]
         try:
             for log in logs:
-                response = requests.post(url, headers=self.headers, data=json.dump(log))
+                response = requests.post(url, headers=self.headers, data=json.dumps(log))
                 response.raise_for_status()
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to send logs: {e}")
@@ -67,7 +67,7 @@ class Logs():
             logs = [logs]
         try:
             for log in logs:
-                response = requests.patch(url, headers=self.headers, data=json.dump(log))
+                response = requests.patch(url, headers=self.headers, data=json.dumps(log))
                 response.raise_for_status()
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to update logs: {e}")
@@ -84,7 +84,7 @@ class Reports():
         if isinstance(reports, dict):
             reports = [reports]
         try:
-            response = requests.patch(url, headers=self.headers, data=json.dump(reports[-1])) # TODO: -1 för att bara skicka senaste reporten? här eller på annat vis?
+            response = requests.patch(url, headers=self.headers, data=json.dumps(reports[-1])) # TODO: -1 för att bara skicka senaste reporten? här eller på annat vis?
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to send reports: {e}")
