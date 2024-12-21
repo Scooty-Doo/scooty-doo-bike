@@ -3,15 +3,10 @@ load_dotenv()
 import threading
 import os
 import uvicorn
-from ._utils._errors import Errors
-from ._utils._settings import Settings
-from .brain.brain import Brain
-from .brain._incoming import app, get_brain
-
-print("DEBUG: BACKEND_URL =", os.getenv("BACKEND_URL"))
-print("DEBUG: BIKE_ID =", os.getenv("BIKE_ID"))
-print("DEBUG: TOKEN =", os.getenv("TOKEN"))
-print("DEBUG: LONGITUDE =", os.getenv("LONGITUDE"))
+from src._utils._errors import Errors
+from src._utils._settings import Settings
+from src.brain.brain import Brain
+from src.brain._incoming import app, get_brain
 
 def help():
     print("""
@@ -34,10 +29,9 @@ def help():
 
 if __name__ == "__main__":
     bike_id = os.getenv("BIKE_ID")
-    longitude = Settings.Position.default_longitude if not os.getenv("LONGITUDE", "") else os.getenv("LONGITUDE")
-    latitude = Settings.Position.default_latitude if not os.getenv("LATITUDE", "") else os.getenv("LATITUDE")
+    longitude = Settings.Position.default_longitude# if not os.getenv("LONGITUDE", "") else os.getenv("LONGITUDE")
+    latitude = Settings.Position.default_latitude# if not os.getenv("LATITUDE", "") else os.getenv("LATITUDE")
     token = os.getenv("TOKEN")
-    backend_url = os.getenv("BACKEND_URL")
 
     required = [bike_id, token]
     for environment_variable in required:
@@ -70,7 +64,7 @@ if __name__ == "__main__":
 
     start_fastapi()
 
-# BIKE_ID=1 TOKEN=token python -m src.main
+# BIKE_ID=1 TOKEN=token python -m main
 
 # TODO: Create Docker related files.
 # TODO: Does authentication work as it is? Token not through parameter but through environment variable only in classes (Brain, Outgoing etc.)

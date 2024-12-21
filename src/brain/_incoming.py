@@ -34,6 +34,7 @@ def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
 class MoveRequest(BaseModel):
     position_or_linestring: Union[tuple, list[tuple]]
 
+# TODO: gör så att den kan hantera tuple + Point WKR + list[tuple] + LineString WKR
 @app.post("/move")
 def move(request: MoveRequest, brain = Depends(get_brain)):
     try:

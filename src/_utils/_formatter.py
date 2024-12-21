@@ -28,11 +28,15 @@ class Formatter:
         if is_log:
             if 'route' in entry:
                 entry['path_taken'] = entry.pop('route')
+            if 'id' in entry:
+                entry['trip_id'] = entry.pop('id')
         if is_report:
             if 'position' in entry:
                 entry['last_position'] = entry.pop('position')
             if 'battery_level' in entry:
                 entry['battery_lvl'] = entry.pop('battery_level')
+            if 'id' in entry:
+                entry['bike_id'] = entry.pop('id')
         return entry
 
     @staticmethod
@@ -52,6 +56,8 @@ class Formatter:
                 del entry['duration']
             if 'distance' in entry:
                 del entry['distance']
+            #if 'trip_id' in entry:
+            #    del entry['trip_id']
         if is_report:
             if 'timestamp' in entry:
                 del entry['timestamp']
@@ -59,8 +65,8 @@ class Formatter:
                 del entry['distance']
             if 'speed' in entry:
                 del entry['speed']
-            if 'id' in entry:
-                del entry['id']
+            if 'bike_id' in entry:
+                del entry['bike_id']
         return entry
 
     @staticmethod
