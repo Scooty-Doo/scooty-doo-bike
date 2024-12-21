@@ -55,7 +55,7 @@ class Map:
             zone = Map.Zone.get(zones, position)
             zone_type = Map.Zone.get_zone_type(zone)
             speed_limit = zone_types[zone_type]['speed_limit']
-            return speed_limit if speed_limit else Settings.Speed.default_speed_limit
+            return speed_limit
 
         # TODO: remove if not used
         #@staticmethod

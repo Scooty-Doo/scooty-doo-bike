@@ -7,7 +7,6 @@ class Settings:
         default_latitude = float(0.0)
 
     class Speed:
-        max_speed = 20
         default_speed_limit = 20
 
     class Battery:

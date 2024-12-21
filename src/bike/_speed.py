@@ -5,11 +5,12 @@ class Speed:
     def __init__(self):
         self.settings = Settings.Speed()
         self.current = 0
-        self.max = self.settings.max_speed
+        self.default = self.settings.default_speed_limit
 
     def limit(self, zones, zone_types, position):
         """Fetch speed limit for position."""
-        self.current = Map.Zone.get_speed_limit(zones, zone_types, position)
+        speed_limit = Map.Zone.get_speed_limit(zones, zone_types, position)
+        self.current = speed_limit if speed_limit else self.default
     
     def terminate(self):
         self.current = 0
