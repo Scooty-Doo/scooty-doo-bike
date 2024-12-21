@@ -8,6 +8,7 @@ class Settings:
 
     class Speed:
         max_speed = 20
+        default_speed_limit = 20
 
     class Battery:
         drain_per_minute = 0.05

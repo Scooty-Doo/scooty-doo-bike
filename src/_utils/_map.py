@@ -1,9 +1,10 @@
-from shapely.geometry import Point, Polygon, LineString
+from shapely.geometry import Point
 from shapely.wkt import loads as wkt_loads
 import random
-
 import json
 import os
+
+from ._settings import Settings
 
 ZONES_FILENAME = '_zones.json'
 ZONE_TYPES_FILENAME = '_zone_types.json'
@@ -54,7 +55,7 @@ class Map:
             zone = Map.Zone.get(zones, position)
             zone_type = Map.Zone.get_zone_type(zone)
             speed_limit = zone_types[zone_type]['speed_limit']
-            return speed_limit
+            return speed_limit if speed_limit else Settings.Speed.default_speed_limit
 
         # TODO: remove if not used
         #@staticmethod
