@@ -3,7 +3,6 @@ from .._utils._clock import Clock
 from .._utils._errors import Errors
 from .._utils._map import Map
 from .._utils._settings import Settings
-from .._utils._route import Route
 from ._battery import Battery
 from ._position import Position
 from ._logs import Logs
