@@ -5,7 +5,7 @@ class Logs:
         self.logs = []
 
     def add(self, trip):
-        log = trip.__dict__
+        log = trip
         if self._exists(log):
             index = self._get_log_index(log)
             self.logs[index] = log
