@@ -1,6 +1,5 @@
 from shapely.geometry import Point, LineString
 import math
-import json
 
 class Formatter:
 

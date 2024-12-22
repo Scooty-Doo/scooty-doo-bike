@@ -16,3 +16,6 @@ class Trip:
     
     def add_movement(self, position):
         self.route.append(position)
+
+    def get(self):
+        return self.__dict__

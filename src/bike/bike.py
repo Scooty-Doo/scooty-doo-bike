@@ -40,7 +40,7 @@ class Bike:
         self.user = User(user_id)
         self.mode.usage()
         self.user.start_trip(self.bike_id, trip_id, self.position.current)
-        trip = self.user.trip
+        trip = self.user.trip.get()
         self.logs.add(trip)
         self.speed.limit(self.city.zones, self.zone_types, self.position.current)
         self.report()
@@ -51,7 +51,7 @@ class Bike:
             raise Errors.already_locked()
         if not ignore_zone and not Map.Position.is_within_zone(self.city.zones, self.position.current):
             raise Errors.position_not_within_zone()
-        trip = self.user.trip
+        trip = self.user.trip.get()
         self.logs.update(trip)
         self.user.end_trip(self.position.current)
         self.user = None
@@ -77,7 +77,7 @@ class Bike:
                 self.report()
                 Clock.sleep(duration / total_reports) # NOTE: Right interval?
             self.user.trip.add_movement(self.position.current)
-            self.logs.update(self.user.trip)
+            self.logs.update(self.user.trip.get())
             self.check()
         
         if self.mode.is_locked():
