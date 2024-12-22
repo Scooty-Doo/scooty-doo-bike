@@ -18,7 +18,7 @@ class Settings:
         minimum_battery_level_for_usage = 20.0
 
     class Endpoints:
-        backend_url = "http://127.0.0.1:8000"
+        backend_url = os.getenv("BACKEND_URL")
         bike_id = os.getenv("BIKE_ID")
 
         # TODO: Endpoints need to get the values through parameters (convert attribute to method) or environment (if BIKE_ID).

@@ -8,6 +8,11 @@ from src._utils._settings import Settings
 from src.brain.brain import Brain
 from src.brain._incoming import app, get_brain
 
+print("DEBUG: BACKEND_URL =", os.getenv("BACKEND_URL"))
+print("DEBUG: BIKE_ID =", os.getenv("BIKE_ID"))
+print("DEBUG: TOKEN =", os.getenv("TOKEN"))
+print("DEBUG: LONGITUDE =", os.getenv("LONGITUDE"))
+
 def help():
     print("""
             Required Environment Variables:
@@ -56,7 +61,7 @@ if __name__ == "__main__":
         
         app.dependency_overrides[get_brain] = brain_dependency_override
         port = 8000 + int(bike_id)
-        uvicorn.run(app, host="0.0.0.0", port=port)
+        uvicorn.run(app, host="0.0.0.0", port=port, log_level="debug", reload=True)
 
     brain_thread_instance = threading.Thread(target=brain_thread)
     brain_thread_instance.daemon = True

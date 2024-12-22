@@ -5,7 +5,7 @@ class Trip:
     def __init__(self, user_id, bike_id, trip_id, position):
         self.user_id = user_id
         self.bike_id = bike_id
-        self.id = trip_id
+        self.trip_id = trip_id
         self.start_time = Clock.now()
         self.start_position = position
         self.route = [self.start_position]

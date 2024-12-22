@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException, Depends
 from typing import Union
 
-app = FastAPI(debug=True)
+app = FastAPI()
 
 def get_brain():
     """

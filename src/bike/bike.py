@@ -59,9 +59,11 @@ class Bike:
         self.mode.sleep() if not maintenance else self.mode.maintenance()
         self.report()
 
-    def move(self, position_or_linestring, ignore_zone=True): # TODO: behövs ignore_zone? för åka till forbidden_zone?
+    # TODO: add ignore_mode parameter
+    def move(self, position_or_linestring): # TODO: behövs ignore_zone? för åka till forbidden_zone?
         """Move the bike to a new position or follow a linestring."""
         def _move(position):
+            position = (float(position[0]), float(position[1]))
             speed = self.speed.default
             distance = Map.Position.get_distance(self.position.current, position)
             duration = distance / speed
@@ -73,7 +75,7 @@ class Bike:
                 self.position.change(current_position[0], current_position[1])
                 self.speed.limit(self.city.zones, self.zone_types, self.position.current)
                 self.report()
-                Clock.sleep(Settings.Report.report_interval)
+                Clock.sleep(duration / total_reports) # NOTE: Right interval?
             self.user.trip.add_movement(self.position.current)
             self.logs.update(self.user.trip)
             self.check()
@@ -136,7 +138,7 @@ class Bike:
         for _ in range(total_reports):
             self.battery.charge(Settings.Report.report_interval)
             self.report()
-            Clock.sleep(Settings.Report.report_interval)
+            Clock.sleep(duration / total_reports) # NOTE: Right interval?
 
     def report(self):
         """Add a report."""
