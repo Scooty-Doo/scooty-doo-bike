@@ -3,10 +3,10 @@ load_dotenv()
 import threading
 import os
 import uvicorn
-from src._utils._errors import Errors
-from src._utils._settings import Settings
-from src.brain.brain import Brain
-from src.brain._incoming import app, get_brain
+from ._utils._errors import Errors
+from ._utils._settings import Settings
+from .brain.brain import Brain
+from .brain._incoming import app, get_brain
 
 print("DEBUG: BACKEND_URL =", os.getenv("BACKEND_URL"))
 print("DEBUG: BIKE_ID =", os.getenv("BIKE_ID"))
