@@ -1,0 +1,14 @@
+{
+    "parking": {
+        "speed_limit": 5
+    },
+    "charging": {
+        "speed_limit": 5
+    },
+    "slow": {
+        "speed_limit": 10
+    },
+    "regular": {
+        "speed_limit": 20
+    }
+}
