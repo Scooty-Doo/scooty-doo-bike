@@ -1,5 +1,5 @@
 from .._utils._clock import Clock
-
+import copy
 
 class Status:
     def __init__(self, bike):
@@ -16,4 +16,4 @@ class Status:
 
     def get(self, bike):
         self.update(bike)
-        return self.__dict__
+        return copy.deepcopy(self.__dict__)
