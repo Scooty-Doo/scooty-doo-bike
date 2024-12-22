@@ -1,5 +1,6 @@
 
 from .._utils._clock import Clock
+import copy
 
 class Trip:
     def __init__(self, user_id, bike_id, trip_id, position):
@@ -18,4 +19,4 @@ class Trip:
         self.route.append(position)
 
     def get(self):
-        return self.__dict__
+        return copy.deepcopy(self.__dict__)
