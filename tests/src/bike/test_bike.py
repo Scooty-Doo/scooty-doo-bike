@@ -40,7 +40,7 @@ class TestBike:
         initial_battery = bike.battery.level
         charging_zone = Map.Zone.get_charging_zone(bike.zones)
         charging_position = Map.Zone.get_centroid_position(charging_zone)
-        bike.move(charging_position[0], charging_position[1])
+        bike.move(charging_position)
         assert bike.battery.level < initial_battery # Check if battery drained.
         bike.speed.limit(bike.zones, bike.zone_types, bike.position.current)
         assert bike.speed.current == mock_zone_types["charging"]["speed_limit"]

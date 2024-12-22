@@ -44,6 +44,11 @@ class OutOfBoundsError(Exception):
     def __init__(self, message="This position is out of bounds. It is not in one of the zones on the map."):
         super().__init__(message)
 
+class InvalidPositionError(Exception):
+    """Custom error raised when an invalid position is passed."""
+    def __init__(self, message="Invalid position."):
+        super().__init__(message)
+
 class Errors():
     # TODO: remove if not used
     #@staticmethod
@@ -80,3 +85,7 @@ class Errors():
     @staticmethod
     def position_not_within_zone():
         raise PositionNotWithinZoneError()
+    
+    @staticmethod
+    def invalid_position():
+        raise InvalidPositionError()

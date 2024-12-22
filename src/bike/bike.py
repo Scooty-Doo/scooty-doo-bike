@@ -77,14 +77,22 @@ class Bike:
             self.user.trip.add_movement(self.position.current)
             self.logs.update(self.user.trip)
             self.check()
+        
+        if self.mode.is_locked():
+            raise Errors.already_locked()
+
+        if not isinstance(position_or_linestring, tuple) and not isinstance(position_or_linestring, list):
+            raise Errors.invalid_position()
 
         if isinstance(position_or_linestring, tuple):
-            _move(position_or_linestring, ignore_zone)
+            _move(position_or_linestring)
+        elif isinstance(position_or_linestring, list) and len(position_or_linestring) == 2:
+            _move(tuple(position_or_linestring))
         elif isinstance(position_or_linestring, list):
             for position in position_or_linestring:
-                _move(position, ignore_zone)
+                _move(position)
         else:
-            pass # TODO: raise custom error
+            raise Errors.invalid_position()
 
     def relocate(self, longitude, latitude, ignore_zone=True):
         """Relocate the bike to a new position without draining the battery."""

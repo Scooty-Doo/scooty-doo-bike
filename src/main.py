@@ -62,7 +62,7 @@ if __name__ == "__main__":
         
         app.dependency_overrides[get_brain] = brain_dependency_override
         port = 8000 + int(bike_id)
-        uvicorn.run(app, host="0.0.0.0", port=port)
+        uvicorn.run(app, host="0.0.0.0", port=port, log_level="debug")
 
     brain_thread_instance = threading.Thread(target=brain_thread)
     brain_thread_instance.daemon = True

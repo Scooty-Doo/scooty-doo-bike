@@ -1,9 +1,9 @@
-from .._utils._errors import AlreadyUnlockedError, AlreadyLockedError
+from .._utils._errors import AlreadyUnlockedError, AlreadyLockedError, InvalidPositionError
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException, Depends
 from typing import Union
 
-app = FastAPI()
+app = FastAPI(debug=True)
 
 def get_brain():
     """
@@ -43,6 +43,10 @@ def move(request: MoveRequest, brain = Depends(get_brain)):
             "message": "Moved and battery drained. Report sent.",
             "data": {
                 "report": brain.bike.reports.last()}}
+    except AlreadyLockedError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except InvalidPositionError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
