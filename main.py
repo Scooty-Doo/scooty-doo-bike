@@ -34,8 +34,8 @@ def help():
 
 if __name__ == "__main__":
     bike_id = os.getenv("BIKE_ID")
-    longitude = Settings.Position.default_longitude# if not os.getenv("LONGITUDE", "") else os.getenv("LONGITUDE")
-    latitude = Settings.Position.default_latitude# if not os.getenv("LATITUDE", "") else os.getenv("LATITUDE")
+    longitude = Settings.Position.default_longitude if not os.getenv("LONGITUDE", "") else os.getenv("LONGITUDE")
+    latitude = Settings.Position.default_latitude if not os.getenv("LATITUDE", "") else os.getenv("LATITUDE")
     token = os.getenv("TOKEN")
 
     required = [bike_id, token]
