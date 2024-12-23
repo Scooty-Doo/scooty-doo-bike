@@ -52,13 +52,12 @@ def move(request: MoveRequest, brain = Depends(get_brain)):
 
 
 class RelocateRequest(BaseModel):
-    longitude: float
-    latitude: float
+    position: Union[tuple, list]
 
 @app.post("/relocate")
 def relocate(request: RelocateRequest, brain = Depends(get_brain)):
     try:
-        brain.bike.relocate(request.longitude, request.latitude)
+        brain.bike.relocate(request.position)
         return {
             "message": "Relocated. Report sent.", 
             "data": {
