@@ -61,7 +61,7 @@ if __name__ == "__main__":
         
         app.dependency_overrides[get_brain] = brain_dependency_override
         port = 8000 + int(bike_id)
-        uvicorn.run(app, host="0.0.0.0", port=port, log_level="debug", reload=True)
+        uvicorn.run("src.main:app", host="0.0.0.0", port=port, log_level="debug", reload=True)
 
     brain_thread_instance = threading.Thread(target=brain_thread)
     brain_thread_instance.daemon = True
@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
     start_fastapi()
 
-# BIKE_ID=1 TOKEN=token python -m main
+# BIKE_ID=1 TOKEN=token python -m src.main
 
 # TODO: Create Docker related files.
 # TODO: Does authentication work as it is? Token not through parameter but through environment variable only in classes (Brain, Outgoing etc.)
