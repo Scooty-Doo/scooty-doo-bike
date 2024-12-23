@@ -29,7 +29,7 @@ def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
     except AlreadyUnlockedError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}")
 
 class MoveRequest(BaseModel):
     position_or_linestring: Union[tuple, list[tuple]]
@@ -48,7 +48,7 @@ def move(request: MoveRequest, brain = Depends(get_brain)):
     except InvalidPositionError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}")
 
 
 class RelocateRequest(BaseModel):
@@ -64,7 +64,7 @@ def relocate(request: RelocateRequest, brain = Depends(get_brain)):
             "data": {
                 "report": brain.bike.reports.last()}}
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}")
 
 
 class EndTripRequest(BaseModel):	
@@ -83,7 +83,7 @@ def end_trip(request: EndTripRequest, brain = Depends(get_brain)):
     except AlreadyLockedError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}")
 
 
 class CheckRequest(BaseModel):
@@ -98,7 +98,7 @@ def check(request: CheckRequest, brain = Depends(get_brain)):
             "data": {
                 "report": brain.bike.reports.last()}}
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}")
 
 
 class ReportRequest(BaseModel):
