@@ -11,4 +11,6 @@ class User:
         
     def end_trip(self, position):
         self.trip.end_trip(position)
+
+    def remove_trip(self):
         self.trip = None

@@ -52,9 +52,10 @@ class Bike:
             raise Errors.already_locked()
         if not ignore_zone and not Map.Position.is_within_zone(self.city.zones, self.position.current):
             raise Errors.position_not_within_zone()
+        self.user.end_trip(self.position.current)
         trip = self.user.trip.get()
         self.logs.update(trip)
-        self.user.end_trip(self.position.current)
+        self.user.remove_trip()
         self.user = None
         self.speed.terminate()
         self.mode.sleep() if not maintenance else self.mode.maintenance()
