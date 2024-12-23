@@ -1,6 +1,6 @@
 from .._user._user import User
 from .._utils._clock import Clock
-from .._utils._errors import Errors
+from .._utils._errors import Errors, InvalidPositionTypeError, InvalidPositionLengthError, InvalidPositionCoordinatesError, PositionNotWithinZoneError
 from .._utils._map import Map
 from .._utils._settings import Settings
 from .._utils._validate import Validate
@@ -52,9 +52,10 @@ class Bike:
             raise Errors.already_locked()
         if not ignore_zone and not Map.Position.is_within_zone(self.city.zones, self.position.current):
             raise Errors.position_not_within_zone()
+        self.user.end_trip(self.position.current)
         trip = self.user.trip.get()
         self.logs.update(trip)
-        self.user.end_trip(self.position.current)
+        self.user.archive_trip()
         self.user = None
         self.speed.terminate()
         self.mode.sleep() if not maintenance else self.mode.maintenance()
@@ -63,12 +64,7 @@ class Bike:
     def move(self, position_or_linestring):
         """Move the bike to a new position or follow a linestring."""
         def _move(position):
-            if not Position.is_valid(position_or_linestring):
-                raise Errors.invalid_position()
-            try:
-                position = (float(position[0]), float(position[1]))
-            except (TypeError, ValueError):
-                raise Errors.invalid_position()
+            position = (float(position[0]), float(position[1])) # TODO: can be removed?
             speed_in_kmh = self.speed.default
             distance_in_km = Map.Position.get_distance_in_km(self.position.current, position)
             total_duration_in_minutes = Clock.get_duration_in_minutes(distance_in_km, speed_in_kmh)
@@ -88,21 +84,20 @@ class Bike:
             self.check()
         if self.mode.is_locked():
             raise Errors.already_locked()
-        if not Position.is_valid(position_or_linestring) and not Validate.is_valid_linestring(position_or_linestring):
-            raise Errors.invalid_position()
-        if isinstance(position_or_linestring, tuple) \
-            or (isinstance(position_or_linestring, list) and len(position_or_linestring) == 2):
+        if Position.is_position(position_or_linestring):
             _move(position_or_linestring)
-        elif isinstance(position_or_linestring, list):
+        elif Validate.is_linestring(position_or_linestring):
             for position in position_or_linestring:
                 _move(position)
+        elif not Position.is_position(position_or_linestring) or not Validate.is_linestring(position_or_linestring):
+                Validate.position_or_linestring(position_or_linestring)
 
     def relocate(self, position, ignore_zone=True):
         """Relocate the bike to a new position without draining the battery."""
         if not ignore_zone and not Map.Position.is_within_zone(self.zones, position):
             raise Errors.out_of_bounds()
-        if not Position.is_valid(position):
-            raise Errors.invalid_position()
+        if not Position.is_position(position):
+            Validate.position(position)
         self.position.change(position[0], position[1])
         self.city.switch(self.zones, self.position.current)
         self.speed.limit(self.city.zones, self.zone_types, self.position.current)

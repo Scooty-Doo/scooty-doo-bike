@@ -1,5 +1,4 @@
 from ._trip import Trip
-from uuid import uuid4 as uuid
 
 class User:
     def __init__(self, user_id):
@@ -11,4 +10,6 @@ class User:
         
     def end_trip(self, position):
         self.trip.end_trip(position)
+    
+    def archive_trip(self): 
         self.trip = None

@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch
 from src.bike.bike import Bike
-from src._utils._errors import AlreadyUnlockedError, AlreadyLockedError, NotChargingZoneError, PositionNotWithinZoneError, InvalidPositionError, OutOfBoundsError
+from src._utils._errors import AlreadyUnlockedError, AlreadyLockedError, NotChargingZoneError, PositionNotWithinZoneError, InvalidPositionTypeError, OutOfBoundsError, InvalidPositionLengthError
 from src._utils._map import Map
 
 @pytest.mark.usefixtures("mock_environment")
@@ -60,14 +60,14 @@ class TestBike:
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
-        with pytest.raises(InvalidPositionError):
-            bike.move("invalid_position")
+        with pytest.raises(InvalidPositionTypeError):
+            bike.move("invalid_position_type")
 
     def test_move_invalid_position_length(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
-        with pytest.raises(InvalidPositionError):
+        with pytest.raises(InvalidPositionLengthError):
             bike.move([0.001])
 
     def test_move_with_tuple(self, mock_zones, mock_zone_types):
@@ -112,6 +112,11 @@ class TestBike:
         with pytest.raises(OutOfBoundsError):
             position = (999.0, 999.0)
             bike.relocate(position, ignore_zone=False)
+
+    def test_relocate_position_is_invalid_position(self, mock_zones, mock_zone_types):
+        bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
+        with pytest.raises(InvalidPositionTypeError):
+            bike.relocate("invalid_position")
 
     def test_charging_in_charging_zone(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)

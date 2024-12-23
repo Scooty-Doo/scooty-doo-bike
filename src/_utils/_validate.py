@@ -1,23 +1,44 @@
+from .._utils._errors import Errors, InvalidPositionTypeError, InvalidPositionLengthError, InvalidPositionCoordinatesError
+from ..bike._position import Position
+
 class Validate:
 
     @staticmethod
-    def is_valid_position(position):
+    def position(position):
         if not isinstance(position, (list, tuple)):
-            return False
+            raise Errors.invalid_position_type()
         if len(position) != 2:
-            return False
-        if not all(isinstance(coordinates, (int, float)) for coordinates in position):
-            return False
+            raise Errors.invalid_position_length()
+        if not all(isinstance(coordinate, (int, float)) for coordinate in position):
+            raise Errors.invalid_position_coordinates()
         return True
     
     @staticmethod
-    def is_valid_linestring(linestring):
-        if not isinstance(linestring, list):
+    def position_or_linestring(position_or_linestring):
+        def _position_or_linestring(position_or_linestring):
+            if Position.is_position(position_or_linestring):
+                return True
+            if not isinstance(position_or_linestring, (list, tuple)):
+                raise Errors.invalid_position_type()
+            for position in position_or_linestring:
+                if not isinstance(position, (list, tuple)):
+                    raise Errors.invalid_position_length()
+                Validate.position(position)
+            return True
+        try:
+            return _position_or_linestring(position_or_linestring)
+        except InvalidPositionTypeError:
+            raise Errors.invalid_position_type()
+        except InvalidPositionLengthError:
+            raise Errors.invalid_position_length()
+        except InvalidPositionCoordinatesError:
+            raise Errors.invalid_position_coordinates()
+    
+    @staticmethod
+    def is_linestring(linestring):
+        if not isinstance(linestring, (list, tuple)):
             return False
-        if not all(isinstance(position, (list, tuple)) for position in linestring):
-            return False
-        if not all(len(position) == 2 for position in linestring):
-            return False
-        if not all(Validate.is_valid_position(position) for position in linestring):
-            return False
+        for position in linestring:
+            if not Position.is_position(position):
+                return False
         return True

@@ -1,5 +1,3 @@
-from .._utils._validate import Validate
-
 class Position:
     def __init__(self, longitude, latitude):
         self.longitude = float(longitude)
@@ -12,5 +10,11 @@ class Position:
         self.current = (longitude, latitude)
 
     @staticmethod
-    def is_valid(position):
-        return Validate.is_valid_position(position)
+    def is_position(position):
+        if not isinstance(position, (list, tuple)):
+            return False
+        if len(position) != 2:
+            return False
+        if not all(isinstance(coordinates, (int, float)) for coordinates in position):
+            return False
+        return True

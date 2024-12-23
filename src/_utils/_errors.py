@@ -49,6 +49,18 @@ class InvalidPositionError(Exception):
     def __init__(self, message="Invalid position. Position must be a tuple of two floatable numbers."):
         super().__init__(message)
 
+class InvalidPositionTypeError(Exception):
+    def __init__(self, message="Position must be a list or tuple."):
+        super().__init__(message)
+
+class InvalidPositionLengthError(Exception):
+    def __init__(self, message="Position must contain exactly two elements."):
+        super().__init__(message)
+
+class InvalidPositionCoordinatesError(Exception):
+    def __init__(self, message="Each coordinate in position must be an int or float."):
+        super().__init__(message)
+
 class Errors():
     # TODO: remove if not used
     #@staticmethod
@@ -89,3 +101,15 @@ class Errors():
     @staticmethod
     def invalid_position():
         raise InvalidPositionError()
+    
+    @staticmethod
+    def invalid_position_type():
+        raise InvalidPositionTypeError()
+
+    @staticmethod
+    def invalid_position_length():
+        raise InvalidPositionLengthError()
+    
+    @staticmethod
+    def invalid_position_coordinates():
+        raise InvalidPositionCoordinatesError()
