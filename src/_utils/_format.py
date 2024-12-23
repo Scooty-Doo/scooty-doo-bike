@@ -1,17 +1,25 @@
 from shapely.geometry import Point, LineString
 import math
 
-class Formatter:
+class Format:
 
     @staticmethod
-    def format(entry):
-        is_log = Formatter._is_log(entry)
-        is_report = Formatter._is_report(entry)
-        entry = Formatter._rename(entry, is_log, is_report)
-        entry = Formatter._add(entry, is_log, is_report)
-        entry = Formatter._remove(entry, is_log, is_report)
-        entry = Formatter._encode(entry, is_log, is_report)
-        entry = Formatter._format(entry, is_log, is_report)
+    def log(entry):
+        return Format._apply_all_formatting(entry)
+    
+    @staticmethod
+    def report(entry):
+        return Format._apply_all_formatting(entry)
+
+    @staticmethod
+    def _apply_all_formatting(entry):
+        is_log = Format._is_log(entry)
+        is_report = Format._is_report(entry)
+        entry = Format._rename(entry, is_log, is_report)
+        entry = Format._add(entry, is_log, is_report)
+        entry = Format._remove(entry, is_log, is_report)
+        entry = Format._encode(entry, is_log, is_report)
+        entry = Format._format(entry, is_log, is_report)
         return entry
 
     @staticmethod

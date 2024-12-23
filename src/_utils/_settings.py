@@ -59,4 +59,4 @@ class Settings:
             get = f'{endpoint}/{{id}}'
 
     class Report:
-        report_interval = 5 # seconds
+        interval = 5

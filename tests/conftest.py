@@ -1,9 +1,7 @@
 import pytest
 import json
 import os
-from fastapi.testclient import TestClient
-from unittest.mock import MagicMock, patch
-from src.brain._incoming import app
+from unittest.mock import patch
 
 @pytest.fixture(scope="session")
 def mock_zones():
@@ -22,6 +20,18 @@ def mock_zone_types():
     with open(file_path, 'r') as f:
         zone_types = json.load(f)
     return zone_types
+
+@pytest.fixture(autouse=True)
+def mock_sleep(request):
+    """
+    Automatically mock Clock.sleep to prevent actual sleeping during tests.
+    This fixture is applied to all tests automatically due to autouse=True.
+    """
+    if request.node.cls.__name__ == "TestClock":
+        yield
+    else:
+        with patch('src.bike.bike.Clock.sleep', return_value=None):
+            yield
 
 @pytest.fixture
 def mock_environment(monkeypatch):

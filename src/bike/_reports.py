@@ -1,5 +1,5 @@
 from .._utils._settings import Settings
-from .._utils._formatter import Formatter
+from .._utils._format import Format
 import math
 
 class Reports:
@@ -10,13 +10,13 @@ class Reports:
         self.reports.append(status)
     
     def get(self):
-        return [Formatter.format(report) for report in self.reports]
+        return [Format.report(report) for report in self.reports]
     
     def last(self):
-        return Formatter.format(self.reports[-1])
+        return Format.report(self.reports[-1])
     
     @staticmethod
-    def reports_needed(duration) -> int:
-        total_reports = math.ceil(duration / Settings.Report.report_interval)
+    def reports_needed(duration_in_minutes) -> int:
+        total_reports = math.ceil(duration_in_minutes / (Settings.Report.interval / 60))
         total_reports = 1 if total_reports == 0 else total_reports
         return total_reports

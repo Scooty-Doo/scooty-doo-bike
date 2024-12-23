@@ -1,4 +1,4 @@
-from .._utils._formatter import Formatter
+from .._utils._format import Format
 
 class Logs:
     def __init__(self):
@@ -16,10 +16,10 @@ class Logs:
         self.add(trip)
 
     def get(self):
-        return [Formatter.format(log) for log in self.logs]
+        return [Format.log(log) for log in self.logs]
     
     def last(self):
-        return Formatter.format(self.logs[-1])
+        return Format.log(self.logs[-1])
 
     def _exists(self, log):
         return any([log["trip_id"] == entry["trip_id"] for entry in self.logs])

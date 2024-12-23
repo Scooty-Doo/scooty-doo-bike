@@ -6,10 +6,6 @@ class Battery:
     def __init__(self, battery_level=100.0):
         self.level = battery_level
         self.settings = Settings.Battery()
-
-    def update(self, settings):
-        for key, value in settings.__dict__.items():
-            setattr(self, key, value)
         
     def get_charge_time(self, desired_level=100.0):
         charging_left = desired_level - self.level

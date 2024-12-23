@@ -46,7 +46,7 @@ class OutOfBoundsError(Exception):
 
 class InvalidPositionError(Exception):
     """Custom error raised when an invalid position is passed."""
-    def __init__(self, message="Invalid position."):
+    def __init__(self, message="Invalid position. Position must be a tuple of two floatable numbers."):
         super().__init__(message)
 
 class Errors():

@@ -69,6 +69,7 @@ class Map:
             zone = Map.Zone.get(zones, position)
             if Map.Zone.get_zone_type(zone) == 'charging':
                 return True
+            return False
         
         # TODO: remove if not used
         #@staticmethod
@@ -125,7 +126,7 @@ class Map:
             with open(file_path) as f:
                 zone_types = json.load(f)
                 if not zone_types:
-                    return []
+                    return {}
             return zone_types
     
     class Position:
@@ -154,7 +155,7 @@ class Map:
             return closest_zone
         
         @staticmethod
-        def get_distance(start_position, end_position):
+        def get_distance_in_km(start_position, end_position):
             def _convert_to_kilometers(distance):
                 return distance / 1000
             start_point = Point(start_position)
@@ -175,7 +176,7 @@ class Map:
                 x = x1 + (x2 - x1) * fraction_of_distance_travelled
                 y = y1 + (y2 - y1) * fraction_of_distance_travelled
                 return (x, y)
-            distance = Map.Position.get_distance(start_position, end_position)
+            distance = Map.Position.get_distance_in_km(start_position, end_position)
             distance_travelled = _get_distance_travelled(speed, minutes_travelled)
             if distance_travelled >= distance:
                 return end_position

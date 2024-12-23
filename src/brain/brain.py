@@ -24,7 +24,7 @@ class Brain:
     def run(self):
         while self.running:
             self.send_report()
-            Clock.sleep(Settings.Report.report_interval)
+            Clock.sleep(Settings.Report.interval)
     
     def terminate(self):
         self.running = False
