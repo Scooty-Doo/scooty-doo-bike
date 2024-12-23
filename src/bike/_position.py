@@ -11,5 +11,6 @@ class Position:
         self.latitude = latitude
         self.current = (longitude, latitude)
 
-    def is_valid(self, position):
+    @staticmethod
+    def is_valid(position):
         return Validate.is_valid_position(position)

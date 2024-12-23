@@ -33,7 +33,8 @@ class TestBike:
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
-        bike.relocate(longitude=999.0, latitude=999.0, ignore_zone=True)
+        position = (999.0, 999.0)
+        bike.relocate(position, ignore_zone=True)
         with pytest.raises(PositionNotWithinZoneError):
             bike.lock(maintenance=False, ignore_zone=False)
 
@@ -109,7 +110,8 @@ class TestBike:
         bike.unlock(user_id=123, trip_id=456)
         bike.relocate_to_charging_zone()
         with pytest.raises(OutOfBoundsError):
-            bike.relocate(longitude=999.0, latitude=999.0, ignore_zone=False)
+            position = (999.0, 999.0)
+            bike.relocate(position, ignore_zone=False)
 
     def test_charging_in_charging_zone(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
@@ -117,7 +119,7 @@ class TestBike:
         bike.unlock(user_id=123, trip_id=456)
         charging_zone = Map.Zone.get_charging_zone(bike.zones)
         charging_position = Map.Zone.get_centroid_position(charging_zone)
-        bike.relocate(charging_position[0], charging_position[1])
+        bike.relocate(charging_position)
         bike.battery.level = 50.0
         bike.charge(desired_level=100.0)
         assert bike.battery.level == 100.0
