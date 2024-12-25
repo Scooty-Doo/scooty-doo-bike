@@ -68,7 +68,7 @@ class TestIntegration:
                 "city_id": 1,
                 "last_position": "POINT(23.11 34.22)",
                 "battery_lvl": 100,
-                "is_available": False,
+                "is_available": True,
             },
         },
     }
