@@ -41,6 +41,5 @@ python -m src.main
 
 To run the tests use:
 ```bash
-# This doesn't work currently
-pytest .
+python -m pytest
 ```
