@@ -26,7 +26,7 @@ class TestFormatter:
     def test_format_report_entry(self):
         report_entry = {
             "id": 1,
-            "mode": "sleeping",
+            "mode": "sleep",
             "battery_level": 75.5,
             "speed": 10,
             "position": (0.002, 0.002),
