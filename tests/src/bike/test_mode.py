@@ -77,5 +77,5 @@ class TestMode:
         invalid_mode = 'flying'
         with pytest.raises(InvalidModeError) as exc_info:
             Mode(mode=invalid_mode)
-        
+
         assert str(exc_info.value) == "Invalid mode."

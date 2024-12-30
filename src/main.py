@@ -1,19 +1,19 @@
-from dotenv import load_dotenv
-load_dotenv()
 import threading
 import os
 import uvicorn
+from dotenv import load_dotenv
 from ._utils._errors import Errors
 from ._utils._settings import Settings
 from .brain.brain import Brain
 from .brain._incoming import app, get_brain
+load_dotenv()
 
 print("DEBUG: BACKEND_URL =", os.getenv("BACKEND_URL"))
 print("DEBUG: BIKE_ID =", os.getenv("BIKE_ID"))
 print("DEBUG: TOKEN =", os.getenv("TOKEN"))
 print("DEBUG: LONGITUDE =", os.getenv("LONGITUDE"))
 
-def help():
+def show_help():
     print("""
             Required Environment Variables:
             - BIKE_ID: The ID of the bike.
@@ -34,17 +34,20 @@ def help():
 
 if __name__ == "__main__":
     bike_id = os.getenv("BIKE_ID")
-    longitude = Settings.Position.default_longitude if not os.getenv("LONGITUDE", "") else os.getenv("LONGITUDE")
-    latitude = Settings.Position.default_latitude if not os.getenv("LATITUDE", "") else os.getenv("LATITUDE")
     token = os.getenv("TOKEN")
+    longitude = Settings.Position.default_longitude \
+        if not os.getenv("LONGITUDE", "") else os.getenv("LONGITUDE")
+    latitude = Settings.Position.default_latitude \
+        if not os.getenv("LATITUDE", "") else os.getenv("LATITUDE")
 
     required = [bike_id, token]
     for environment_variable in required:
         if not environment_variable:
-            help()
+            show_help()
             raise Errors.initialization_error()
 
-    # TODO: Should token be skipped as parameter and instead taken from environment? Same on Outgoing?
+    # TODO: Should token be skipped as parameter
+    # and instead taken from environment? Same on Outgoing?
     brain = Brain(
         bike_id=bike_id,
         longitude=longitude,
@@ -58,7 +61,7 @@ if __name__ == "__main__":
     def start_fastapi():
         def brain_dependency_override():
             return brain
-        
+
         app.dependency_overrides[get_brain] = brain_dependency_override
         port = 8000 + int(bike_id)
         uvicorn.run(app, host="0.0.0.0", port=port, log_level="debug")
@@ -72,6 +75,8 @@ if __name__ == "__main__":
 # BIKE_ID=1 TOKEN=token python -m src.main
 
 # TODO: Create Docker related files.
-# TODO: Does authentication work as it is? Token not through parameter but through environment variable only in classes (Brain, Outgoing etc.)
+# TODO: Does authentication work as it is?
+#       Token not through parameter but through
+#       environment variable only in classes (Brain, Outgoing etc.)
 # TODO: Utöka testning + uppdatera existerande tester i Bike.
 # TODO: Ordna linting.

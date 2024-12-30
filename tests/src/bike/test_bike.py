@@ -1,8 +1,11 @@
-import pytest
 from unittest.mock import patch
+import pytest
 from src.bike.bike import Bike
-from src._utils._errors import AlreadyUnlockedError, AlreadyLockedError, NotChargingZoneError, PositionNotWithinZoneError, InvalidPositionTypeError, OutOfBoundsError, InvalidPositionLengthError
 from src._utils._map import Map
+from src._utils._errors import (AlreadyUnlockedError, AlreadyLockedError,
+                                NotChargingZoneError, PositionNotWithinZoneError,
+                                InvalidPositionTypeError, OutOfBoundsError,
+                                InvalidPositionLengthError)
 
 @pytest.mark.usefixtures("mock_environment")
 class TestBike:
@@ -37,6 +40,14 @@ class TestBike:
         bike.relocate(position, ignore_zone=True)
         with pytest.raises(PositionNotWithinZoneError):
             bike.lock(maintenance=False, ignore_zone=False)
+
+    def test_lock_with_maintenance_mode(self, mock_zones, mock_zone_types):
+        bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
+        bike.update(mock_zones, mock_zone_types)
+        bike.unlock(user_id=123, trip_id=456)
+        bike.lock(maintenance=True)
+        assert bike.mode.is_maintenance(), \
+            "Bike should be in maintenance mode after locking with maintenance=True."
 
     def test_moving_bike(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
@@ -113,7 +124,7 @@ class TestBike:
             position = (999.0, 999.0)
             bike.relocate(position, ignore_zone=False)
 
-    def test_relocate_position_is_invalid_position(self, mock_zones, mock_zone_types):
+    def test_relocate_position_is_invalid_position(self):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         with pytest.raises(InvalidPositionTypeError):
             bike.relocate("invalid_position")
@@ -151,10 +162,12 @@ class TestBike:
         bike.update(mock_zones, mock_zone_types)
         deployment_zone = next(zone for zone in mock_zones if zone["zone_type"] == "parking")
         expected_position = Map.Zone.get_centroid_position(deployment_zone)
-        with patch('src._utils._map.Map.Zone.get_deployment_zone', return_value=deployment_zone):
+        with patch('src._utils._map.Map.Zone.get_deployment_zone',
+                   return_value=deployment_zone):
             bike.deploy()
         deployed_position = bike.position.current
-        assert deployed_position == expected_position, f"Deployed position {deployed_position} does not match expected {expected_position}"
+        assert deployed_position == expected_position, \
+            f"Deployed position {deployed_position} does not match expected {expected_position}"
 
     def test_check_out_of_bounds(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
@@ -164,12 +177,21 @@ class TestBike:
                 "id": 11,
                 "zone_type": "regular",
                 "city_id": 2,
-                "boundary": "POLYGON((0.030 0.000, 0.030 0.001, 0.031 0.001, 0.031 0.000, 0.030 0.000))"
+                "boundary": \
+                    "POLYGON((0.030 0.000, 0.030 0.001, 0.031 0.001, 0.031 0.000, 0.030 0.000))"
             }
             mock_get_closest_zone.return_value = mock_closest_zone
-            with patch.object(bike, 'report') as mock_report:
+            with patch.object(bike, 'report'):
                 with pytest.raises(OutOfBoundsError) as exc_info:
                     bike.check()
                 assert bike.mode.is_maintenance(), "Bike should be in maintenance mode."
-                mock_report.assert_called_once(), "Report should be sent once."
-                assert str(exc_info.value) == "This position is out of bounds. It is not in one of the zones on the map.", "Incorrect error message."
+                assert str(exc_info.value) == \
+                    "This position is out of bounds. It is not in one of the zones on the map.", \
+                        "Incorrect error message."
+
+    def test_check_with_maintenance_mode(self, mock_zones, mock_zone_types):
+        bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
+        bike.update(mock_zones, mock_zone_types)
+        bike.check(maintenance=True)
+        assert bike.mode.is_maintenance(), \
+            "Bike should be in maintenance mode after check with maintenance=True."

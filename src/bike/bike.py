@@ -1,9 +1,9 @@
 from .._user._user import User
 from .._utils._clock import Clock
-from .._utils._errors import Errors, InvalidPositionTypeError, InvalidPositionLengthError, InvalidPositionCoordinatesError, PositionNotWithinZoneError
 from .._utils._map import Map
 from .._utils._settings import Settings
 from .._utils._validate import Validate
+from .._utils._errors import Errors
 from ._battery import Battery
 from ._position import Position
 from ._logs import Logs
@@ -14,9 +14,10 @@ from ._city import City
 from ._status import Status
 
 class Bike:
-    def __init__(self, bike_id,  
-                 longitude, 
+    def __init__(self, bike_id,
+                 longitude,
                  latitude):
+
         self.bike_id = bike_id
         self.zones = Map.Zones.load()
         self.zone_types = Map.ZoneTypes.load()
@@ -41,7 +42,9 @@ class Bike:
         self.user = User(user_id)
         self.mode.usage()
         zone = Map.Zone.get(self.city.zones, self.position.current)
-        self.user.start_trip(self.bike_id, trip_id, self.position.current, zone=zone if zone else None)
+        self.user.start_trip(
+            self.bike_id, trip_id, self.position.current,
+            zone=zone if zone else None)
         trip = self.user.trip.get()
         self.logs.add(trip)
         self.speed.limit(self.city.zones, self.zone_types, self.position.current)
@@ -51,7 +54,8 @@ class Bike:
         """Lock the bike."""
         if not self.user and self.mode.is_locked():
             raise Errors.already_locked()
-        if not ignore_zone and not Map.Position.is_within_zone(self.city.zones, self.position.current):
+        if not ignore_zone and not Map.Position.is_within_zone(
+            self.city.zones, self.position.current):
             raise Errors.position_not_within_zone()
         zone = Map.Zone.get(self.city.zones, self.position.current)
         self.user.end_trip(self.position.current, zone=zone if zone else None)
@@ -60,7 +64,10 @@ class Bike:
         self.user.archive_trip()
         self.user = None
         self.speed.terminate()
-        self.mode.sleep() if not maintenance else self.mode.maintenance()
+        if maintenance:
+            self.mode.maintenance()
+        if not maintenance:
+            self.mode.sleep()
         self.report()
 
     def move(self, position_or_linestring):
@@ -72,14 +79,17 @@ class Bike:
             total_duration_in_minutes = Clock.get_duration_in_minutes(distance_in_km, speed_in_kmh)
             total_reports = Reports.reports_needed(total_duration_in_minutes)
             for report_index in range(total_reports):
-                report_interval_in_minutes = Clock.convert_seconds_to_minutes(Settings.Report.interval)
+                report_interval_in_minutes = Clock.convert_seconds_to_minutes(
+                    Settings.Report.interval)
                 minutes_travelled = report_interval_in_minutes * (report_index + 1)
                 self.battery.drain(report_interval_in_minutes, self.mode.current)
-                current_position = Map.Position.get_position_after_minutes_travelled(self.position.current, position, minutes_travelled, speed_in_kmh)
+                current_position = Map.Position.get_position_after_minutes_travelled(
+                    self.position.current, position, minutes_travelled, speed_in_kmh)
                 self.position.change(current_position[0], current_position[1])
                 self.speed.limit(self.city.zones, self.zone_types, self.position.current)
                 self.report()
-                leg_duration_in_seconds = Clock.get_leg_duration_in_seconds(total_duration_in_minutes, total_reports)
+                leg_duration_in_seconds = Clock.get_leg_duration_in_seconds(
+                    total_duration_in_minutes, total_reports)
                 Clock.sleep(leg_duration_in_seconds)
             self.user.trip.add_movement(self.position.current)
             self.logs.update(self.user.trip.get())
@@ -91,8 +101,9 @@ class Bike:
         elif Validate.is_linestring(position_or_linestring):
             for position in position_or_linestring:
                 _move(position)
-        elif not Position.is_position(position_or_linestring) or not Validate.is_linestring(position_or_linestring):
-                Validate.position_or_linestring(position_or_linestring)
+        elif not Position.is_position(position_or_linestring) \
+            or not Validate.is_linestring(position_or_linestring):
+            Validate.position_or_linestring(position_or_linestring)
 
     def relocate(self, position, ignore_zone=True):
         """Relocate the bike to a new position without draining the battery."""
@@ -104,7 +115,7 @@ class Bike:
         self.city.switch(self.zones, self.position.current)
         self.speed.limit(self.city.zones, self.zone_types, self.position.current)
         self.report()
-    
+
     def deploy(self):
         """Relocate the bike to a deployment zone."""
         deployment_zone = Map.Zone.get_deployment_zone(self.city.zones)
@@ -124,10 +135,12 @@ class Bike:
         if maintenance:
             self.mode.maintenance()
             self.report()
-        if not maintenance and self.battery.is_low() and self.mode.is_sleep():
+            return
+        if self.battery.is_low() and self.mode.is_sleep():
             self.mode.maintenance()
             self.report()
-        if not maintenance and not Map.Zone.has_city_id(Map.Position.get_closest_zone(self.city.zones, self.position.current), self.city.id):
+        if not Map.Zone.has_city_id(
+            Map.Position.get_closest_zone(self.city.zones, self.position.current), self.city.id):
             self.mode.maintenance()
             self.report()
             raise Errors.out_of_bounds()
@@ -141,7 +154,8 @@ class Bike:
         for _ in range(total_reports):
             self.battery.charge(Clock.convert_seconds_to_minutes(Settings.Report.interval))
             self.report()
-            leg_duration_in_seconds = Clock.get_leg_duration_in_seconds(total_duration_in_minutes, total_reports)
+            leg_duration_in_seconds = Clock.get_leg_duration_in_seconds(
+                total_duration_in_minutes, total_reports)
             Clock.sleep(leg_duration_in_seconds)
 
     def report(self):

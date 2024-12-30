@@ -147,7 +147,8 @@ class Map:
             """Returns the closest zone to the position."""
             point = Point(position)
             closest_zone = None
-            shortest_distance = float('inf') # Initialize to infinity so that the first distance will always be shorter.
+             # Initialize to infinity so that the first distance will always be shorter.
+            shortest_distance = float('inf')
             for zone in zones:
                 boundary = wkt_loads(zone['boundary'])
                 distance = boundary.distance(point)
@@ -166,20 +167,39 @@ class Map:
             return _convert_to_kilometers(distance)
 
         @staticmethod
-        def get_position_after_minutes_travelled(start_position, end_position, minutes_travelled, speed):
+        def get_position_after_minutes_travelled(
+            start_position, end_position,
+            minutes_travelled, speed
+            ):
+
             def _get_distance_travelled(speed, minutes_travelled):
                 return speed * (minutes_travelled / 60)
+
             def _calculate_fraction_of_distance_travelled(distance_travelled, distance):
                 return distance_travelled / distance
-            def _calculate_final_position(start_position, end_position, distance_travelled, distance):
-                fraction_of_distance_travelled = _calculate_fraction_of_distance_travelled(distance_travelled, distance)
+
+            def _calculate_final_position(
+                    start_position, end_position,
+                    distance_travelled, distance
+                    ):
+
+                fraction_of_distance_travelled = \
+                    _calculate_fraction_of_distance_travelled(
+                        distance_travelled, distance)
+
                 x1, y1 = start_position
                 x2, y2 = end_position
                 x = x1 + (x2 - x1) * fraction_of_distance_travelled
                 y = y1 + (y2 - y1) * fraction_of_distance_travelled
                 return (x, y)
+
             distance = Map.Position.get_distance_in_km(start_position, end_position)
             distance_travelled = _get_distance_travelled(speed, minutes_travelled)
+
             if distance_travelled >= distance:
                 return end_position
-            return _calculate_final_position(start_position, end_position, distance_travelled, distance)
+
+            return _calculate_final_position(start_position, end_position,
+                                             distance_travelled, distance
+                                             )
+

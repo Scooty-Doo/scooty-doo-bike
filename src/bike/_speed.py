@@ -11,7 +11,6 @@ class Speed:
         """Fetch speed limit for position."""
         speed_limit = Map.Zone.get_speed_limit(zones, zone_types, position)
         self.current = speed_limit if speed_limit else self.default
-    
+
     def terminate(self):
         self.current = 0
-    

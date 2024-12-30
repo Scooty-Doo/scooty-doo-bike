@@ -30,21 +30,27 @@ class TestBattery:
         battery = Battery(battery_level=100.0)
         minutes = 10
         battery.drain(minutes=minutes, mode='usage')
-        assert battery.level == 100.0 - (Settings.Battery.drain_per_minute * minutes * Settings.Battery.drain_factor_usage_mode)
+        assert battery.level == 100.0 - \
+            (Settings.Battery.drain_per_minute * minutes \
+             * Settings.Battery.drain_factor_usage_mode)
 
     def test_drain_sleep_mode(self):
         minutes = 10
         battery_level = 100.0
         battery = Battery(battery_level=battery_level)
         battery.drain(minutes=minutes, mode='sleep')
-        assert battery.level == 100.0 - (Settings.Battery.drain_per_minute * minutes * Settings.Battery.drain_factor_sleep_mode)
+        assert battery.level == 100.0 - \
+            (Settings.Battery.drain_per_minute * minutes \
+             * Settings.Battery.drain_factor_sleep_mode)
 
     def test_drain_maintenance_mode(self):
         battery_level = 100.0
         minutes = 10
         battery = Battery(battery_level=battery_level)
         battery.drain(minutes=minutes, mode='maintenance')
-        assert battery.level == 100.0 - (Settings.Battery.drain_per_minute * minutes * Settings.Battery.drain_factor_maintenance_mode)
+        assert battery.level == 100.0 - \
+            (Settings.Battery.drain_per_minute * minutes \
+             * Settings.Battery.drain_factor_maintenance_mode)
 
     def test_drain_invalid_mode(self):
         battery = Battery()
@@ -66,7 +72,7 @@ class TestBattery:
 
     def test_drain_battery_below_zero(self):
         minutes = 5
-        battery_level = 0.1 
+        battery_level = 0.1
         battery = Battery(battery_level=battery_level)
         battery.drain(minutes=minutes, mode='usage')
         assert battery.level == 0.0

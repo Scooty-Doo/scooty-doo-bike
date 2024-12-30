@@ -1,5 +1,5 @@
-from .._utils._clock import Clock
 import copy
+from .._utils._clock import Clock
 
 class Status:
     def __init__(self, bike):

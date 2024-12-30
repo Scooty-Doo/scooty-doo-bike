@@ -12,21 +12,21 @@ class Mode:
 
     def maintenance(self):
         self.current = 'maintenance'
-    
+
     def sleep(self):
         self.current = 'sleep'
 
     def is_usage(self):
-        return True if self.current == 'usage' else False
-    
+        return self.current == 'usage'
+
     def is_maintenance(self):
-        return True if self.current == 'maintenance' else False
-    
+        return self.current == 'maintenance'
+
     def is_sleep(self):
-        return True if self.current == 'sleep' else False
+        return self.current == 'sleep'
 
     def is_unlocked(self):
-        return True if self.current == 'usage' else False
-    
+        return self.current == 'usage'
+
     def is_locked(self):
-        return True if self.current in ['maintenance', 'sleep'] else False
+        return self.current in ['maintenance', 'sleep']

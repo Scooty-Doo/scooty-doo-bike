@@ -1,4 +1,3 @@
-import pytest
 from src.bike._position import Position
 
 class TestPosition:

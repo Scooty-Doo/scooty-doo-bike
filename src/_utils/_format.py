@@ -52,7 +52,7 @@ class Format:
             pass
         if is_report:
             if 'mode' in entry:
-                entry['is_available'] = True if entry['mode'] == 'sleep' else False
+                entry['is_available'] = entry['mode'] == 'sleep'
                 entry.pop('mode')
         return entry
 
@@ -80,7 +80,7 @@ class Format:
     def _encode(entry, is_log=False, is_report=False):
         if is_log:
             if 'path_taken' in entry:
-                if entry['path_taken'] is not None and type(entry['path_taken']) is list:
+                if entry['path_taken'] is not None and isinstance(entry['path_taken'], list):
                     if len(entry['path_taken']) > 1:
                         entry['path_taken'] = LineString(entry['path_taken']).wkt
                     else:

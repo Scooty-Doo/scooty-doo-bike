@@ -1,12 +1,11 @@
 from src.bike._reports import Reports
-from src._utils._settings import Settings
 from src._utils._format import Format
 
 class TestReports:
 
     def test_initial_reports_empty(self):
         reports = Reports()
-        assert reports.reports == []
+        assert not reports.reports
 
     def test_add_report(self):
         reports = Reports()

@@ -1,7 +1,7 @@
-from .._utils._errors import AlreadyUnlockedError, AlreadyLockedError, InvalidPositionError
+from typing import Union
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException, Depends
-from typing import Union
+from .._utils._errors import AlreadyUnlockedError, AlreadyLockedError, InvalidPositionError
 
 app = FastAPI()
 
@@ -10,8 +10,6 @@ def get_brain():
     Returns the Brain instance.
     Injected at runtime via dependency override.
     """
-    pass
-
 
 class StartTripRequest(BaseModel):
     user_id: int
@@ -27,9 +25,9 @@ def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
                 "report": brain.bike.reports.last(),
                 "log": brain.bike.logs.last()}}
     except AlreadyUnlockedError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}")
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
 class MoveRequest(BaseModel):
     position_or_linestring: Union[tuple, list[tuple]]
@@ -44,11 +42,11 @@ def move(request: MoveRequest, brain = Depends(get_brain)):
             "data": {
                 "report": brain.bike.reports.last()}}
     except AlreadyLockedError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except InvalidPositionError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}")
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
 
 class RelocateRequest(BaseModel):
@@ -63,10 +61,10 @@ def relocate(request: RelocateRequest, brain = Depends(get_brain)):
             "data": {
                 "report": brain.bike.reports.last()}}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}")
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
 
-class EndTripRequest(BaseModel):	
+class EndTripRequest(BaseModel):
     maintenance: bool = False
     ignore_zone: bool = True
 
@@ -80,9 +78,9 @@ def end_trip(request: EndTripRequest, brain = Depends(get_brain)):
                 "log": brain.bike.logs.last(),
                 "report": brain.bike.reports.last()}}
     except AlreadyLockedError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}")
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
 
 class CheckRequest(BaseModel):
@@ -97,27 +95,32 @@ def check(request: CheckRequest, brain = Depends(get_brain)):
             "data": {
                 "report": brain.bike.reports.last()}}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}")
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
 
 class ReportRequest(BaseModel):
     pass
 
 @app.get("/report")
-def report(request: ReportRequest, brain = Depends(get_brain)):
-    brain.bike.report()
-    return {
-        "message": "Report created and sent",
-        "data": {
-            "report": brain.bike.reports.last()}}
-
+def report(brain = Depends(get_brain)): # request: ReportRequest
+    try:
+        brain.bike.report()
+        return {
+            "message": "Report created and sent",
+            "data": {
+                "report": brain.bike.reports.last()}}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
 class UpdateRequest(BaseModel):
     pass
 
 @app.post("/update")
-def update(request: UpdateRequest, brain = Depends(get_brain)):
-    zones = brain.request_zones()
-    zone_types = brain.request_zone_types()
-    brain.bike.update(zones=zones, zone_types=zone_types)
-    return {"message": "Zones and zone types updated"}
+def update(brain = Depends(get_brain)): # request: UpdateRequest
+    try:
+        zones = brain.request_zones()
+        zone_types = brain.request_zone_types()
+        brain.bike.update(zones=zones, zone_types=zone_types)
+        return {"message": "Zones and zone types updated"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e

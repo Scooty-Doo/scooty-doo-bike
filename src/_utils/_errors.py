@@ -36,17 +36,20 @@ class InvalidModeError(Exception):
 
 class InitializationError(Exception):
     """Custom error raised when an object is not initialized properly."""
-    def __init__(self, message="Object not initialized properly. Missing required environment variables."):
+    def __init__(self, message="Object not initialized properly. "
+                 "Missing required environment variables."):
         super().__init__(message)
 
 class OutOfBoundsError(Exception):
     """Custom error raised when a bike is moved out of bounds."""
-    def __init__(self, message="This position is out of bounds. It is not in one of the zones on the map."):
+    def __init__(self, message="This position is out of bounds. "
+                 "It is not in one of the zones on the map."):
         super().__init__(message)
 
 class InvalidPositionError(Exception):
     """Custom error raised when an invalid position is passed."""
-    def __init__(self, message="Invalid position. Position must be a tuple of two floatable numbers."):
+    def __init__(self, message="Invalid position. "
+                 "Position must be a tuple of two floatable numbers."):
         super().__init__(message)
 
 class InvalidPositionTypeError(Exception):
@@ -64,9 +67,10 @@ class InvalidPositionCoordinatesError(Exception):
 class Errors():
     # TODO: remove if not used
     #@staticmethod
-    #def not_parking_zone(): 
+    #def not_parking_zone():
     #    raise NotParkingZoneError()
 
+    @staticmethod
     def not_charging_zone():
         raise NotChargingZoneError()
 

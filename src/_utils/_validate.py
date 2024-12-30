@@ -1,5 +1,8 @@
-from .._utils._errors import Errors, InvalidPositionTypeError, InvalidPositionLengthError, InvalidPositionCoordinatesError
 from ..bike._position import Position
+from .._utils._errors import (Errors,
+                              InvalidPositionTypeError,
+                              InvalidPositionLengthError,
+                              InvalidPositionCoordinatesError)
 
 class Validate:
 
@@ -27,12 +30,12 @@ class Validate:
             return True
         try:
             return _position_or_linestring(position_or_linestring)
-        except InvalidPositionTypeError:
-            raise Errors.invalid_position_type()
-        except InvalidPositionLengthError:
-            raise Errors.invalid_position_length()
-        except InvalidPositionCoordinatesError:
-            raise Errors.invalid_position_coordinates()
+        except InvalidPositionTypeError as exc:
+            raise Errors.invalid_position_type() from exc
+        except InvalidPositionLengthError as exc:
+            raise Errors.invalid_position_length() from exc
+        except InvalidPositionCoordinatesError as exc:
+            raise Errors.invalid_position_coordinates() from exc
 
     @staticmethod
     def is_linestring(linestring):
