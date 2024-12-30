@@ -60,3 +60,6 @@ class Settings:
 
     class Report:
         interval = 5
+        interval_sleep = 60
+        interval_maintenance = 60
+        interval_usage = 5

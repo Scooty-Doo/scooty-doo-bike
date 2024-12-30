@@ -24,7 +24,8 @@ class Brain:
     def run(self):
         while self.running:
             self.send_report()
-            Clock.sleep(Settings.Report.interval)
+            report_interval = getattr(Settings.Report, f'interval_{self.bike.mode.current}')
+            Clock.sleep(report_interval)
     
     def terminate(self):
         self.running = False
