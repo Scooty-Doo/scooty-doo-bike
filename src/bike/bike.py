@@ -119,12 +119,15 @@ class Bike:
         self.speed.limit(self.city.zones, self.zone_types, self.position.current)
         self.report()
 
-    def check(self):
+    def check(self, maintenance=False):
         """Check if the bike needs maintenance."""
-        if self.battery.is_low() and self.mode.is_sleep():
+        if maintenance:
             self.mode.maintenance()
             self.report()
-        if not Map.Zone.has_city_id(Map.Position.get_closest_zone(self.city.zones, self.position.current), self.city.id):
+        if not maintenance and self.battery.is_low() and self.mode.is_sleep():
+            self.mode.maintenance()
+            self.report()
+        if not maintenance and not Map.Zone.has_city_id(Map.Position.get_closest_zone(self.city.zones, self.position.current), self.city.id):
             self.mode.maintenance()
             self.report()
             raise Errors.out_of_bounds()

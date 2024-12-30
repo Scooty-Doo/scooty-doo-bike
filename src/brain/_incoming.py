@@ -86,12 +86,12 @@ def end_trip(request: EndTripRequest, brain = Depends(get_brain)):
 
 
 class CheckRequest(BaseModel):
-    pass
+    maintenance: bool = False
 
 @app.post("/check")
 def check(request: CheckRequest, brain = Depends(get_brain)):
     try:
-        brain.bike.check()
+        brain.bike.check(request.maintenance)
         return {
             "message": "Bike checked. Report sent",
             "data": {
