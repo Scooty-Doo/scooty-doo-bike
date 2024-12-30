@@ -1,7 +1,6 @@
-
+import copy
 from .._utils._clock import Clock
 from .._utils._map import Map
-import copy
 
 class Trip:
     def __init__(self, user_id, bike_id, trip_id, position, zone=None):
@@ -19,7 +18,7 @@ class Trip:
         self.end_position = position
         self.end_zone_id = None if not zone else Map.Zone.get_zone_id(zone)
         self.end_zone_type = None if not zone else Map.Zone.get_zone_type(zone)
-    
+
     def add_movement(self, position):
         self.route.append(position)
 
