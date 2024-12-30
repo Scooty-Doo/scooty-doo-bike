@@ -47,6 +47,8 @@ class TestIntegration:
                 "start_time": "2024-12-25T13:27:44.284455+00:00",
                 "start_position": "POINT(12.44 23.44)",
                 "path_taken": None,
+                "start_zone_id": None,
+                "start_zone_type": None,
             },
         },
     }
@@ -63,6 +65,10 @@ class TestIntegration:
                 "end_time": "2024-12-25T13:27:44.284455+00:00",
                 "end_position": "POINT(23.11 34.22)",
                 "path_taken": "LINESTRING(12.44 23.44, 23.11 34.22)",
+                "start_zone_id": None,
+                "start_zone_type": None,
+                "end_zone_id": None,
+                "end_zone_type": None,
             },
             "report": {
                 "city_id": 1,

@@ -40,6 +40,10 @@ class Map:
             return zone['city_id']
         
         @staticmethod
+        def get_zone_id(zone):
+            return zone['id']
+
+        @staticmethod
         def get_zone_type(zone):
             return zone['zone_type']
         
