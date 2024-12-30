@@ -1,10 +1,8 @@
-from shapely.geometry import Point
-from shapely.wkt import loads as wkt_loads
 import random
 import json
 import os
-
-from ._settings import Settings
+from shapely.geometry import Point
+from shapely.wkt import loads as wkt_loads
 
 ZONES_FILENAME = '_zones.json'
 ZONE_TYPES_FILENAME = '_zone_types.json'
@@ -30,15 +28,15 @@ class Map:
                 if boundary.covers(point):
                     return zone
             return None
-        
+
         @staticmethod
         def has_city_id(zone, city_id):
             return Map.Zone.get_city_id(zone) == city_id
-        
+
         @staticmethod
         def get_city_id(zone):
             return zone['city_id']
-        
+
         @staticmethod
         def get_zone_id(zone):
             return zone['id']
@@ -46,13 +44,13 @@ class Map:
         @staticmethod
         def get_zone_type(zone):
             return zone['zone_type']
-        
+
         @staticmethod
         def get_centroid_position(zone):
             """Returns the centroid of the zone."""
             boundary = wkt_loads(zone['boundary'])
             return (boundary.centroid.x, boundary.centroid.y)
-        
+
         @staticmethod
         def get_speed_limit(zones, zone_types, position):
             zone = Map.Zone.get(zones, position)
@@ -74,20 +72,20 @@ class Map:
             if Map.Zone.get_zone_type(zone) == 'charging':
                 return True
             return False
-        
+
         # TODO: remove if not used
         #@staticmethod
         #def is_forbidden_zone(zones, position):
         #    zone = Map.Zone.get(zones, position)
         #    if Map.Zone.get_zone_type(zone) == 'forbidden':
         #        return True
-            
+
         @staticmethod
         def get_deployment_zone(zones):
             parking_zones = Map.Zones.get_parking_zones(zones)
             random_parking_zone = random.choice(parking_zones)
             return random_parking_zone
-        
+
         @staticmethod
         def get_charging_zone(zones):
             charging_zones = Map.Zones.get_charging_zones(zones)
@@ -99,12 +97,12 @@ class Map:
         def load():
             current_directory = os.path.dirname(__file__)
             file_path = os.path.join(current_directory, ZONES_FILENAME)
-            with open(file_path) as f:
+            with open(file=file_path, mode='r', encoding='utf-8') as f:
                 zones = json.load(f)
                 if not zones:
                     return []
             return zones
-        
+
         @staticmethod
         def get_zones_with_city_id(zones, city_id):
             return [zone for zone in zones if Map.Zone.get_city_id(zone) == city_id]
@@ -112,11 +110,11 @@ class Map:
         @staticmethod
         def get_parking_zones(zones):
             return [zone for zone in zones if Map.Zone.get_zone_type(zone) == 'parking']
-        
+
         @staticmethod
         def get_charging_zones(zones):
             return [zone for zone in zones if Map.Zone.get_zone_type(zone) == 'charging']
-        
+
         # TODO: remove if not used
         #@staticmethod
         #def get_slow_zones(zones):
@@ -127,23 +125,23 @@ class Map:
         def load():
             current_directory = os.path.dirname(__file__)
             file_path = os.path.join(current_directory, ZONE_TYPES_FILENAME)
-            with open(file_path) as f:
+            with open(file=file_path, mode='r', encoding='utf-8') as f:
                 zone_types = json.load(f)
                 if not zone_types:
                     return {}
             return zone_types
-    
+
     class Position:
         @staticmethod
         def is_within_zone(zones, position):
             return Map.Zone.get(zones, position) is not None
-        
+
         # TODO: remove if not used
         #@staticmethod
         #def is_within_city_zone(zones, position, city_id):
         #    zone = Map.Position.get_closest_zone(zones, position)
         #    return Map.Zone.has_city_id(zone, city_id)
-        
+
         @staticmethod
         def get_closest_zone(zones, position):
             """Returns the closest zone to the position."""
@@ -157,7 +155,7 @@ class Map:
                     shortest_distance = distance
                     closest_zone = zone
             return closest_zone
-        
+
         @staticmethod
         def get_distance_in_km(start_position, end_position):
             def _convert_to_kilometers(distance):

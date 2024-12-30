@@ -66,18 +66,18 @@ class Errors():
     #@staticmethod
     #def not_parking_zone(): 
     #    raise NotParkingZoneError()
-    
+
     def not_charging_zone():
         raise NotChargingZoneError()
 
     @staticmethod
     def already_unlocked():
         raise AlreadyUnlockedError()
-    
+
     @staticmethod
     def already_locked():
         raise AlreadyLockedError()
-    
+
     @staticmethod
     def fully_charged():
         raise FullyChargedError()
@@ -89,19 +89,19 @@ class Errors():
     @staticmethod
     def initialization_error():
         raise InitializationError()
-    
+
     @staticmethod
     def out_of_bounds():
         raise OutOfBoundsError()
-    
+
     @staticmethod
     def position_not_within_zone():
         raise PositionNotWithinZoneError()
-    
+
     @staticmethod
     def invalid_position():
         raise InvalidPositionError()
-    
+
     @staticmethod
     def invalid_position_type():
         raise InvalidPositionTypeError()
@@ -109,7 +109,7 @@ class Errors():
     @staticmethod
     def invalid_position_length():
         raise InvalidPositionLengthError()
-    
+
     @staticmethod
     def invalid_position_coordinates():
         raise InvalidPositionCoordinatesError()

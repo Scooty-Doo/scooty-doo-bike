@@ -1,7 +1,7 @@
 import os
 
 class Settings:
-    
+
     class Position:
         default_longitude = float(0.0)
         default_latitude = float(0.0)
@@ -21,7 +21,8 @@ class Settings:
         backend_url = os.getenv("BACKEND_URL")
         bike_id = os.getenv("BIKE_ID")
 
-        # TODO: Endpoints need to get the values through parameters (convert attribute to method) or environment (if BIKE_ID).
+        # TODO: Endpoints need to get the values through parameters 
+        # (convert attribute to method) or environment (if BIKE_ID).
 
         class Bikes:
             endpoint = 'v1/bikes'
@@ -30,7 +31,7 @@ class Settings:
             add = f'{endpoint}'
             update = f'{endpoint}' + f'/{os.getenv("BIKE_ID")}'
             remove = f'{endpoint}' + f'/{os.getenv("BIKE_ID")}'
-        
+
         class Trips:
             endpoint = 'v1/trips'
             get_all = f'{endpoint}'

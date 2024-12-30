@@ -1,12 +1,12 @@
-from shapely.geometry import Point, LineString
 import math
+from shapely.geometry import Point, LineString
 
 class Format:
 
     @staticmethod
     def log(entry):
         return Format._apply_all_formatting(entry)
-    
+
     @staticmethod
     def report(entry):
         return Format._apply_all_formatting(entry)
@@ -25,7 +25,7 @@ class Format:
     @staticmethod
     def _is_log(entry):
         return 'route' in entry
-    
+
     @staticmethod
     def _is_report(entry):
         return 'mode' in entry
@@ -93,7 +93,7 @@ class Format:
             if 'last_position' in entry:
                 entry['last_position'] = Point(entry['last_position']).wkt
         return entry
-    
+
     @staticmethod
     def _format(entry, is_log=False, is_report=False):
         def _remove_space(string):

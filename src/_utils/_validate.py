@@ -12,7 +12,7 @@ class Validate:
         if not all(isinstance(coordinate, (int, float)) for coordinate in position):
             raise Errors.invalid_position_coordinates()
         return True
-    
+
     @staticmethod
     def position_or_linestring(position_or_linestring):
         def _position_or_linestring(position_or_linestring):
@@ -33,7 +33,7 @@ class Validate:
             raise Errors.invalid_position_length()
         except InvalidPositionCoordinatesError:
             raise Errors.invalid_position_coordinates()
-    
+
     @staticmethod
     def is_linestring(linestring):
         if not isinstance(linestring, (list, tuple)):
