@@ -25,39 +25,39 @@ class Settings:
         # (convert attribute to method) or environment (if BIKE_ID).
 
         class Bikes:
-            endpoint = 'v1/bikes'
+            endpoint = 'v1/bikes/'
             get_all = f'{endpoint}'
-            get = f'{endpoint}' + f'/{os.getenv("BIKE_ID")}'
+            get = f'{endpoint}' + f'{os.getenv("BIKE_ID")}'
             add = f'{endpoint}'
-            update = f'{endpoint}' + f'/{os.getenv("BIKE_ID")}'
-            remove = f'{endpoint}' + f'/{os.getenv("BIKE_ID")}'
+            update = f'{endpoint}' + f'{os.getenv("BIKE_ID")}'
+            remove = f'{endpoint}' + f'{os.getenv("BIKE_ID")}'
 
         class Trips:
-            endpoint = 'v1/trips'
+            endpoint = 'v1/trips/'
             get_all = f'{endpoint}'
             start = f'{endpoint}'
-            get = f'{endpoint}/{{id}}'
-            update = f'{endpoint}/{{id}}'
-            remove = f'{endpoint}/{{id}}'
-            get_for_bike = f'{endpoint}/bike/{{id}}'
-            get_trip_for_bike = f'{endpoint}/bike/{{id}}/trip/{{trip_id}}'
-            get_user_history = f'{endpoint}/user/{{id}}'
+            get = f'{endpoint}{{id}}'
+            update = f'{endpoint}{{id}}'
+            remove = f'{endpoint}{{id}}'
+            get_for_bike = f'{endpoint}bike/{{id}}'
+            get_trip_for_bike = f'{endpoint}bike/{{id}}/trip/{{trip_id}}'
+            get_user_history = f'{endpoint}user/{{id}}'
 
         class Zones:
-            endpoint = 'v1/zones'
+            endpoint = 'v1/zones/'
             get_all = f'{endpoint}'
             create = f'{endpoint}'
-            get = f'{endpoint}/{{id}}'
-            update = f'{endpoint}/{{id}}'
-            remove = f'{endpoint}/{{id}}'
-            get_parking = f'{endpoint}/parking'
-            get_types = f'{endpoint}/types'
+            get = f'{endpoint}{{id}}'
+            update = f'{endpoint}{{id}}'
+            remove = f'{endpoint}{{id}}'
+            get_parking = f'{endpoint}parking'
+            get_types = f'{endpoint}types'
 
         class Users:
-            endpoint = 'v1/users'
+            endpoint = 'v1/users/'
             get_all = f'{endpoint}'
             create = f'{endpoint}'
-            get = f'{endpoint}/{{id}}'
+            get = f'{endpoint}{{id}}'
 
     class Report:
         interval = 5
