@@ -1,15 +1,29 @@
-from typing import Union
+from typing import Union, Optional
 from pydantic import BaseModel
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Query, Request
 from .._utils._errors import AlreadyUnlockedError, AlreadyLockedError, InvalidPositionError
+from .brain import Brain
+from .hivemind import Hivemind 
 
 app = FastAPI()
 
-def get_brain():
-    """
-    Returns the Brain instance.
-    Injected at runtime via dependency override.
-    """
+def get_hivemind(request: Request) -> Hivemind:
+    """Dependency to retrieve the Hivemind instance from the FastAPI app's state."""
+    hivemind = request.app.state.hivemind
+    if not hivemind:
+        raise HTTPException(status_code=500, detail="Hivemind not initialized.")
+    return hivemind
+
+def get_brain(bike_id: Optional[int] = Query(
+        None, description="The ID of the target bike."
+        "Defaults to the lowest bike_id."),
+        hivemind: Hivemind = Depends(get_hivemind)
+        ) -> Brain:
+    """Dependency to retrieve a Brain instance from the Hivemind instance."""
+    try:
+        return hivemind.get_brain(bike_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 class StartTripRequest(BaseModel):
     user_id: int

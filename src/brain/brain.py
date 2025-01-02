@@ -11,7 +11,7 @@ class Brain:
                  ):
 
         self.bike = Bike(bike_id, longitude, latitude)
-        self.outgoing = Outgoing(token)
+        self.outgoing = Outgoing(token, bike_id)
         self.running = True
 
     async def initialize(self):
