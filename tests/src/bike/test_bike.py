@@ -9,8 +9,8 @@ from src._utils._errors import (AlreadyUnlockedError, AlreadyLockedError,
 
 @pytest.mark.usefixtures("mock_environment")
 class TestBike:
-
-    def test_unlocking_bike(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_unlocking_bike(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         assert bike.mode.is_locked()
@@ -21,7 +21,8 @@ class TestBike:
         with pytest.raises(AlreadyUnlockedError):
             bike.unlock(user_id=456, trip_id=789)
 
-    def test_locking_bike_in_parking_zone(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_locking_bike_in_parking_zone(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
@@ -32,7 +33,8 @@ class TestBike:
         with pytest.raises(AlreadyLockedError):
             bike.lock()
 
-    def test_locking_bike_outside_zone(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_locking_bike_outside_zone(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
@@ -41,7 +43,8 @@ class TestBike:
         with pytest.raises(PositionNotWithinZoneError):
             bike.lock(maintenance=False, ignore_zone=False)
 
-    def test_lock_with_maintenance_mode(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_lock_with_maintenance_mode(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
@@ -49,63 +52,71 @@ class TestBike:
         assert bike.mode.is_maintenance(), \
             "Bike should be in maintenance mode after locking with maintenance=True."
 
-    def test_moving_bike(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_moving_bike(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
         initial_battery = bike.battery.level
         charging_zone = Map.Zone.get_charging_zone(bike.zones)
         charging_position = Map.Zone.get_centroid_position(charging_zone)
-        bike.move(charging_position)
+        await bike.move(charging_position)
         assert bike.battery.level < initial_battery
         bike.speed.limit(bike.zones, bike.zone_types, bike.position.current)
         assert bike.speed.current == mock_zone_types["charging"]["speed_limit"]
 
-    def test_move_when_locked(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_move_when_locked(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         with pytest.raises(AlreadyLockedError):
-            bike.move((0.001, 0.001))
+            await bike.move((0.001, 0.001))
 
-    def test_move_invalid_position_type(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_move_invalid_position_type(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
         with pytest.raises(InvalidPositionTypeError):
-            bike.move("invalid_position_type")
+            await bike.move("invalid_position_type")
 
-    def test_move_invalid_position_length(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_move_invalid_position_length(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
         with pytest.raises(InvalidPositionLengthError):
-            bike.move([0.001])
+            await bike.move([0.001])
 
-    def test_move_with_tuple(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_move_with_tuple(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
         new_position = (0.002, 0.002)
-        bike.move(new_position)
+        await bike.move(new_position)
         assert bike.position.current == new_position
 
-    def test_move_with_two_element_list(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_move_with_two_element_list(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
         new_position = [0.002, 0.002]
-        bike.move(new_position)
+        await bike.move(new_position)
         assert bike.position.current == tuple(new_position)
 
-    def test_move_with_multiple_positions_list(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_move_with_multiple_positions_list(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
         positions = [(0.001, 0.001), (0.002, 0.002), (0.003, 0.003)]
-        bike.move(positions)
+        await bike.move(positions)
         assert bike.position.current == positions[-1]
 
-    def test_relocate_to_charging_zone_success(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_relocate_to_charging_zone_success(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
@@ -115,7 +126,8 @@ class TestBike:
             bike.relocate_to_charging_zone()
         assert bike.position.current == expected_position
 
-    def test_relocate_to_charging_zone_out_of_bounds(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_relocate_to_charging_zone_out_of_bounds(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
@@ -124,12 +136,14 @@ class TestBike:
             position = (999.0, 999.0)
             bike.relocate(position, ignore_zone=False)
 
-    def test_relocate_position_is_invalid_position(self):
+    @pytest.mark.asyncio
+    async def test_relocate_position_is_invalid_position(self):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         with pytest.raises(InvalidPositionTypeError):
             bike.relocate("invalid_position")
 
-    def test_charging_in_charging_zone(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_charging_in_charging_zone(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
@@ -137,17 +151,19 @@ class TestBike:
         charging_position = Map.Zone.get_centroid_position(charging_zone)
         bike.relocate(charging_position)
         bike.battery.level = 50.0
-        bike.charge(desired_level=100.0)
+        await bike.charge(desired_level=100.0)
         assert bike.battery.level == 100.0
 
-    def test_charging_outside_charging_zone(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_charging_outside_charging_zone(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
         with pytest.raises(NotChargingZoneError):
-            bike.charge(desired_level=100.0)
+            await bike.charge(desired_level=100.0)
 
-    def test_maintenance_mode_when_battery_is_low(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_maintenance_mode_when_battery_is_low(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.unlock(user_id=123, trip_id=456)
@@ -157,7 +173,8 @@ class TestBike:
         bike.check()
         assert bike.mode.is_maintenance()
 
-    def test_deploy_bike(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_deploy_bike(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         deployment_zone = next(zone for zone in mock_zones if zone["zone_type"] == "parking")
@@ -169,7 +186,8 @@ class TestBike:
         assert deployed_position == expected_position, \
             f"Deployed position {deployed_position} does not match expected {expected_position}"
 
-    def test_check_out_of_bounds(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_check_out_of_bounds(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         with patch('src._utils._map.Map.Position.get_closest_zone') as mock_get_closest_zone:
@@ -189,7 +207,8 @@ class TestBike:
                     "This position is out of bounds. It is not in one of the zones on the map.", \
                         "Incorrect error message."
 
-    def test_check_with_maintenance_mode(self, mock_zones, mock_zone_types):
+    @pytest.mark.asyncio
+    async def test_check_with_maintenance_mode(self, mock_zones, mock_zone_types):
         bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
         bike.update(mock_zones, mock_zone_types)
         bike.check(maintenance=True)

@@ -1,4 +1,4 @@
-import time
+import asyncio
 from datetime import datetime, timezone
 
 class Clock:
@@ -8,12 +8,12 @@ class Clock:
         return datetime.now(timezone.utc).isoformat() # TODO: correct format?
 
     @staticmethod
-    def sleep(seconds):
+    async def sleep(seconds):
         if not isinstance(seconds, (int, float)):
             raise TypeError("Seconds must be a number.")
         if seconds < 0:
             raise ValueError("Seconds cannot be negative.")
-        time.sleep(seconds)
+        await asyncio.sleep(seconds)
 
     @staticmethod
     def get_duration_in_minutes(distance_in_km, speed_in_kmh):

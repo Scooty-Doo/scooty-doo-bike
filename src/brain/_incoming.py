@@ -16,7 +16,7 @@ class StartTripRequest(BaseModel):
     trip_id: int
 
 @app.post("/start_trip")
-def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
+async def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
     try:
         brain.bike.unlock(request.user_id, request.trip_id)
         return {
@@ -34,9 +34,9 @@ class MoveRequest(BaseModel):
 
 # TODO: gör så att den kan hantera tuple + Point WKR + list[tuple] + LineString WKR
 @app.post("/move")
-def move(request: MoveRequest, brain = Depends(get_brain)):
+async def move(request: MoveRequest, brain = Depends(get_brain)):
     try:
-        brain.bike.move(request.position_or_linestring)
+        await brain.bike.move(request.position_or_linestring)
         return {
             "message": "Moved and battery drained. Report sent.",
             "data": {
@@ -53,7 +53,7 @@ class RelocateRequest(BaseModel):
     position: Union[tuple, list]
 
 @app.post("/relocate")
-def relocate(request: RelocateRequest, brain = Depends(get_brain)):
+async def relocate(request: RelocateRequest, brain = Depends(get_brain)):
     try:
         brain.bike.relocate(request.position)
         return {
@@ -69,7 +69,7 @@ class EndTripRequest(BaseModel):
     ignore_zone: bool = True
 
 @app.post("/end_trip")
-def end_trip(request: EndTripRequest, brain = Depends(get_brain)):
+async def end_trip(request: EndTripRequest, brain = Depends(get_brain)):
     try:
         brain.bike.lock(request.maintenance, request.ignore_zone)
         return {
@@ -87,7 +87,7 @@ class CheckRequest(BaseModel):
     maintenance: bool = False
 
 @app.post("/check")
-def check(request: CheckRequest, brain = Depends(get_brain)):
+async def check(request: CheckRequest, brain = Depends(get_brain)):
     try:
         brain.bike.check(request.maintenance)
         return {
@@ -102,7 +102,7 @@ class ReportRequest(BaseModel):
     pass
 
 @app.get("/report")
-def report(brain = Depends(get_brain)): # request: ReportRequest
+async def report(brain = Depends(get_brain)): # request: ReportRequest
     try:
         brain.bike.report()
         return {
@@ -116,11 +116,11 @@ class UpdateRequest(BaseModel):
     pass
 
 @app.post("/update")
-def update(brain = Depends(get_brain)): # request: UpdateRequest
+async def update(brain = Depends(get_brain)): # request: UpdateRequest
     try:
-        zones = brain.request_zones()
-        zone_types = brain.request_zone_types()
-        brain.bike.update(zones=zones, zone_types=zone_types)
+        zones = await brain.request_zones()
+        zone_types = await brain.request_zone_types()
+        await brain.bike.update(zones=zones, zone_types=zone_types)
         return {"message": "Zones and zone types updated"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
