@@ -7,16 +7,17 @@ def _url(url, endpoint):
     return f'{url.rstrip("/")}/{endpoint.lstrip("/")}'
 
 class Outgoing:
-    def __init__(self, token):
+    def __init__(self, token: str, bike_id: int):
         self.endpoints = Settings.Endpoints()
         self.url = self.endpoints.backend_url
         self.token = token
+        self.bike_id = bike_id
         self.headers = {
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {self.token}',
         }
         self.logs = Logs(self.url, self.headers)
-        self.reports = Reports(self.url, self.headers)
+        self.reports = Reports(self.url, self.headers, self.bike_id)
         self.request = Request(self.url, self.headers)
 
 class Request():
@@ -80,13 +81,14 @@ class Logs():
                 raise httpx.RequestError(f"Failed to update logs: {e}") from e
 
 class Reports():
-    def __init__(self, url, headers):
+    def __init__(self, url, headers, bike_id):
         self.endpoints = Settings.Endpoints()
         self.url = url
         self.headers = headers
+        self.bike_id = bike_id
 
     async def send(self, reports: Union[Dict, List[Dict]]):
-        url = _url(self.url, self.endpoints.Bikes.update)
+        url = _url(self.url, self.endpoints.Bikes.update(self.bike_id))
         if isinstance(reports, dict):
             reports = [reports]
         async with httpx.AsyncClient() as client:

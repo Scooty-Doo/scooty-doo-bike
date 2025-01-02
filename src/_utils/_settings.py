@@ -26,11 +26,21 @@ class Settings:
 
         class Bikes:
             endpoint = 'v1/bikes/'
-            get_all = f'{endpoint}'
-            get = f'{endpoint}' + f'{os.getenv("BIKE_ID")}'
-            add = f'{endpoint}'
-            update = f'{endpoint}' + f'{os.getenv("BIKE_ID")}'
-            remove = f'{endpoint}' + f'{os.getenv("BIKE_ID")}'
+            @staticmethod
+            def get_all():
+                return f'{Settings.Endpoints.Bikes.endpoint}'
+            @staticmethod
+            def get(bike_id: int):
+                return f'{Settings.Endpoints.Bikes.endpoint}{bike_id}'
+            @staticmethod
+            def add():
+                return f'{Settings.Endpoints.Bikes.endpoint}'
+            @staticmethod
+            def update(bike_id: int):
+                return f'{Settings.Endpoints.Bikes.endpoint}{bike_id}'
+            @staticmethod
+            def remove(bike_id: int):
+                return f'{Settings.Endpoints.Bikes.endpoint}{bike_id}'
 
         class Trips:
             endpoint = 'v1/trips/'
