@@ -1,6 +1,7 @@
-import threading
+import asyncio
 import os
 import uvicorn
+import platform
 from dotenv import load_dotenv
 from ._utils._errors import Errors
 from ._utils._settings import Settings
@@ -30,10 +31,7 @@ def show_help():
             - same for _utils/_parking_zones.json
           """)
 
-# TODO: Gör så att den tankar in miljövariabler från .env som default.
-# men kan överskrivas med CLI?
-
-if __name__ == "__main__":
+async def main():
     bike_id = os.getenv("BIKE_ID")
     token = os.getenv("TOKEN")
     longitude = Settings.Position.default_longitude \
@@ -47,8 +45,6 @@ if __name__ == "__main__":
             show_help()
             raise Errors.initialization_error()
 
-    # TODO: Should token be skipped as parameter
-    # and instead taken from environment? Same on Outgoing?
     brain = Brain(
         bike_id=bike_id,
         longitude=longitude,
@@ -56,22 +52,34 @@ if __name__ == "__main__":
         token=token
     )
 
-    def brain_thread():
-        brain.run()
+    await brain.initialize()
 
-    def start_fastapi():
-        def brain_dependency_override():
-            return brain
+    app.dependency_overrides[get_brain] = lambda: brain
 
-        app.dependency_overrides[get_brain] = brain_dependency_override
-        port = 8000 + int(bike_id)
-        uvicorn.run(app, host="0.0.0.0", port=port, log_level="debug")
+    host = "0.0.0.0"
+    if platform.system() == "Windows":
+        host = "127.0.0.1"
 
-    brain_thread_instance = threading.Thread(target=brain_thread)
-    brain_thread_instance.daemon = True
-    brain_thread_instance.start()
+    config = uvicorn.Config(
+        app,
+        host=host,
+        port=8000 + int(bike_id),
+        log_level="debug",
+        loop="asyncio",
+        lifespan="on"
+    )
+    server = uvicorn.Server(config)
 
-    start_fastapi()
+    await asyncio.gather(
+        brain.run(),
+        server.serve()
+    )
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except (KeyboardInterrupt, SystemExit):
+        print("Application has been shut down.")
 
 # BIKE_ID=1 TOKEN=token python -m src.main
 

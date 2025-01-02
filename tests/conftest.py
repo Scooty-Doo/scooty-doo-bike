@@ -1,9 +1,11 @@
 import json
 import os
-from unittest.mock import patch
-import pytest
+import sys
+from unittest.mock import patch, AsyncMock
+import asyncio
+import pytest_asyncio
 
-@pytest.fixture(scope="session")
+@pytest_asyncio.fixture(scope="session")
 def mock_zones():
     """Load mock zones from a local JSON file."""
     current_dir = os.path.dirname(__file__)
@@ -12,7 +14,7 @@ def mock_zones():
         zones = json.load(f)
     return zones
 
-@pytest.fixture(scope="session")
+@pytest_asyncio.fixture(scope="session")
 def mock_zone_types():
     """Load mock zone types from a local JSON file."""
     current_dir = os.path.dirname(__file__)
@@ -21,7 +23,7 @@ def mock_zone_types():
         zone_types = json.load(f)
     return zone_types
 
-@pytest.fixture
+@pytest_asyncio.fixture
 def sample_zones_for_test_map():
     return [
         {
@@ -50,7 +52,7 @@ def sample_zones_for_test_map():
         }
     ]
 
-@pytest.fixture
+@pytest_asyncio.fixture
 def sample_zone_types_for_test_map():
     return {
         "parking": {
@@ -67,8 +69,8 @@ def sample_zone_types_for_test_map():
         }
     }
 
-@pytest.fixture(autouse=True)
-def mock_sleep(request):
+@pytest_asyncio.fixture(autouse=True)
+async def mock_sleep(request):
     """
     Automatically mock Clock.sleep to prevent actual sleeping during tests.
     This fixture is applied to all tests automatically due to autouse=True.
@@ -77,15 +79,16 @@ def mock_sleep(request):
         and request.node.cls.__name__ == "TestClock":
         yield
     else:
-        with patch('src._utils._clock.Clock.sleep', return_value=None):
+        with patch('src._utils._clock.Clock.sleep', new_callable=AsyncMock) as mock_sleep:
+            mock_sleep.return_value = asyncio.sleep(0)
             yield
 
-@pytest.fixture
+@pytest_asyncio.fixture
 def mock_environment(monkeypatch):
     """Mock environment variables required for the application."""
     monkeypatch.setenv("BIKE_ID", "test_bike")
     monkeypatch.setenv("TOKEN", "test_token")
-    monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
+    monkeypatch.setenv("BACKEND_URL", "http://localhost:8000/")
     monkeypatch.setenv("LONGITUDE", "0.0")
     monkeypatch.setenv("LATITUDE", "0.0")
     monkeypatch.setenv("PORT", "8000")
@@ -93,3 +96,4 @@ def mock_environment(monkeypatch):
 # python -m pytest
 # python -m pytest -s
 # python -m pytest --cov=src --cov-report=html
+# python -m pytest -W error --cov=src --cov-report=html

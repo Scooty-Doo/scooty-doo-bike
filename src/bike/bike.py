@@ -70,9 +70,9 @@ class Bike:
             self.mode.sleep()
         self.report()
 
-    def move(self, position_or_linestring):
+    async def move(self, position_or_linestring):
         """Move the bike to a new position or follow a linestring."""
-        def _move(position):
+        async def _move(position):
             position = (float(position[0]), float(position[1])) # TODO: can be removed?
             speed_in_kmh = self.speed.default
             distance_in_km = Map.Position.get_distance_in_km(self.position.current, position)
@@ -90,17 +90,17 @@ class Bike:
                 self.report()
                 leg_duration_in_seconds = Clock.get_leg_duration_in_seconds(
                     total_duration_in_minutes, total_reports)
-                Clock.sleep(leg_duration_in_seconds)
+                await Clock.sleep(leg_duration_in_seconds)
             self.user.trip.add_movement(self.position.current)
             self.logs.update(self.user.trip.get())
             self.check()
         if self.mode.is_locked():
             raise Errors.already_locked()
         if Position.is_position(position_or_linestring):
-            _move(position_or_linestring)
+            await _move(position_or_linestring)
         elif Validate.is_linestring(position_or_linestring):
             for position in position_or_linestring:
-                _move(position)
+                await _move(position)
         elif not Position.is_position(position_or_linestring) \
             or not Validate.is_linestring(position_or_linestring):
             Validate.position_or_linestring(position_or_linestring)
@@ -145,7 +145,7 @@ class Bike:
             self.report()
             raise Errors.out_of_bounds()
 
-    def charge(self, desired_level):
+    async def charge(self, desired_level):
         """Charge the bike to the desired battery level."""
         if not Map.Zone.is_charging_zone(self.city.zones, self.position.current):
             raise Errors.not_charging_zone()
@@ -156,7 +156,7 @@ class Bike:
             self.report()
             leg_duration_in_seconds = Clock.get_leg_duration_in_seconds(
                 total_duration_in_minutes, total_reports)
-            Clock.sleep(leg_duration_in_seconds)
+            await Clock.sleep(leg_duration_in_seconds)
 
     def report(self):
         """Add a report."""
