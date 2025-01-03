@@ -29,6 +29,8 @@ def show_help():
             Other Information:
             - BIKE_IDS and POSITIONS must be of the same length (or POSITIONS can be omitted).
           """)
+    
+# TODO: Configure logging and write logs to file (1 per bike_id/brain + 1 general log file).
 
 async def main():
     bike_ids = os.getenv("BIKE_IDS")

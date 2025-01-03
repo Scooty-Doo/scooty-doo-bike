@@ -64,6 +64,11 @@ class InvalidPositionCoordinatesError(Exception):
     def __init__(self, message="Each coordinate in position must be an int or float."):
         super().__init__(message)
 
+class MovingOrChargingError(Exception):
+    def __init__(self, message="Bike is moving or charging and cannot accept further requests "
+                 "until moving or charging is completed."):
+        super().__init__(message)
+
 class Errors():
     # TODO: remove if not used
     #@staticmethod
@@ -117,3 +122,7 @@ class Errors():
     @staticmethod
     def invalid_position_coordinates():
         raise InvalidPositionCoordinatesError()
+
+    @staticmethod
+    def moving_or_charging():
+        raise MovingOrChargingError()

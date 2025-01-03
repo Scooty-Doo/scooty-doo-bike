@@ -1,9 +1,13 @@
 from typing import Union, Optional
 from pydantic import BaseModel
-from fastapi import FastAPI, HTTPException, Depends, Query, Request
-from .._utils._errors import AlreadyUnlockedError, AlreadyLockedError, InvalidPositionError
+from fastapi import FastAPI, HTTPException, Depends, Query, Request, BackgroundTasks
+import asyncio
 from .brain import Brain
 from .hivemind import Hivemind 
+from .._utils._errors import (AlreadyUnlockedError,
+                              AlreadyLockedError,
+                              InvalidPositionError,
+                              MovingOrChargingError)
 
 app = FastAPI()
 
@@ -32,6 +36,8 @@ class StartTripRequest(BaseModel):
 @app.post("/start_trip")
 async def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
     try:
+        if brain.bike.is_moving_or_charging(): 
+            raise MovingOrChargingError()
         brain.bike.unlock(request.user_id, request.trip_id)
         return {
             "message": "Trip started.",
@@ -48,16 +54,20 @@ class MoveRequest(BaseModel):
 
 # TODO: gör så att den kan hantera tuple + Point WKR + list[tuple] + LineString WKR
 @app.post("/move")
-async def move(request: MoveRequest, brain = Depends(get_brain)):
+async def move(request: MoveRequest, background_tasks: BackgroundTasks, brain = Depends(get_brain)):
     try:
-        await brain.bike.move(request.position_or_linestring)
+        if brain.bike.is_moving_or_charging(): 
+            raise MovingOrChargingError()
+        asyncio.create_task(brain.bike.move(request.position_or_linestring))
         return {
-            "message": "Moved and battery drained. Report sent.",
+            "message": "Move initiated. Battery drain and reporting will be done during the move.",
             "data": {
                 "report": brain.bike.reports.last()}}
     except AlreadyLockedError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     except InvalidPositionError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    except MovingOrChargingError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
@@ -69,6 +79,8 @@ class RelocateRequest(BaseModel):
 @app.post("/relocate")
 async def relocate(request: RelocateRequest, brain = Depends(get_brain)):
     try:
+        if brain.bike.is_moving_or_charging(): 
+            raise MovingOrChargingError()
         brain.bike.relocate(request.position)
         return {
             "message": "Relocated. Report sent.", 
@@ -85,6 +97,8 @@ class EndTripRequest(BaseModel):
 @app.post("/end_trip")
 async def end_trip(request: EndTripRequest, brain = Depends(get_brain)):
     try:
+        if brain.bike.is_moving_or_charging(): 
+            raise MovingOrChargingError()
         brain.bike.lock(request.maintenance, request.ignore_zone)
         return {
             "message": "Trip ended. Log and report sent",
@@ -103,6 +117,8 @@ class CheckRequest(BaseModel):
 @app.post("/check")
 async def check(request: CheckRequest, brain = Depends(get_brain)):
     try:
+        if brain.bike.is_moving_or_charging(): 
+            raise MovingOrChargingError()
         brain.bike.check(request.maintenance)
         return {
             "message": "Bike checked. Report sent",
@@ -132,6 +148,8 @@ class UpdateRequest(BaseModel):
 @app.post("/update")
 async def update(brain = Depends(get_brain)): # request: UpdateRequest
     try:
+        if brain.bike.is_moving_or_charging(): 
+            raise MovingOrChargingError()
         zones = await brain.request_zones()
         zone_types = await brain.request_zone_types()
         await brain.bike.update(zones=zones, zone_types=zone_types)

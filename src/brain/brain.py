@@ -2,6 +2,10 @@ from ._outgoing import Outgoing
 from ..bike.bike import Bike
 from .._utils._settings import Settings
 from .._utils._clock import Clock
+import logging
+import httpx
+
+# TODO: Arrange logging to a bike_id specific file + a general log file
 
 class Brain:
     def __init__(self, bike_id,
@@ -13,6 +17,7 @@ class Brain:
         self.bike = Bike(bike_id, longitude, latitude)
         self.outgoing = Outgoing(token, bike_id)
         self.running = True
+        self.logger = logging.getLogger(__name__)
 
     async def initialize(self):
         if self.bike.zones is None:
@@ -27,7 +32,14 @@ class Brain:
 
     async def run(self):
         while self.running:
-            await self.send_report()
+            try:
+                await self.send_report()
+            except httpx.HTTPStatusError as e:
+                self.logger.error(f"HTTPStatusError while sending report: {e}")
+                raise e
+            except Exception as e:
+                self.logger.error(f"Unexpected error while sending report: {e}")
+                raise e
             report_interval = getattr(Settings.Report, f'interval_{self.bike.mode.current}')
             await Clock.sleep(report_interval)
 
