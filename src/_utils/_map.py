@@ -7,16 +7,7 @@ from shapely.wkt import loads as wkt_loads
 ZONES_FILENAME = '_zones.json'
 ZONE_TYPES_FILENAME = '_zone_types.json'
 
-# _zones.json
-# [
-#     {
-#         "id": 1,
-#         "zone_name": "zone1",
-#         "zone_type": "parking",
-#         "city_id": "city1",
-#         "boundary": "Polygon(...)"
-#     },
-# ]
+# TODO: Kolla på att optimisera användandet av zoner (se Martins kommentar i Discord).
 
 class Map:
     class Zone:

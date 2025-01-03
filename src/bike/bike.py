@@ -94,13 +94,18 @@ class Bike:
             self.user.trip.add_movement(self.position.current)
             self.logs.update(self.user.trip.get())
             self.check()
+            self.mode.submodes.usage.moving = False
         if self.mode.is_locked():
             raise Errors.already_locked()
         if Position.is_position(position_or_linestring):
+            self.mode.submodes.usage.moving = True
             await _move(position_or_linestring)
+            self.mode.submodes.usage.moving = False
         elif Validate.is_linestring(position_or_linestring):
+            self.mode.submodes.usage.moving = True
             for position in position_or_linestring:
                 await _move(position)
+            self.mode.submodes.usage.moving = False
         elif not Position.is_position(position_or_linestring) \
             or not Validate.is_linestring(position_or_linestring):
             Validate.position_or_linestring(position_or_linestring)
@@ -132,7 +137,7 @@ class Bike:
 
     def check(self, maintenance=False):
         """Check if the bike needs maintenance."""
-        if maintenance:
+        if maintenance: # TODO: if this one is used a trip should be ended gracefully in some way...
             self.mode.maintenance()
             self.report()
             return
@@ -149,6 +154,7 @@ class Bike:
         """Charge the bike to the desired battery level."""
         if not Map.Zone.is_charging_zone(self.city.zones, self.position.current):
             raise Errors.not_charging_zone()
+        self.mode.submodes.usage.charging = True
         total_duration_in_minutes = self.battery.get_charge_time(desired_level)
         total_reports = Reports.reports_needed(total_duration_in_minutes)
         for _ in range(total_reports):
@@ -157,6 +163,7 @@ class Bike:
             leg_duration_in_seconds = Clock.get_leg_duration_in_seconds(
                 total_duration_in_minutes, total_reports)
             await Clock.sleep(leg_duration_in_seconds)
+        self.mode.submodes.usage.charging = False
 
     def report(self):
         """Add a report."""
@@ -167,3 +174,7 @@ class Bike:
         self.zones = zones if zones else self.zones
         self.zone_types = zone_types if zone_types else self.zone_types
         self.city.switch(self.zones, self.position.current)
+
+    def is_moving_or_charging(self):
+        """Check if the bike is moving or charging."""
+        return self.mode.submodes.usage.moving or self.mode.submodes.usage.charging
