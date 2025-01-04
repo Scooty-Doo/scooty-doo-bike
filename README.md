@@ -1,3 +1,6 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Scooty-Doo/scooty-doo-bike/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Scooty-Doo/scooty-doo-bike/?branch=main)
+[![Code Coverage](https://scrutinizer-ci.com/g/Scooty-Doo/scooty-doo-bike/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/Scooty-Doo/scooty-doo-bike/?branch=main)
+[![Build Status](https://scrutinizer-ci.com/g/Scooty-Doo/scooty-doo-bike/badges/build.png?b=main)](https://scrutinizer-ci.com/g/Scooty-Doo/scooty-doo-bike/build-status/main)
 # scooty-doo-bike
 Program controlling e-scooters for the Scooty Doo bike renting application
 
