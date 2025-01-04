@@ -1,0 +1,26 @@
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env
+.venv/
+
+# Git repository
+.git
+.gitignore
+
+# Docker files
+Dockerfile
+docker-compose.yml
+
+# Testing and coverage
+*.coverage
+*.pytest_cache/
+htmlcov/
+
+# Documentation
+docs/

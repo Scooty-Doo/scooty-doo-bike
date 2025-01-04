@@ -1,0 +1,19 @@
+version: '3.8'
+
+#networks:
+#  scooty-web:
+#    external: true
+
+services:
+  bike_hivemind:
+    build: .
+    container_name: bike_hivemind_app
+    env_file:
+      - .env
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+    #networks:
+    #  - scooty-web
+    restart: unless-stopped
