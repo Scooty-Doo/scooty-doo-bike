@@ -1,6 +1,6 @@
-#networks:
-#  scooty-web:
-#    external: true
+networks:
+  scooty-web:
+    external: true
 
 services:
   bike_hivemind:
@@ -12,6 +12,8 @@ services:
       - "8001:8001"
     volumes:
       - .:/app
-    #networks:
-    #  - scooty-web
+    networks:
+      - scooty-web
     restart: unless-stopped
+    depends_on:
+      - api
