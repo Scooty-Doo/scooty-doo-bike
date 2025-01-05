@@ -28,6 +28,10 @@ def get_brain(bike_id: Optional[int] = Query(
         return hivemind.get_brain(bike_id)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+    
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the bike hivemind API."}
 
 class StartTripRequest(BaseModel):
     user_id: int
