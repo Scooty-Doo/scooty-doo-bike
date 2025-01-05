@@ -81,9 +81,9 @@ async def main():
     
     app.state.hivemind = hivemind # NOTE: Will this work? Or dependency injection is needed?
 
-    host = "0.0.0.0"
-    if platform.system() == "Windows":
-        host = "127.0.0.1"
+    host = "0.0.0.0" # NOTE: This is for it to work in Docker.
+    #if platform.system() == "Windows":
+    #    host = "127.0.0.1"
 
     config = uvicorn.Config(
         app,
