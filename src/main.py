@@ -1,6 +1,7 @@
 import asyncio
 import os
 import uvicorn
+import time
 from typing import List
 from dotenv import load_dotenv
 from ._utils._errors import Errors
@@ -37,6 +38,8 @@ async def main():
     bike_ids = os.getenv("BIKE_IDS", "")
     positions = os.getenv("POSITIONS", "")
     try:
+        print("BIKE: Waiting 20 seconds in order for the backend to start.")
+        time.sleep(20)
         initialize = Initialize(token)
         bike_ids = initialize.bike_ids()
         positions = initialize.bike_positions()
