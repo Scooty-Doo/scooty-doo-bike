@@ -14,7 +14,7 @@ class Initialize:
             'Authorization': f'Bearer {self.token}',
         }
         self.bikes = self._bikes()
-        print(self.bikes)
+        print(f'Bikes look like this: {self.bikes}')
 
     def _bikes(self):
         url = _url(self.url, self.endpoints.Bikes.get_all())
