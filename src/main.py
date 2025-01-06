@@ -5,6 +5,7 @@ import time
 from typing import List
 from dotenv import load_dotenv
 from ._utils._errors import Errors
+from ._utils._clock import Clock
 from .brain._initialize import Initialize
 from .brain.brain import Brain
 from .brain.hivemind import Hivemind
@@ -38,8 +39,8 @@ async def main():
     bike_ids = os.getenv("BIKE_IDS", "")
     positions = os.getenv("POSITIONS", "")
     try:
-        print("BIKE: Waiting 20 seconds in order for the backend to start.")
-        time.sleep(20)
+        print("BIKE: Waiting 10 seconds in order for the backend to start.")
+        await Clock.sleep(10)
         initialize = Initialize(token)
         bike_ids = initialize.bike_ids()
         positions = initialize.bike_positions()
