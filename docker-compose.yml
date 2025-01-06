@@ -15,5 +15,3 @@ services:
     networks:
       - scooty-web
     restart: unless-stopped
-    depends_on:
-      - api
