@@ -16,7 +16,7 @@ class Initialize:
         self.bikes = self._bikes()
 
     async def _bikes(self):
-        url = _url(self.url, self.endpoints.Bikes.get_all)
+        url = _url(self.url, self.endpoints.Bikes.get_all())
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.get(url, headers=self.headers, timeout=10.0)
