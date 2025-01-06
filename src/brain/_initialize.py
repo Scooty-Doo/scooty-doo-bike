@@ -13,29 +13,25 @@ class Initialize:
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {self.token}',
         }
-        self.bikes = []
-    
-    async def fetch_bikes(self):
-        self.bikes = await self.bikes()
+        self.bikes = self._bikes().get('data', [])
+        print(f'Bikes look like this: {self.bikes}')
 
-    async def _bikes(self):
+    def _bikes(self):
         url = _url(self.url, self.endpoints.Bikes.get_all())
-        async with httpx.AsyncClient() as client:
+        with httpx.Client() as client:
             try:
-                response = await client.get(url, headers=self.headers, timeout=10.0)
+                response = client.get(url, headers=self.headers, timeout=10.0)
                 response.raise_for_status()
                 return response.json()
             except httpx.RequestError as e:
                 raise httpx.RequestError(f"Failed to request bikes: {e}") from e
 
-    async def bike_ids(self):
-        await self.fetch_bikes()
-        bikes = self.bikes.get('data', [])
+    def bike_ids(self):
+        bikes = self.bikes
         return Serialize.bike_ids(Extract.Bike.ids(bikes))
     
-    async def bike_positions(self):
-        await self.fetch_bikes()
-        bikes = self.bikes.get('data', [])
+    def bike_positions(self):
+        bikes = self.bikes
         return Serialize.positions(Extract.Bike.positions(bikes))
 
 class Extract:
