@@ -16,22 +16,22 @@ class Initialize:
         self.bikes = self._bikes()
         print(self.bikes)
 
-    async def _bikes(self):
+    def _bikes(self):
         url = _url(self.url, self.endpoints.Bikes.get_all())
-        async with httpx.AsyncClient() as client:
+        with httpx.Client() as client:
             try:
-                response = await client.get(url, headers=self.headers, timeout=10.0)
+                response = client.get(url, headers=self.headers, timeout=10.0)
                 response.raise_for_status()
                 return response.json()
             except httpx.RequestError as e:
                 raise httpx.RequestError(f"Failed to request bikes: {e}") from e
 
-    async def bike_ids(self):
-        bikes = await self.bikes
+    def bike_ids(self):
+        bikes = self.bikes
         return Extract.Bike.ids(bikes)
     
-    async def bike_positions(self):
-        bikes = await self.bikes
+    def bike_positions(self):
+        bikes = self.bikes
         return Extract.Bike.positions(bikes)
 
 class Extract:
