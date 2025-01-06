@@ -38,7 +38,7 @@ class Extract:
     class Bike:
         @staticmethod
         def ids(bikes):
-            return [bike['id'] for bike in bikes]
+            return [bike['data']['id'] for bike in bikes]
 
         @staticmethod
         def positions(bikes):
@@ -46,7 +46,7 @@ class Extract:
             def _point_to_tuple(point):
                 point = point.replace("POINT(", "").replace(")", "")
                 return tuple(map(float, point.split()))
-            return [_point_to_tuple(bike['attributes']['last_position']) for bike in bikes]
+            return [_point_to_tuple(bike['data']['attributes']['last_position']) for bike in bikes]
 
 class Serialize:
     @staticmethod
