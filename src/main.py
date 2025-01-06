@@ -40,6 +40,8 @@ async def main():
         initialize = Initialize(token)
         bike_ids = await initialize.bike_ids()
         positions = await initialize.bike_positions()
+        os.environ["BIKE_IDS"] = bike_ids
+        os.environ["POSITIONS"] = positions
     except Exception as e:
         print(f"ERROR: Failed to initialize: {e}")
         print("Getting bike IDs and positions from environment variables instead.")
