@@ -13,7 +13,7 @@ class Initialize:
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {self.token}',
         }
-        self.bikes = self._bikes()
+        self.bikes = self._bikes().get('data', [])
         print(f'Bikes look like this: {self.bikes}')
 
     def _bikes(self):
