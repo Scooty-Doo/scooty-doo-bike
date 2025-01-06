@@ -42,6 +42,10 @@ async def main():
         positions = await initialize.bike_positions()
         os.environ["BIKE_IDS"] = bike_ids
         os.environ["POSITIONS"] = positions
+        print("DEBUG: BACKEND_URL =", os.getenv("BACKEND_URL"))
+        print("DEBUG: BIKE_IDS =", os.getenv("BIKE_IDS"))
+        print("DEBUG: TOKEN =", os.getenv("TOKEN"))
+        print("DEBUG: POSITIONS =", os.getenv("POSITIONS"))
     except Exception as e:
         print(f"ERROR: Failed to initialize: {e}")
         print("Getting bike IDs and positions from environment variables instead.")

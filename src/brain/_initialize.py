@@ -27,11 +27,11 @@ class Initialize:
 
     async def bike_ids(self):
         bikes = await self.bikes
-        return Serialize.bike_ids(Extract.Bike.ids(bikes))
+        return Extract.Bike.ids(bikes)
     
     async def bike_positions(self):
         bikes = await self.bikes
-        return Serialize.positions(Extract.Bike.positions(bikes))
+        return Extract.Bike.positions(bikes)
 
 class Extract:
     class Bike:
