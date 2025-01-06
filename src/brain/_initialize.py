@@ -28,11 +28,11 @@ class Initialize:
 
     def bike_ids(self):
         bikes = self.bikes
-        return Extract.Bike.ids(bikes)
+        return Serialize.bike_ids(Extract.Bike.ids(bikes))
     
     def bike_positions(self):
         bikes = self.bikes
-        return Extract.Bike.positions(bikes)
+        return Serialize.positions(Extract.Bike.positions(bikes))
 
 class Extract:
     class Bike:
