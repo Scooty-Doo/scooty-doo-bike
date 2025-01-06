@@ -1,10 +1,10 @@
 import asyncio
 import os
 import uvicorn
-import platform
 from typing import List
 from dotenv import load_dotenv
 from ._utils._errors import Errors
+from .brain._initialize import Initialize
 from .brain.brain import Brain
 from .brain.hivemind import Hivemind
 from .brain._incoming import app
@@ -33,9 +33,16 @@ def show_help():
 # TODO: Configure logging and write logs to file (1 per bike_id/brain + 1 general log file).
 
 async def main():
-    bike_ids = os.getenv("BIKE_IDS")
-    token = os.getenv("TOKEN")
-    positions = os.getenv("POSITIONS")
+    token = os.getenv("TOKEN", "")
+    bike_ids = os.getenv("BIKE_IDS", "")
+    positions = os.getenv("POSITIONS", "")
+    try:
+        initialize = Initialize(token)
+        bike_ids = await initialize.bike_ids()
+        positions = await initialize.bike_positions()
+    except Exception as e:
+        print(f"ERROR: Failed to initialize: {e}")
+        print("Getting bike IDs and positions from environment variables instead.")
 
     if not bike_ids:
         show_help()
