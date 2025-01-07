@@ -32,6 +32,7 @@ class Bike:
         self.city.switch(self.zones, self.position.current)
         #if not Map.Position.is_within_zone(self.city.zones, self.position.current):
         #    self.deploy()
+        self.check(maintenance=False)
         self.status = Status(self)
         self.report()
 
