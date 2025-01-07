@@ -1,7 +1,7 @@
 from .._utils._errors import Errors
 
 class Mode:
-    def __init__(self, mode='maintenance'):
+    def __init__(self, mode='sleep'):
         self.current = mode
         self.modes = ['sleep', 'usage', 'maintenance']
         self.submodes = _Submodes()
