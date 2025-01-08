@@ -145,6 +145,19 @@ async def report(brain = Depends(get_brain)): # request: ReportRequest
                 "report": brain.bike.reports.last()}}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
+    
+class LogRequest(BaseModel):
+    pass
+
+@app.get("/log")
+async def log(brain = Depends(get_brain)):
+    try:
+        return {
+            "message": "Log created and sent",
+            "data": {
+                "log": brain.bike.logs.last()}}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
 class UpdateRequest(BaseModel):
     pass

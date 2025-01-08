@@ -6,11 +6,11 @@ class TestMode:
 
     def test_initial_mode(self):
         mode = Mode()
-        assert mode.current == 'maintenance'
+        assert mode.current == 'sleep'
 
     def test_initial_mode_custom(self):
-        mode = Mode(mode='sleep')
-        assert mode.current == 'sleep'
+        mode = Mode(mode='maintenance')
+        assert mode.current == 'maintenance'
 
     def test_invalid_initial_mode(self):
         with pytest.raises(InvalidModeError):
