@@ -90,7 +90,7 @@ async def main():
         hivemind.add_brain(bike_id, brain)
         brains.append(brain)
     
-    app.state.hivemind = hivemind # NOTE: Will this work? Or dependency injection is needed?
+    app.state.hivemind = hivemind
 
     host = "0.0.0.0" # NOTE: This is for it to work in Docker.
     #if platform.system() == "Windows":
@@ -117,6 +117,6 @@ if __name__ == "__main__":
     except (KeyboardInterrupt, SystemExit):
         print("Application has been shut down.")
 
-# BIKE_IDS=1,2,3 TOKEN=token POSITIONS=13.45:54.124,13.46:54.125,13.47:54.126 python -m src.main
+# BACKEND_URL='http://localhost:8000/' BIKE_IDS=1,2,3 TOKEN=token POSITIONS=13.45:54.124,13.46:54.125,13.47:54.126 python -m src.main
 
 # TODO: Create Docker related files.
