@@ -86,7 +86,7 @@ class Format:
                     if len(entry['path_taken']) == 1:
                         entry['path_taken'] = LineString([entry['path_taken'][0], entry['path_taken'][0]]).wkt
                     else:
-                        entry['path_taken'] = None
+                        entry['path_taken'] = LineString([entry['start_position'], entry['start_position']]).wkt
             if 'start_position' in entry:
                 entry['start_position'] = Point(entry['start_position']).wkt
             if 'end_position' in entry:
