@@ -7,7 +7,7 @@ class Settings:
         default_latitude = float(0.0)
 
     class Speed:
-        default_speed_limit = 1000
+        default_speed_limit = os.getenv("DEFAULT_SPEED", 20.0)
 
     class Battery:
         drain_per_minute = 0.05
