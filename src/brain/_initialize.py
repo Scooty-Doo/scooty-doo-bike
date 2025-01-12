@@ -20,7 +20,7 @@ class Initialize:
         url = _url(self.url, self.endpoints.Bikes.get_all())
         with httpx.Client() as client:
             try:
-                response = client.get(url, headers=self.headers, timeout=10.0)
+                response = client.get(url, headers=self.headers, timeout=20.0)
                 response.raise_for_status()
                 return response.json()
             except httpx.RequestError as e:
