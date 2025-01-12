@@ -79,6 +79,32 @@ class TestIntegration:
         },
     }
 
+    correct_response_end_no_move = {
+        "message": "Trip ended. Log and report sent",
+        "data": {
+            "log": {
+                "user_id": 652134919185249719,
+                "bike_id": 1,
+                "trip_id": 1114,
+                "start_time": "2024-12-25T13:27:44.284455+00:00",
+                "start_position": "POINT(12.44 23.44)",
+                "end_time": "2024-12-25T13:27:44.284455+00:00",
+                "end_position": "POINT(12.44 23.44)",
+                "path_taken": "LINESTRING(12.44 23.44, 12.44 23.44)",
+                "start_zone_id": None,
+                "start_zone_type": None,
+                "end_zone_id": None,
+                "end_zone_type": None,
+            },
+            "report": {
+                "city_id": 1,
+                "last_position": "POINT(12.44 23.44)",
+                "battery_lvl": 100,
+                "is_available": True,
+            },
+        },
+    }
+
     def test_api_startup(self):
         """Tests if api starts"""
         # Setup
@@ -132,3 +158,25 @@ class TestIntegration:
 
         assert end_response.status_code == 200
         assert end_response.json() == self.correct_response_end
+
+    @pytest.mark.usefixtures("integration_mock_fixture")
+    def test_whole_trip_no_move(self):
+        """Tests if end_trip route works"""
+        # Setup
+        client = TestClient(app)
+
+        # Act
+        # Start trip:
+        start_response = client.post(
+            "/start_trip", json={"user_id": 652134919185249719, "trip_id": 1114}
+        )
+
+        assert start_response.status_code == 200
+
+        # End trip:
+        end_response = client.post(
+            "end_trip", json={"maintenance": False, "ignore_zone": True}
+        )
+
+        assert end_response.status_code == 200
+        assert end_response.json() == self.correct_response_end_no_move
