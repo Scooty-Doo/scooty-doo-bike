@@ -40,7 +40,7 @@ async def main():
     positions = os.getenv("POSITIONS", "")
     try:
         print("BIKE: Waiting 5 seconds in order for the backend to start.")
-        await Clock.sleep(5)
+        await Clock.sleep(30)
         initialize = Initialize(token)
         bike_ids = initialize.bike_ids()
         positions = initialize.bike_positions()
