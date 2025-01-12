@@ -30,7 +30,7 @@ class Request():
         url = _url(self.url, self.endpoints.Zones.get_all)
         async with httpx.AsyncClient() as client:
             try:
-                response = await client.get(url, headers=self.headers, timeout=10.0)
+                response = await client.get(url, headers=self.headers, timeout=20.0)
                 response.raise_for_status()
                 return response.json()
             except httpx.RequestError as e:
@@ -40,7 +40,7 @@ class Request():
         url = _url(self.url, self.endpoints.Zones.get_types)
         async with httpx.AsyncClient() as client:
             try:
-                response = await client.get(url, headers=self.headers, timeout=10.0)
+                response = await client.get(url, headers=self.headers, timeout=20.0)
                 response.raise_for_status()
                 return response.json()
             except httpx.RequestError as e:
@@ -61,7 +61,7 @@ class Logs():
                 for log in logs:
                     response = await client.post(
                         url, headers=self.headers,
-                        data=json.dumps(log), timeout=10.0)
+                        data=json.dumps(log), timeout=20.0)
                     response.raise_for_status()
             except httpx.RequestError as e:
                 raise httpx.RequestError(f"Failed to send logs: {e}") from e
@@ -75,7 +75,7 @@ class Logs():
                 for log in logs:
                     response = await client.patch(
                         url, headers=self.headers,
-                        data=json.dumps(log), timeout=10.0)
+                        data=json.dumps(log), timeout=20.0)
                     response.raise_for_status()
             except httpx.RequestError as e:
                 raise httpx.RequestError(f"Failed to update logs: {e}") from e
@@ -96,7 +96,7 @@ class Reports():
                 for report in reports:
                     response = await client.patch(
                         url, headers=self.headers,
-                        data=json.dumps(report), timeout=10.0)
+                        data=json.dumps(report), timeout=20.0)
                     response.raise_for_status()
             except httpx.RequestError as e:
                 raise httpx.RequestError(f"Failed to send reports: {e}") from e
