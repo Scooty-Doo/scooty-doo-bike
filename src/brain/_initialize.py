@@ -14,8 +14,6 @@ class Initialize:
             'Authorization': f'Bearer {self.token}',
         }
         self.bikes = None # self._bikes().get('data', [])
-        print(f'Bikes look like this: {self.bikes}')
-    
 
     async def _load_bikes(self):
         if self.bikes is None:
