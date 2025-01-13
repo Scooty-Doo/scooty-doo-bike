@@ -150,7 +150,8 @@ class TestBike:
             charging_zone = Map.Zone.get_charging_zone(bike.zones)
             charging_position = Map.Zone.get_centroid_position(charging_zone)
             bike.relocate(charging_position)
-            bike.battery.level = 99.99 # NOTE: Set battery level to 99.9 to avoid test taking too long
+            # NOTE: Set battery level to 99.9 to avoid test taking too long
+            bike.battery.level = 99.99
             await bike.charge(desired_level=100.0)
             assert bike.battery.level == 100.0
 

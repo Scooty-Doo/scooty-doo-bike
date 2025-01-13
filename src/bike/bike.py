@@ -74,7 +74,7 @@ class Bike:
     async def move(self, position_or_linestring):
         """Move the bike to a new position or follow a linestring."""
         async def _move(position):
-            position = (float(position[0]), float(position[1])) # TODO: can be removed?
+            position = (float(position[0]), float(position[1]))
             speed_in_kmh = self.speed.default
             distance_in_km = Map.Position.get_distance_in_km(self.position.current, position)
             total_duration_in_minutes = Clock.get_duration_in_minutes(distance_in_km, speed_in_kmh)

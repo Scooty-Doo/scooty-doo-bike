@@ -7,7 +7,7 @@ class Settings:
         default_latitude = float(0.0)
 
     class Speed:
-        default_speed_limit = int(os.getenv("DEFAULT_SPEED", 20.0))
+        default_speed_limit = int(os.getenv("DEFAULT_SPEED", "20.0"))
 
     class Battery:
         drain_per_minute = 0.05
@@ -21,8 +21,9 @@ class Settings:
         backend_url = os.getenv("BACKEND_URL")
         bike_id = os.getenv("BIKE_ID")
 
-        # TODO: Endpoints need to get the values through parameters
+        # NOTE: Endpoints need to get the values through parameters
         # (convert attribute to method) or environment (if BIKE_ID).
+        # Change this if you need other endpoints.
 
         class Bikes:
             endpoint = 'v1/bikes/'

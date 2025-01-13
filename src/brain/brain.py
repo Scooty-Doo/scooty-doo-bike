@@ -5,8 +5,6 @@ from .._utils._clock import Clock
 import logging
 import httpx
 
-# TODO: Arrange logging to a bike_id specific file + a general log file
-
 class Brain:
     def __init__(self, bike_id,
                  longitude=None,

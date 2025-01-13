@@ -50,26 +50,12 @@ class Map:
             speed_limit = zone_types[zone_type]['speed_limit']
             return speed_limit
 
-        # TODO: remove if not used
-        #@staticmethod
-        #def is_parking_zone(zones, position):
-        #    zone = Map.Zone.get(zones, position)
-        #    if Map.Zone.get_zone_type(zone) == 'parking':
-        #        return True
-
         @staticmethod
         def is_charging_zone(zones, position):
             zone = Map.Zone.get(zones, position)
             if Map.Zone.get_zone_type(zone) == 'charging':
                 return True
             return False
-
-        # TODO: remove if not used
-        #@staticmethod
-        #def is_forbidden_zone(zones, position):
-        #    zone = Map.Zone.get(zones, position)
-        #    if Map.Zone.get_zone_type(zone) == 'forbidden':
-        #        return True
 
         @staticmethod
         def get_deployment_zone(zones):
@@ -106,11 +92,6 @@ class Map:
         def get_charging_zones(zones):
             return [zone for zone in zones if Map.Zone.get_zone_type(zone) == 'charging']
 
-        # TODO: remove if not used
-        #@staticmethod
-        #def get_slow_zones(zones):
-        #    return [zone for zone in zones if Map.Zone.get_zone_type(zone) == 'slow']
-
     class ZoneTypes:
         @staticmethod
         def load():
@@ -126,12 +107,6 @@ class Map:
         @staticmethod
         def is_within_zone(zones, position):
             return Map.Zone.get(zones, position) is not None
-
-        # TODO: remove if not used
-        #@staticmethod
-        #def is_within_city_zone(zones, position, city_id):
-        #    zone = Map.Position.get_closest_zone(zones, position)
-        #    return Map.Zone.has_city_id(zone, city_id)
 
         @staticmethod
         def get_closest_zone(zones, position):
@@ -193,4 +168,3 @@ class Map:
             return _calculate_final_position(start_position, end_position,
                                              distance_travelled, distance
                                              )
-

@@ -1,7 +1,6 @@
 import asyncio
 import os
 import uvicorn
-import time
 from typing import List
 from dotenv import load_dotenv
 from ._utils._errors import Errors
@@ -31,7 +30,7 @@ def show_help():
             Other Information:
             - BIKE_IDS and POSITIONS must be of the same length (or POSITIONS can be omitted).
           """)
-    
+
 # TODO: Configure logging and write logs to file (1 per bike_id/brain + 1 general log file).
 
 async def main():
@@ -53,7 +52,7 @@ async def main():
         show_help()
         print("ERROR: BIKE_IDS is required.")
         raise Errors.initialization_error()
-    
+
     try:
         bike_ids: List[int] = [int(bike_id.strip()) for bike_id in bike_ids.split(",")]
     except ValueError as e:
@@ -90,7 +89,7 @@ async def main():
         await brain.initialize()
         hivemind.add_brain(bike_id, brain)
         brains.append(brain)
-    
+
     app.state.hivemind = hivemind
 
     host = "0.0.0.0" # NOTE: This is for it to work in Docker.
@@ -119,5 +118,3 @@ if __name__ == "__main__":
         print("Application has been shut down.")
 
 # BACKEND_URL='http://localhost:8000/' BIKE_IDS=1,2,3 TOKEN=token POSITIONS=13.45:54.124,13.46:54.125,13.47:54.126 python -m src.main
-
-# TODO: Create Docker related files.

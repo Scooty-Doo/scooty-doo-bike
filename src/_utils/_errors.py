@@ -1,9 +1,3 @@
-# TODO: remove if not used
-#class NotParkingZoneError(Exception):
-#    """Custom error raised when bike is in a non-parking zone."""
-#    def __init__(self, message="This zone is not a parking zone."):
-#        super().__init__(message)
-
 class NotChargingZoneError(Exception):
     """Custom error raised when bike is not in a charging zone."""
     def __init__(self, message="This zone is not a charging zone."):
@@ -70,11 +64,6 @@ class MovingOrChargingError(Exception):
         super().__init__(message)
 
 class Errors():
-    # TODO: remove if not used
-    #@staticmethod
-    #def not_parking_zone():
-    #    raise NotParkingZoneError()
-
     @staticmethod
     def not_charging_zone():
         raise NotChargingZoneError()

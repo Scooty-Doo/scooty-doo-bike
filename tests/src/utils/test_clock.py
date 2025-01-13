@@ -1,5 +1,5 @@
-import pytest
 from unittest.mock import patch, AsyncMock
+import pytest
 from src._utils._clock import Clock
 
 class TestClock:

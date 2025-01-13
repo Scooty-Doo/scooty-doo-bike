@@ -32,7 +32,7 @@ class Initialize:
     async def bike_ids(self):
         await self._load_bikes()
         return Serialize.bike_ids(Extract.Bike.ids(self.bikes))
-    
+
     async def bike_positions(self):
         await self._load_bikes()
         return Serialize.positions(Extract.Bike.positions(self.bikes))

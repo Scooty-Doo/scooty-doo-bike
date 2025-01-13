@@ -1,8 +1,6 @@
 from typing import Dict, Optional
 from .brain import Brain
 
-# TODO: Should the methods by async?
-
 class Hivemind:
     def __init__(self):
         self.brains: Dict[int, Brain] = {}
