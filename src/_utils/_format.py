@@ -37,6 +37,14 @@ class Format:
                 entry['path_taken'] = entry.pop('route')
             if 'id' in entry:
                 entry['trip_id'] = entry.pop('id')
+            if 'start_zone_id' in entry:
+                entry['start_map_zone_id'] = entry.pop('start_zone_id')
+            if 'start_zone_type' in entry:
+                entry['start_map_zone_type'] = entry.pop('start_zone_type')
+            if 'end_zone_id' in entry:
+                entry['end_map_zone_id'] = entry.pop('end_zone_id')
+            if 'end_zone_type' in entry:
+                entry['end_map_zone_type'] = entry.pop('end_zone_type')
         if is_report:
             if 'position' in entry:
                 entry['last_position'] = entry.pop('position')
