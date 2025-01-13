@@ -15,6 +15,9 @@ class TestIntegration:
     @pytest.fixture
     def integration_mock_fixture(self, monkeypatch):
         """Fixture for integration testing"""
+
+        # Set DEFAULT_SPEED to 2000.0
+        monkeypatch.setenv("DEFAULT_SPEED", "2000.0")
         # Create a brain instance
         brain_instance = Brain(
             bike_id=1, longitude=12.44, latitude=23.44, token="token"
@@ -38,6 +41,7 @@ class TestIntegration:
                 "city_id": 1,
                 "last_position": "POINT(12.44 23.44)",
                 "battery_lvl": 100,
+                "speed": 20.0,
                 "is_available": False,
             },
             "log": {
@@ -74,6 +78,7 @@ class TestIntegration:
                 "city_id": 1,
                 "last_position": "POINT(12.45 23.45)",
                 "battery_lvl": 100,
+                "speed": 20.0,
                 "is_available": True,
             },
         },
@@ -99,6 +104,7 @@ class TestIntegration:
             "report": {
                 "city_id": 1,
                 "last_position": "POINT(12.44 23.44)",
+                "speed": 20.0,
                 "battery_lvl": 100,
                 "is_available": True,
             },

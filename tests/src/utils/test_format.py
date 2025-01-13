@@ -38,6 +38,7 @@ class TestFormatter:
         expected = {
             "last_position": "POINT(0.002 0.002)",
             "battery_lvl": 76,  # Ceil of 75.5
+            "speed": 10,
             "is_available": True
         }
         assert formatted == expected

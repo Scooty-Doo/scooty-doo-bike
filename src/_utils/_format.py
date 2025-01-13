@@ -78,8 +78,8 @@ class Format:
                 del entry['timestamp']
             if 'distance' in entry:
                 del entry['distance']
-            if 'speed' in entry:
-                del entry['speed']
+            #if 'speed' in entry:
+            #    del entry['speed']
             if 'bike_id' in entry:
                 del entry['bike_id']
         return entry
