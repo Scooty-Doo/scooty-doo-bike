@@ -165,8 +165,7 @@ class TestIntegration:
         end_reponse_text = end_response.json()
         expected_end_response_text = "{'detail': 'Internal Server Error. Details: Bike is moving or charging and cannot accept further requests until moving or charging is completed.'}"
 
-        assert end_response.status_code == 200 or str(expected_end_response_text) == end_reponse_text
-        assert end_response.json() == self.correct_response_end
+        assert (end_response.status_code == 200 and end_response.json() == self.correct_response_end) or expected_end_response_text == end_reponse_text
 
     @pytest.mark.usefixtures("integration_mock_fixture")
     def test_whole_trip_no_move(self):
