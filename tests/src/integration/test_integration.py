@@ -139,7 +139,7 @@ class TestIntegration:
         # Act
         # Start trip:
         start_response = client.post(
-            "/start_trip", json={"user_id": "652134919185249719", "trip_id": "1114"}
+            "/start_trip", json={"user_id": 652134919185249719, "trip_id": 1114}
         )
 
         if start_response.status_code != 200:
