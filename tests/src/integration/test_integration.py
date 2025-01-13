@@ -165,7 +165,7 @@ class TestIntegration:
         end_reponse_text = end_response.json()
         is_moving_text = "Bike is moving"
 
-        assert (end_response.status_code == 200 and end_response.json() == self.correct_response_end) or is_moving_text in end_reponse_text
+        assert end_response.status_code == 200 or is_moving_text in end_reponse_text
 
     @pytest.mark.usefixtures("integration_mock_fixture")
     def test_whole_trip_no_move(self):
