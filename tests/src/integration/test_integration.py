@@ -131,10 +131,11 @@ class TestIntegration:
         assert response.json() == self.correct_response_start
 
     @pytest.mark.usefixtures("integration_mock_fixture")
-    def test_whole_trip(self):
+    def test_whole_trip(self, monkeypatch):
         """Tests if end_trip route works"""
         # Setup
         client = TestClient(app)
+        monkeypatch.setenv("DEFAULT_SPEED", "2000.0")
 
         # Act
         # Start trip:
