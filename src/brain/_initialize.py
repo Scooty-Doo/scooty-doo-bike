@@ -13,26 +13,31 @@ class Initialize:
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {self.token}',
         }
-        self.bikes = self._bikes().get('data', [])
+        self.bikes = None # self._bikes().get('data', [])
         print(f'Bikes look like this: {self.bikes}')
-
-    def _bikes(self):
-        url = _url(self.url, self.endpoints.Bikes.get_all())
-        with httpx.Client() as client:
-            try:
-                response = client.get(url, headers=self.headers, timeout=20.0)
-                response.raise_for_status()
-                return response.json()
-            except httpx.RequestError as e:
-                raise httpx.RequestError(f"Failed to request bikes: {e}") from e
-
-    def bike_ids(self):
-        bikes = self.bikes
-        return Serialize.bike_ids(Extract.Bike.ids(bikes))
     
-    def bike_positions(self):
-        bikes = self.bikes
-        return Serialize.positions(Extract.Bike.positions(bikes))
+
+    async def _load_bikes(self):
+        if self.bikes is None:
+            url = _url(self.url, self.endpoints.Bikes.get_all())
+            async with httpx.AsyncClient() as client:
+                try:
+                    response = await client.get(url, headers=self.headers, timeout=20.0)
+                    response.raise_for_status()
+                    self.bikes = response.json().get('data', [])
+                    print(f'Bikes loaded. First five bikes: {self.bikes[0:5]}')
+                except httpx.RequestError as e:
+                    raise httpx.RequestError(f"Failed to request bikes: {e}") from e
+        else:
+            print(f'Bikes already loaded. First five bikes: {self.bikes[0:5]}')
+
+    async def bike_ids(self):
+        await self._load_bikes()
+        return Serialize.bike_ids(Extract.Bike.ids(self.bikes))
+    
+    async def bike_positions(self):
+        await self._load_bikes()
+        return Serialize.positions(Extract.Bike.positions(self.bikes))
 
 class Extract:
     class Bike:

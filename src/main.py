@@ -43,8 +43,8 @@ async def main():
         print(f"BIKE: Waiting {seconds_to_wait_for_backend} seconds in order for the backend to start.")
         await Clock.sleep(seconds_to_wait_for_backend)
         initialize = Initialize(token)
-        bike_ids = initialize.bike_ids()
-        positions = initialize.bike_positions()
+        bike_ids = await initialize.bike_ids()
+        positions = await initialize.bike_positions()
     except Exception as e:
         print(f"ERROR: Failed to initialize: {e}")
         print("Getting bike IDs and positions from environment variables instead.")
