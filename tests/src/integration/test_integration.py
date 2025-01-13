@@ -159,6 +159,9 @@ class TestIntegration:
             "end_trip", json={"maintenance": False, "ignore_zone": True}
         )
 
+        if end_response.status_code != 200:
+            print(end_response.json())
+
         assert end_response.status_code == 200
         assert end_response.json() == self.correct_response_end
 
@@ -182,5 +185,6 @@ class TestIntegration:
         )
         if end_response.status_code != 200:
             print(end_response.json())
+
         assert end_response.status_code == 200
         assert end_response.json() == self.correct_response_end_no_move
