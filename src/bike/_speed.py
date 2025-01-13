@@ -5,7 +5,7 @@ class Speed:
     def __init__(self):
         self.settings = Settings.Speed()
         self.current = 0
-        self.default = self.settings.default_speed_limit
+        self.default = int(self.settings.default_speed_limit)
 
     def limit(self, zones, zone_types, position):
         """Fetch speed limit for position."""
