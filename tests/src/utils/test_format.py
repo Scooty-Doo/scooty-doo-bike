@@ -64,7 +64,7 @@ class TestFormatter:
         formatted = Format._apply_all_formatting(entry)
         expected = {
             "trip_id": 456,
-            "path_taken": None
+            "path_taken": "LINESTRING(0 0, 0 0)"
         }
         assert formatted == expected
 

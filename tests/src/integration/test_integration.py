@@ -46,9 +46,9 @@ class TestIntegration:
                 "trip_id": 1114,
                 "start_time": "2024-12-25T13:27:44.284455+00:00",
                 "start_position": "POINT(12.44 23.44)",
-                "path_taken": None,
-                "start_zone_id": None,
-                "start_zone_type": None,
+                "path_taken": "LINESTRING(12.44 23.44, 12.44 23.44)",
+                "start_map_zone_id": None,
+                "start_map_zone_type": None,
             },
         },
     }
@@ -63,16 +63,16 @@ class TestIntegration:
                 "start_time": "2024-12-25T13:27:44.284455+00:00",
                 "start_position": "POINT(12.44 23.44)",
                 "end_time": "2024-12-25T13:27:44.284455+00:00",
-                "end_position": "POINT(23.11 34.22)",
-                "path_taken": "LINESTRING(12.44 23.44, 23.11 34.22)",
-                "start_zone_id": None,
-                "start_zone_type": None,
-                "end_zone_id": None,
-                "end_zone_type": None,
+                "end_position": "POINT(12.45 23.45)",
+                "path_taken": "LINESTRING(12.44 23.44, 12.45 23.45)",
+                "start_map_zone_id": None,
+                "start_map_zone_type": None,
+                "end_map_zone_id": None,
+                "end_map_zone_type": None,
             },
             "report": {
                 "city_id": 1,
-                "last_position": "POINT(23.11 34.22)",
+                "last_position": "POINT(12.45 23.45)",
                 "battery_lvl": 100,
                 "is_available": True,
             },
@@ -91,10 +91,10 @@ class TestIntegration:
                 "end_time": "2024-12-25T13:27:44.284455+00:00",
                 "end_position": "POINT(12.44 23.44)",
                 "path_taken": "LINESTRING(12.44 23.44, 12.44 23.44)",
-                "start_zone_id": None,
-                "start_zone_type": None,
-                "end_zone_id": None,
-                "end_zone_type": None,
+                "start_map_zone_id": None,
+                "start_map_zone_type": None,
+                "end_map_zone_id": None,
+                "end_map_zone_type": None,
             },
             "report": {
                 "city_id": 1,
@@ -139,14 +139,16 @@ class TestIntegration:
         # Act
         # Start trip:
         start_response = client.post(
-            "/start_trip", json={"user_id": 652134919185249719, "trip_id": 1114}
+            "/start_trip", json={"user_id": "652134919185249719", "trip_id": "1114"}
         )
 
+        if start_response.status_code != 200:
+            print(start_response.json())
         assert start_response.status_code == 200
 
         # Move bike once:
         move_response = client.post(
-            "move", json={"position_or_linestring": [23.11, 34.22]}
+            "move", json={"position_or_linestring": [[12.45, 23.45]]}
         )
 
         assert move_response.status_code == 200

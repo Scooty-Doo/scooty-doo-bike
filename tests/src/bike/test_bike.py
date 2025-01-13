@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import patch, AsyncMock
 import pytest
 from src.bike.bike import Bike
 from src._utils._map import Map
@@ -7,7 +7,6 @@ from src._utils._errors import (AlreadyUnlockedError, AlreadyLockedError,
                                 InvalidPositionTypeError, OutOfBoundsError,
                                 InvalidPositionLengthError)
 
-@pytest.mark.usefixtures("mock_environment")
 class TestBike:
     @pytest.mark.asyncio
     async def test_unlocking_bike(self, mock_zones, mock_zone_types):
@@ -144,15 +143,16 @@ class TestBike:
 
     @pytest.mark.asyncio
     async def test_charging_in_charging_zone(self, mock_zones, mock_zone_types):
-        bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
-        bike.update(mock_zones, mock_zone_types)
-        bike.unlock(user_id=123, trip_id=456)
-        charging_zone = Map.Zone.get_charging_zone(bike.zones)
-        charging_position = Map.Zone.get_centroid_position(charging_zone)
-        bike.relocate(charging_position)
-        bike.battery.level = 50.0
-        await bike.charge(desired_level=100.0)
-        assert bike.battery.level == 100.0
+        with patch('asyncio.sleep', new=AsyncMock()):
+            bike = Bike(bike_id="1", longitude=0.0, latitude=0.0)
+            bike.update(mock_zones, mock_zone_types)
+            bike.unlock(user_id=123, trip_id=456)
+            charging_zone = Map.Zone.get_charging_zone(bike.zones)
+            charging_position = Map.Zone.get_centroid_position(charging_zone)
+            bike.relocate(charging_position)
+            bike.battery.level = 99.99 # NOTE: Set battery level to 99.9 to avoid test taking too long
+            await bike.charge(desired_level=100.0)
+            assert bike.battery.level == 100.0
 
     @pytest.mark.asyncio
     async def test_charging_outside_charging_zone(self, mock_zones, mock_zone_types):

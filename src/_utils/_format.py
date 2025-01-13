@@ -91,7 +91,7 @@ class Format:
                 if entry['path_taken'] is not None and isinstance(entry['path_taken'], list):
                     if len(entry['path_taken']) > 1:
                         entry['path_taken'] = LineString(entry['path_taken']).wkt
-                    if len(entry['path_taken']) == 1:
+                    elif len(entry['path_taken']) == 1:
                         entry['path_taken'] = LineString([entry['path_taken'][0], entry['path_taken'][0]]).wkt
                     else:
                         entry['path_taken'] = LineString([entry['start_position'], entry['start_position']]).wkt

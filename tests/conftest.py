@@ -1,9 +1,12 @@
 import json
 import os
-import sys
-from unittest.mock import patch, AsyncMock
-import asyncio
+import pytest
 import pytest_asyncio
+
+@pytest.fixture(scope="function", autouse=True)
+def set_default_speed(monkeypatch):
+    """Fixture to set DEFAULT_SPEED to 2000 for tests."""
+    monkeypatch.setenv("DEFAULT_SPEED", "2000.0")
 
 @pytest_asyncio.fixture(scope="session")
 def mock_zones():
@@ -68,20 +71,6 @@ def sample_zone_types_for_test_map():
             "speed_limit": 20
         }
     }
-
-@pytest_asyncio.fixture(autouse=True)
-async def mock_sleep(request):
-    """
-    Automatically mock Clock.sleep to prevent actual sleeping during tests.
-    This fixture is applied to all tests automatically due to autouse=True.
-    """
-    if hasattr(request.node, 'cls') and request.node.cls is not None \
-        and request.node.cls.__name__ == "TestClock":
-        yield
-    else:
-        with patch('src._utils._clock.Clock.sleep', new_callable=AsyncMock) as mock_sleep:
-            mock_sleep.return_value = asyncio.sleep(0)
-            yield
 
 @pytest_asyncio.fixture
 def mock_environment(monkeypatch):
