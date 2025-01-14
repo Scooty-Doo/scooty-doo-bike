@@ -35,6 +35,8 @@ def show_help():
 
 async def main():
     TOKEN = os.getenv("TOKEN", "")
+    BIKE_IDS = None
+    POSITIONS = None
     INIT_BIKES_REMOTELY = os.getenv("INIT_BIKES_REMOTELY", "True").lower() == "true"
     if not INIT_BIKES_REMOTELY:
         print("DEBUG: Initializing bikes locally.")
