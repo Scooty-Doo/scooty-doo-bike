@@ -35,24 +35,24 @@ def show_help():
 
 async def main():
     TOKEN = os.getenv("TOKEN", "")
-    BIKE_IDS = None
-    POSITIONS = None
-    INIT_BIKES_REMOTELY = os.getenv("INIT_BIKES_REMOTELY", "True").lower() == "true"
-    if not INIT_BIKES_REMOTELY:
-        print("DEBUG: Initializing bikes locally.")
-        BIKE_IDS = os.getenv("BIKE_IDS", "")
-        POSITIONS = os.getenv("POSITIONS", "")
-    else:
-        try:
-            seconds_to_wait_for_backend = 5
-            print(f"BIKE: Waiting {seconds_to_wait_for_backend} seconds in order for the backend to start.")
-            await Clock.sleep(seconds_to_wait_for_backend)
-            initialize = Initialize(TOKEN)
-            BIKE_IDS = await initialize.bike_ids()
-            POSITIONS = await initialize.bike_positions()
-        except Exception as e:
-            print(f"ERROR: Failed to initialize: {e}")
-            print("Getting bike IDs and positions from environment variables instead.")
+    BIKE_IDS = os.getenv("BIKE_IDS", "")
+    POSITIONS = os.getenv("POSITIONS", "")
+    #INIT_BIKES_REMOTELY = os.getenv("INIT_BIKES_REMOTELY", "True").lower() == "true"
+    #if not INIT_BIKES_REMOTELY:
+    #    print("DEBUG: Initializing bikes locally.")
+    #    BIKE_IDS = os.getenv("BIKE_IDS", "")
+    #    POSITIONS = os.getenv("POSITIONS", "")
+    #else:
+    try:
+        seconds_to_wait_for_backend = 5
+        print(f"BIKE: Waiting {seconds_to_wait_for_backend} seconds in order for the backend to start.")
+        await Clock.sleep(seconds_to_wait_for_backend)
+        initialize = Initialize(TOKEN)
+        BIKE_IDS = await initialize.bike_ids()
+        POSITIONS = await initialize.bike_positions()
+    except Exception as e:
+        print(f"ERROR: Failed to initialize: {e}")
+        print("Getting bike IDs and positions from environment variables instead.")
 
     if not BIKE_IDS:
         show_help()
