@@ -20,6 +20,7 @@ class Settings:
     class Endpoints:
         backend_url = os.getenv("BACKEND_URL")
         bike_id = os.getenv("BIKE_ID")
+        bike_limit = os.getenv("BIKE_LIMIT", 9999)
 
         # NOTE: Endpoints need to get the values through parameters
         # (convert attribute to method) or environment (if BIKE_ID).

@@ -86,3 +86,4 @@ def mock_environment(monkeypatch):
 # python -m pytest -s
 # python -m pytest --cov=src --cov-report=html
 # python -m pytest -W error --cov=src --cov-report=html
+# python -m pytest --cov=src --cov-report=html --verbose -vv

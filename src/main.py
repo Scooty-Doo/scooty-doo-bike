@@ -34,57 +34,61 @@ def show_help():
 # TODO: Configure logging and write logs to file (1 per bike_id/brain + 1 general log file).
 
 async def main():
-    token = os.getenv("TOKEN", "")
-    bike_ids = os.getenv("BIKE_IDS", "")
-    positions = os.getenv("POSITIONS", "")
-    try:
-        seconds_to_wait_for_backend = 5
-        print(f"BIKE: Waiting {seconds_to_wait_for_backend} seconds in order for the backend to start.")
-        await Clock.sleep(seconds_to_wait_for_backend)
-        initialize = Initialize(token)
-        bike_ids = await initialize.bike_ids()
-        positions = await initialize.bike_positions()
-    except Exception as e:
-        print(f"ERROR: Failed to initialize: {e}")
-        print("Getting bike IDs and positions from environment variables instead.")
+    TOKEN = os.getenv("TOKEN", "")
+    INIT_BIKES_REMOTELY = os.getenv("INIT_BIKES_REMOTELY", "True").lower() == "true"
+    if not INIT_BIKES_REMOTELY:
+        print("DEBUG: Initializing bikes locally.")
+        BIKE_IDS = os.getenv("BIKE_IDS", "")
+        POSITIONS = os.getenv("POSITIONS", "")
+    else:
+        try:
+            seconds_to_wait_for_backend = 5
+            print(f"BIKE: Waiting {seconds_to_wait_for_backend} seconds in order for the backend to start.")
+            await Clock.sleep(seconds_to_wait_for_backend)
+            initialize = Initialize(TOKEN)
+            BIKE_IDS = await initialize.bike_ids()
+            POSITIONS = await initialize.bike_positions()
+        except Exception as e:
+            print(f"ERROR: Failed to initialize: {e}")
+            print("Getting bike IDs and positions from environment variables instead.")
 
-    if not bike_ids:
+    if not BIKE_IDS:
         show_help()
         print("ERROR: BIKE_IDS is required.")
         raise Errors.initialization_error()
 
     try:
-        bike_ids: List[int] = [int(bike_id.strip()) for bike_id in bike_ids.split(",")]
+        BIKE_IDS: List[int] = [int(bike_id.strip()) for bike_id in BIKE_IDS.split(",")]
     except ValueError as e:
         show_help()
         print(f"ERROR: BIKE_IDS must be a comma-separated list of integers: {e}")
         raise Errors.initialization_error()
 
-    if positions:
-        positions = [position.strip() for position in positions.split(",")]
-        if len(bike_ids) != len(positions):
+    if POSITIONS:
+        POSITIONS = [position.strip() for position in POSITIONS.split(",")]
+        if len(BIKE_IDS) != len(POSITIONS):
             show_help()
             print("ERROR: BIKE_IDS and POSITIONS must be of the same length.")
             raise Errors.initialization_error()
         try:
-            positions = [tuple(map(float, position.split(":"))) for position in positions]
+            POSITIONS = [tuple(map(float, position.split(":"))) for position in POSITIONS]
         except ValueError as e:
             show_help()
             print(f"ERROR: POSITIONS must be a comma-separated list of longitude:latitude pairs: {e}")
             raise Errors.initialization_error()
 
-    if not positions:
-        positions = list(zip([1.1] * len(bike_ids), [1.1] * len(bike_ids)))
+    if not POSITIONS:
+        POSITIONS = list(zip([1.1] * len(BIKE_IDS), [1.1] * len(BIKE_IDS)))
 
     hivemind = Hivemind()
 
     brains = []
-    for bike_id, (longitude, latitude) in zip(bike_ids, positions):
+    for bike_id, (longitude, latitude) in zip(BIKE_IDS, POSITIONS):
         brain = Brain(
             bike_id=bike_id,
             longitude=longitude,
             latitude=latitude,
-            token=token
+            token=TOKEN
         )
         await brain.initialize()
         hivemind.add_brain(bike_id, brain)
@@ -117,4 +121,4 @@ if __name__ == "__main__":
     except (KeyboardInterrupt, SystemExit):
         print("Application has been shut down.")
 
-# BACKEND_URL='http://localhost:8000/' BIKE_IDS=1,2,3 TOKEN=token POSITIONS=13.45:54.124,13.46:54.125,13.47:54.126 python -m src.main
+# INIT_BIKES_REMOTELY=false BACKEND_URL='http://localhost:8000/' BIKE_IDS=1,2,3 TOKEN=token POSITIONS=13.45:54.124,13.46:54.125,13.47:54.126 python -m src.main
