@@ -20,16 +20,9 @@ pip install -r requirements.txt
 
 ### .env file
 
-You can set up the bike with the following environment variables: 
-```
-BIKE_ID
-TOKEN
-BACKEND_URL
-LONGITUDE
-LATITUDE
-```
+You can set up the bike .env file with the environment variables found in .env.example.
 
-To make things easy, there is an [.env.example](.env.example) for you to use. Just rename it to copy it to a new .env and you're good to go.
+There is an [.env.example](.env.example) for you to use. Just rename it to copy it to a new .env and you're good to go.
 
 ## Start the bike
 
@@ -39,6 +32,10 @@ To start the bike run:
 # From project root
 python -m src.main
 ```
+
+NOTE: Currently, in order to run src/main.py using "python -m src.main" you need to setup the backend first, 
+since the application will crash once reports fail to be sent to the backend.
+It is recommended to start the application in the scooty-doo master repository where the backend and bike is set up in the same network.
 
 ## Run tests
 
