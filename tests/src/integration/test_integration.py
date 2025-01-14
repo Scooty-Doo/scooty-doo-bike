@@ -41,7 +41,7 @@ class TestIntegration:
                 "city_id": 1,
                 "last_position": "POINT(12.44 23.44)",
                 "battery_lvl": 100,
-                "speed": 20.0,
+                "speed": 20,
                 "is_available": False,
             },
             "log": {
@@ -78,7 +78,7 @@ class TestIntegration:
                 "city_id": 1,
                 "last_position": "POINT(12.45 23.45)",
                 "battery_lvl": 100,
-                "speed": 20.0,
+                "speed": 0,
                 "is_available": True,
             },
         },
@@ -104,7 +104,7 @@ class TestIntegration:
             "report": {
                 "city_id": 1,
                 "last_position": "POINT(12.44 23.44)",
-                "speed": 20.0,
+                "speed": 0,
                 "battery_lvl": 100,
                 "is_available": True,
             },
