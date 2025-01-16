@@ -44,7 +44,7 @@ async def main():
     #    POSITIONS = os.getenv("POSITIONS", "")
     #else:
     try:
-        seconds_to_wait_for_backend = 5
+        seconds_to_wait_for_backend = 0
         print(f"BIKE: Waiting {seconds_to_wait_for_backend} seconds in order for the backend to start.")
         await Clock.sleep(seconds_to_wait_for_backend)
         initialize = Initialize(TOKEN)
@@ -95,7 +95,7 @@ async def main():
         await brain.initialize()
         hivemind.add_brain(bike_id, brain)
         brains.append(brain)
-
+    print(f"Number of bikes: {len(BIKE_IDS)}")
     app.state.hivemind = hivemind
 
     host = "0.0.0.0" # NOTE: This is for it to work in Docker.
