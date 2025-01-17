@@ -1,4 +1,5 @@
 import os
+from random import randint
 
 class Settings:
 
@@ -72,7 +73,7 @@ class Settings:
             get = f'{endpoint}{{id}}'
 
     class Report:
-        interval = 5
-        interval_sleep = 60
-        interval_maintenance = 60
-        interval_usage = 5
+        interval = 10
+        interval_sleep = 300
+        interval_maintenance = 600
+        interval_usage = 10
