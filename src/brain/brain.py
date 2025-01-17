@@ -1,9 +1,11 @@
+from random import randint
 from ._outgoing import Outgoing
 from ..bike.bike import Bike
 from .._utils._settings import Settings
 from .._utils._clock import Clock
 import logging
 import httpx
+
 
 class Brain:
     def __init__(self, bike_id,
@@ -30,6 +32,10 @@ class Brain:
 
     async def run(self):
         while self.running:
+            report_interval = getattr(Settings.Report, f'interval_{self.bike.mode.current}')
+            delay = randint(report_interval, 1000)
+            my_space = report_interval + (delay/1000)
+            await Clock.sleep(my_space)
             try:
                 await self.send_report()
             except httpx.HTTPStatusError as e:
@@ -38,8 +44,7 @@ class Brain:
             except Exception as e:
                 self.logger.error(f"Unexpected error while sending report: {e}")
                 raise e
-            report_interval = getattr(Settings.Report, f'interval_{self.bike.mode.current}')
-            await Clock.sleep(report_interval)
+
 
     async def terminate(self):
         self.running = False
