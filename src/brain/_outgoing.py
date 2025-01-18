@@ -34,7 +34,7 @@ class Request():
                 response.raise_for_status()
                 return response.json()
             except httpx.RequestError as e:
-                raise httpx.RequestError(f"Failed to request zones: {e}") from e
+                print(f"Failed to get zones {e}")
 
     async def zone_types(self):
         url = _url(self.url, self.endpoints.Zones.get_types)
@@ -44,7 +44,7 @@ class Request():
                 response.raise_for_status()
                 return response.json()
             except httpx.RequestError as e:
-                raise httpx.RequestError(f"Failed to request zone types: {e}") from e
+                print(f"Failed to get zone types. {e}")
 
 class Logs():
     def __init__(self, url, headers):
@@ -64,7 +64,7 @@ class Logs():
                         data=json.dumps(log), timeout=20.0)
                     response.raise_for_status()
             except httpx.RequestError as e:
-                raise httpx.RequestError(f"Failed to send logs: {e}") from e
+                print(f"Failed to send log. {e}")
 
     async def update(self, logs: Union[Dict, List[Dict]]):
         url = _url(self.url, self.endpoints.Trips.update)
@@ -78,7 +78,7 @@ class Logs():
                         data=json.dumps(log), timeout=20.0)
                     response.raise_for_status()
             except httpx.RequestError as e:
-                raise httpx.RequestError(f"Failed to update logs: {e}") from e
+                print(f"Failed to send log. {e}")
 
 class Reports():
     def __init__(self, url, headers, bike_id):
@@ -99,4 +99,4 @@ class Reports():
                         data=json.dumps(report), timeout=20.0)
                     response.raise_for_status()
             except httpx.RequestError as e:
-                raise httpx.RequestError(f"Failed to send reports: {e}") from e
+                print(f"Failed to send report. {e}")
