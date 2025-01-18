@@ -3,6 +3,7 @@
 from unittest.mock import patch, AsyncMock, MagicMock
 import pytest
 import httpx
+from src.brain._initialize import Initialize, Extract, Serialize
 
 def _mock_response(json_data=None, status_code=200):
     """Return a mock response object."""
@@ -18,10 +19,9 @@ class TestInitialize:
     @pytest.mark.asyncio
     async def test_load_bikes_successful(self, monkeypatch):
         """Test that _load_bikes() loads bikes from the backend."""
-        monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
-        from src._utils._settings import Settings
-        monkeypatch.setattr("src._utils._settings.Settings.Endpoints.backend_url", "http://localhost:8000/")
-        from src.brain._initialize import Initialize
+        monkeypatch.setattr(
+            "src._utils._settings.Settings.Endpoints.backend_url",
+            "http://localhost:8000/")
         init = Initialize(token="token")
         init.bikes = None
 
@@ -50,7 +50,6 @@ class TestInitialize:
     @pytest.mark.asyncio
     async def test_load_bikes_already_loaded(self):
         """Test that _load_bikes() does not reload bikes if they're already loaded."""
-        from src.brain._initialize import Initialize
         init = Initialize(token="token")
         init.bikes = [{"bikes_already_loaded": 999}]
         with patch("httpx.AsyncClient", autospec=True) as mock_client_class:
@@ -64,10 +63,9 @@ class TestInitialize:
     @pytest.mark.asyncio
     async def test_load_bikes_request_error(self, monkeypatch):
         """Test that _load_bikes() raises a RequestError if the request fails."""
-        monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
-        from src.brain._initialize import Initialize
-        from src._utils._settings import Settings
-        monkeypatch.setattr("src._utils._settings.Settings.Endpoints.backend_url", "http://localhost:8000/")
+        monkeypatch.setattr(
+            "src._utils._settings.Settings.Endpoints.backend_url",
+            "http://localhost:8000/")
         init = Initialize(token="token")
         init.bikes = None
         with patch("httpx.AsyncClient", autospec=True) as mock_client_class:
@@ -83,10 +81,9 @@ class TestInitialize:
     @pytest.mark.asyncio
     async def test_bike_ids_calls_load_bikes(self, monkeypatch):
         """Test that bike_ids() calls _load_bikes() and returns a serialized list of bike IDs."""
-        monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
-        from src.brain._initialize import Initialize
-        from src._utils._settings import Settings
-        monkeypatch.setattr("src._utils._settings.Settings.Endpoints.backend_url", "http://localhost:8000/")
+        monkeypatch.setattr(
+            "src._utils._settings.Settings.Endpoints.backend_url",
+            "http://localhost:8000/")
         init = Initialize(token="token")
         init.bikes = None
 
@@ -116,10 +113,9 @@ class TestInitialize:
     async def test_bike_positions(self, monkeypatch):
         """Test that bike_positions() calls _load_bikes() and 
         returns a serialized list of bike positions."""
-        monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
-        from src.brain._initialize import Initialize
-        from src._utils._settings import Settings
-        monkeypatch.setattr("src._utils._settings.Settings.Endpoints.backend_url", "http://localhost:8000/")
+        monkeypatch.setattr(
+            "src._utils._settings.Settings.Endpoints.backend_url",
+            "http://localhost:8000/")
         init = Initialize(token="token")
         init.bikes = None
 
@@ -148,7 +144,6 @@ class TestExtract:
     """Tests for the Extract class."""
     def test_extract_bike_ids(self):
         """Test that Extract.Bike.ids() extracts bike IDs."""
-        from src.brain._initialize import Extract
         bikes = [
             {"id": 10, "attributes": {"last_position": "POINT(1 2)"}},
             {"id": 20, "attributes": {"last_position": "POINT(3 4)"}}
@@ -158,7 +153,6 @@ class TestExtract:
 
     def test_extract_bike_positions(self):
         """Test that Extract.Bike.positions() extracts bike positions."""
-        from src.brain._initialize import Extract
         bikes = [
             {"id": 10, "attributes": {"last_position": "POINT(13.0 55.0)"}},
             {"id": 20, "attributes": {"last_position": "POINT(14.5 56.25)"}}
@@ -170,14 +164,12 @@ class TestSerialize:
     """Tests for the Serialize class."""
     def test_serialize_bike_ids(self):
         """Test that Serialize.bike_ids() serializes a list of bike IDs."""
-        from src.brain._initialize import Serialize
         ids = [10, 20, 30]
         result = Serialize.bike_ids(ids)
         assert result == "10,20,30"
 
     def test_serialize_positions(self):
         """Test that Serialize.positions() serializes a list of positions."""
-        from src.brain._initialize import Serialize
         positions = [(13.06782, 55.577859), (13.46782, 54.977859)]
         result = Serialize.positions(positions)
         assert result == "13.06782:55.577859,13.46782:54.977859"

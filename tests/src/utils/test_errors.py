@@ -5,7 +5,11 @@ from src._utils._errors import (Errors,
                                 InitializationError,
                                 InvalidPositionError,
                                 InvalidPositionCoordinatesError,
-                                MovingOrChargingError)
+                                MovingOrChargingError,
+                                AlreadyLockedError,
+                                AlreadyUnlockedError,
+                                PositionNotWithinZoneError,
+                                InvalidPositionTypeError)
 
 class TestErrors:
     """Tests for the Errors class."""
@@ -73,3 +77,27 @@ class TestErrors:
         assert str(exc_info.value) == \
             "Bike is moving or charging and cannot accept further requests " \
             "until moving or charging is completed."
+
+    def test_already_locked_error_message_default(self):
+        """Test the default already locked error message."""
+        with pytest.raises(AlreadyLockedError) as exc_info:
+            raise AlreadyLockedError()
+        assert str(exc_info.value) == "This bike is already locked."
+
+    def test_errors_already_unlocked_error_message_default(self):
+        """Test the already unlocked error method."""
+        with pytest.raises(AlreadyUnlockedError) as exc_info:
+            Errors.already_unlocked()
+        assert str(exc_info.value) == "This bike is already in use (is unlocked)."
+
+    def test_position_not_within_zone_error_message_default(self):
+        """Test the default position not within zone error message."""
+        with pytest.raises(PositionNotWithinZoneError) as exc_info:
+            raise PositionNotWithinZoneError()
+        assert str(exc_info.value) == "This position is not within a zone."
+
+    def test_invalid_position_type_error_message_default(self):
+        """Test the default invalid position type error message."""
+        with pytest.raises(InvalidPositionTypeError) as exc_info:
+            raise InvalidPositionTypeError()
+        assert str(exc_info.value) == "Position must be a list or tuple."
