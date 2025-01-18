@@ -3,7 +3,6 @@
 from unittest.mock import patch, AsyncMock, MagicMock
 import pytest
 import httpx
-from src.brain._initialize import Extract, Serialize
 
 def _mock_response(json_data=None, status_code=200):
     """Return a mock response object."""
@@ -142,6 +141,7 @@ class TestExtract:
     """Tests for the Extract class."""
     def test_extract_bike_ids(self):
         """Test that Extract.Bike.ids() extracts bike IDs."""
+        from src.brain._initialize import Extract
         bikes = [
             {"id": 10, "attributes": {"last_position": "POINT(1 2)"}},
             {"id": 20, "attributes": {"last_position": "POINT(3 4)"}}
@@ -151,6 +151,7 @@ class TestExtract:
 
     def test_extract_bike_positions(self):
         """Test that Extract.Bike.positions() extracts bike positions."""
+        from src.brain._initialize import Extract
         bikes = [
             {"id": 10, "attributes": {"last_position": "POINT(13.0 55.0)"}},
             {"id": 20, "attributes": {"last_position": "POINT(14.5 56.25)"}}
@@ -162,12 +163,14 @@ class TestSerialize:
     """Tests for the Serialize class."""
     def test_serialize_bike_ids(self):
         """Test that Serialize.bike_ids() serializes a list of bike IDs."""
+        from src.brain._initialize import Serialize
         ids = [10, 20, 30]
         result = Serialize.bike_ids(ids)
         assert result == "10,20,30"
 
     def test_serialize_positions(self):
         """Test that Serialize.positions() serializes a list of positions."""
+        from src.brain._initialize import Serialize
         positions = [(13.06782, 55.577859), (13.46782, 54.977859)]
         result = Serialize.positions(positions)
         assert result == "13.06782:55.577859,13.46782:54.977859"
