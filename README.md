@@ -28,7 +28,7 @@ There is an [.env.example](.env.example) for you to use. Just rename it to copy 
 
 To start the bike run:
 
-```bash
+```python
 # From project root
 python -m src.main
 ```
@@ -40,6 +40,14 @@ It is recommended to start the application in the scooty-doo master repository w
 ## Run tests
 
 To run the tests use:
-```bash
+```python
 python -m pytest
 ```
+
+# Generate documentation
+
+```python
+python -m pydoc -p 8000
+```
+
+Go to http://localhost:8000/ to inspect the documentation.
