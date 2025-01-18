@@ -34,8 +34,8 @@ class Brain:
         while self.running:
             report_interval = getattr(Settings.Report, f'interval_{self.bike.mode.current}')
             delay = randint(report_interval, 1000)
-            my_space = report_interval + (delay/1000)
-            await Clock.sleep(my_space)
+            wait_time = report_interval + (delay/1000)
+            await Clock.sleep(wait_time)
             try:
                 await self.send_report()
             except httpx.HTTPStatusError as e:
@@ -44,7 +44,6 @@ class Brain:
             except Exception as e:
                 self.logger.error(f"Unexpected error while sending report: {e}")
                 raise e
-
 
     async def terminate(self):
         self.running = False
