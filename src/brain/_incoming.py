@@ -1,3 +1,7 @@
+"""
+This module handles all the incoming requests to the bike hivemind API.
+"""
+
 from typing import Union, Optional
 import asyncio
 from pydantic import BaseModel
@@ -31,14 +35,17 @@ def get_brain(bike_id: Optional[int] = Query(
 
 @app.get("/")
 async def root():
+    """Root endpoint of the API."""
     return {"message": "Welcome to the bike hivemind API."}
 
 class StartTripRequest(BaseModel):
+    """Request model for starting a trip."""
     user_id: int
     trip_id: int
 
 @app.post("/start_trip")
 async def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
+    """Handling incoming request to start a trip."""
     try:
         if brain.bike.is_moving_or_charging():
             raise MovingOrChargingError()
@@ -54,6 +61,7 @@ async def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
         raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
 class MoveRequest(BaseModel):
+    """Request model for moving the bike."""
     position_or_linestring: Union[tuple, list[tuple]]
 
 @app.post("/move")
@@ -62,6 +70,7 @@ async def move(
     background_tasks: BackgroundTasks, # pylint: disable=unused-argument
     brain = Depends(get_brain)
     ):
+    """Handling incoming request to move the bike."""
     try:
         if brain.bike.is_moving_or_charging():
             raise MovingOrChargingError()
@@ -81,10 +90,12 @@ async def move(
 
 
 class RelocateRequest(BaseModel):
+    """Request model for relocating the bike."""
     position: Union[tuple, list]
 
 @app.post("/relocate")
 async def relocate(request: RelocateRequest, brain = Depends(get_brain)):
+    """Handling incoming request to relocate the bike."""
     try:
         if brain.bike.is_moving_or_charging():
             raise MovingOrChargingError()
@@ -98,11 +109,13 @@ async def relocate(request: RelocateRequest, brain = Depends(get_brain)):
 
 
 class EndTripRequest(BaseModel):
+    """Request model for ending a trip."""
     maintenance: bool = False
     ignore_zone: bool = True
 
 @app.post("/end_trip")
 async def end_trip(request: EndTripRequest, brain = Depends(get_brain)):
+    """Handling incoming request to end a trip."""
     try:
         if brain.bike.is_moving_or_charging():
             raise MovingOrChargingError()
@@ -119,10 +132,12 @@ async def end_trip(request: EndTripRequest, brain = Depends(get_brain)):
 
 
 class CheckRequest(BaseModel):
+    """Request model for checking the bike."""
     maintenance: bool = False
 
 @app.post("/check")
 async def check(request: CheckRequest, brain = Depends(get_brain)):
+    """Handling incoming request to check the bike."""
     try:
         if brain.bike.is_moving_or_charging():
             raise MovingOrChargingError()
@@ -136,10 +151,11 @@ async def check(request: CheckRequest, brain = Depends(get_brain)):
 
 
 class ReportRequest(BaseModel):
-    pass
+    """Request model for creating a report."""
 
 @app.get("/report")
 async def report(brain = Depends(get_brain)): # request: ReportRequest
+    """Handling incoming request to create a report."""
     try:
         brain.bike.report()
         return {
@@ -150,10 +166,11 @@ async def report(brain = Depends(get_brain)): # request: ReportRequest
         raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
 class LogRequest(BaseModel):
-    pass
+    """Request model for fetching a log."""
 
 @app.get("/log")
 async def log(brain = Depends(get_brain)):
+    """Handling incoming request to fetch the last log."""
     try:
         return {
             "message": "Log created and sent",
@@ -163,10 +180,11 @@ async def log(brain = Depends(get_brain)):
         raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
 class UpdateRequest(BaseModel):
-    pass
+    """Request model for updating the bike's zones and zone types."""
 
 @app.post("/update")
 async def update(brain = Depends(get_brain)): # request: UpdateRequest
+    """Handling incoming request to update the bike's zones and zone types."""
     try:
         if brain.bike.is_moving_or_charging():
             raise MovingOrChargingError()

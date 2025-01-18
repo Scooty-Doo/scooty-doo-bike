@@ -1,18 +1,27 @@
+"""
+Module that handles formatting of reports and logs.
+This makes them compatible with the backend pydantic models.
+"""
+
 import math
 from shapely.geometry import Point, LineString
 
 class Format:
+    """Class handling formatting of reports and logs."""
 
     @staticmethod
     def log(entry):
+        """Format a log entry."""
         return Format._apply_all_formatting(entry)
 
     @staticmethod
     def report(entry):
+        """Format a report entry."""
         return Format._apply_all_formatting(entry)
 
     @staticmethod
     def _apply_all_formatting(entry):
+        """Apply all formatting to an entry."""
         is_log = Format._is_log(entry)
         is_report = Format._is_report(entry)
         entry = Format._rename(entry, is_log, is_report)
@@ -24,14 +33,17 @@ class Format:
 
     @staticmethod
     def _is_log(entry):
+        """Check if an entry is a log."""
         return 'route' in entry
 
     @staticmethod
     def _is_report(entry):
+        """Check if an entry is a report."""
         return 'mode' in entry
 
     @staticmethod
     def _rename(entry, is_log=False, is_report=False):
+        """Rename fields in an entry."""
         if is_log:
             if 'route' in entry:
                 entry['path_taken'] = entry.pop('route')
@@ -56,6 +68,7 @@ class Format:
 
     @staticmethod
     def _add(entry, is_log=False, is_report=False):
+        """Add fields to an entry."""
         if is_log:
             pass
         if is_report:
@@ -66,6 +79,7 @@ class Format:
 
     @staticmethod
     def _remove(entry, is_log=False, is_report=False):
+        """Remove fields from an entry."""
         if is_log:
             if 'duration' in entry:
                 del entry['duration']
@@ -82,6 +96,7 @@ class Format:
 
     @staticmethod
     def _encode(entry, is_log=False, is_report=False):
+        """Encode fields in an entry."""
         if is_log:
             if 'path_taken' in entry:
                 if entry['path_taken'] is not None and isinstance(entry['path_taken'], list):
@@ -104,6 +119,7 @@ class Format:
 
     @staticmethod
     def _format(entry, is_log=False, is_report=False):
+        """Format fields in an entry."""
         def _remove_space(string):
             return string.replace(" ", "", 1)
         if is_log:

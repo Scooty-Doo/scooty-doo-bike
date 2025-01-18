@@ -1,3 +1,5 @@
+"""Fixtures for the tests."""
+
 import json
 import os
 import pytest
@@ -28,6 +30,7 @@ def mock_zone_types():
 
 @pytest_asyncio.fixture
 def sample_zones_for_test_map():
+    """Sample zones for the test map."""
     return [
         {
             "id": 1,
@@ -57,6 +60,7 @@ def sample_zones_for_test_map():
 
 @pytest_asyncio.fixture
 def sample_zone_types_for_test_map():
+    """Sample zone types for the test map."""
     return {
         "parking": {
             "speed_limit": 5

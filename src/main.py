@@ -1,3 +1,7 @@
+"""
+This is the main module of the application.
+"""
+
 import asyncio
 import os
 from typing import List
@@ -18,6 +22,7 @@ print("DEBUG: TOKEN =", os.getenv("TOKEN"))
 print("DEBUG: POSITIONS =", os.getenv("POSITIONS"))
 
 def show_help():
+    """Show help message with information on required environment variables."""
     print("""
             Required Environment Variables:
             - BIKE_IDS: Comma-separated list of bike IDs.
@@ -32,6 +37,7 @@ def show_help():
           """)
 
 async def main():
+    """Main function of the application."""
     TOKEN = os.getenv("TOKEN", "")
     BIKE_IDS = os.getenv("BIKE_IDS", "")
     POSITIONS = os.getenv("POSITIONS", "")

@@ -1,3 +1,7 @@
+"""
+Module handling validation of custom types.
+"""
+
 from ..bike._position import Position
 from .._utils._errors import (Errors,
                               InvalidPositionTypeError,
@@ -5,9 +9,11 @@ from .._utils._errors import (Errors,
                               InvalidPositionCoordinatesError)
 
 class Validate:
+    """Class handling validation of custom types."""
 
     @staticmethod
     def position(position):
+        """Validate a position."""
         if not isinstance(position, (list, tuple)):
             raise Errors.invalid_position_type()
         if len(position) != 2:
@@ -18,7 +24,9 @@ class Validate:
 
     @staticmethod
     def position_or_linestring(position_or_linestring):
+        """Validate a position or a linestring."""
         def _position_or_linestring(position_or_linestring):
+            """Validate a position or a linestring."""
             if Position.is_position(position_or_linestring):
                 return True
             if not isinstance(position_or_linestring, (list, tuple)):
@@ -39,6 +47,7 @@ class Validate:
 
     @staticmethod
     def is_linestring(linestring):
+        """Check if a linestring is valid."""
         if not isinstance(linestring, (list, tuple)):
             return False
         for position in linestring:

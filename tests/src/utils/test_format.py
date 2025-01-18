@@ -1,8 +1,12 @@
+"""Tests for the Format class."""
+
 from src._utils._format import Format
 
 class TestFormatter:
+    """Tests for the Format class."""
 
     def test_format_log_entry(self):
+        """Test formatting a log entry."""
         log_entry = {
             "trip_id": 456,
             "user_id": 123,
@@ -24,6 +28,7 @@ class TestFormatter:
         assert formatted == expected
 
     def test_format_report_entry(self):
+        """Test formatting a report entry."""
         report_entry = {
             "id": 1,
             "mode": "sleep",
@@ -44,6 +49,7 @@ class TestFormatter:
         assert formatted == expected
 
     def test_format_remove_fields(self):
+        """Test removing fields from an entry."""
         entry = {
             "trip_id": 456,
             "route": [(0.0, 0.0), (0.001, 0.001)],
@@ -58,6 +64,7 @@ class TestFormatter:
         assert formatted == expected
 
     def test_format_encode_none_path_taken(self):
+        """Test that a none path_taken is formatted correctly."""
         entry = {
             "trip_id": 456,
             "route": [(0.0, 0.0)]
@@ -93,6 +100,7 @@ class TestFormatter:
         assert formatted == expected
 
     def test_format_empty_route_with_start_position(self):
+        """Test that an empty route with a start position is formatted correctly."""
         entry = {
             "trip_id": 456,
             "route": None,  # Route is None

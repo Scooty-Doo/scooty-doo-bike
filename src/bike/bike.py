@@ -1,3 +1,7 @@
+"""
+This module handles all the bike behavior.
+"""
+
 from .._user._user import User
 from .._utils._clock import Clock
 from .._utils._map import Map
@@ -15,6 +19,7 @@ from ._status import Status
 from ._light import Light
 
 class Bike:
+    """Class representing a bike."""
     def __init__(self, bike_id,
                  longitude,
                  latitude):

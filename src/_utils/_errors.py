@@ -1,3 +1,7 @@
+"""
+Module containing custom errors.
+"""
+
 class NotChargingZoneError(Exception):
     """Custom error raised when bike is not in a charging zone."""
     def __init__(self, message="This zone is not a charging zone."):
@@ -47,71 +51,89 @@ class InvalidPositionError(Exception):
         super().__init__(message)
 
 class InvalidPositionTypeError(Exception):
+    """Custom error raised when an invalid position type is passed."""
     def __init__(self, message="Position must be a list or tuple."):
         super().__init__(message)
 
 class InvalidPositionLengthError(Exception):
+    """Custom error raised when an invalid position length is passed."""
     def __init__(self, message="Position must contain exactly two elements."):
         super().__init__(message)
 
 class InvalidPositionCoordinatesError(Exception):
+    """Custom error raised when invalid position coordinates are passed."""
     def __init__(self, message="Each coordinate in position must be an int or float."):
         super().__init__(message)
 
 class MovingOrChargingError(Exception):
+    """Custom error raised when bike is moving or charging."""
     def __init__(self, message="Bike is moving or charging and cannot accept further requests "
                  "until moving or charging is completed."):
         super().__init__(message)
 
 class Errors():
+    """Class handling the raising of custom errors."""
     @staticmethod
     def not_charging_zone():
+        """Raise NotChargingZoneError."""
         raise NotChargingZoneError()
 
     @staticmethod
     def already_unlocked():
+        """Raise AlreadyUnlockedError."""
         raise AlreadyUnlockedError()
 
     @staticmethod
     def already_locked():
+        """Raise AlreadyLockedError."""
         raise AlreadyLockedError()
 
     @staticmethod
     def fully_charged():
+        """Raise FullyChargedError."""
         raise FullyChargedError()
 
     @staticmethod
     def invalid_mode():
+        """Raise InvalidModeError."""
         raise InvalidModeError()
 
     @staticmethod
     def initialization_error():
+        """Raise InitializationError."""
         raise InitializationError()
 
     @staticmethod
     def out_of_bounds():
+        """Raise OutOfBoundsError."""
         raise OutOfBoundsError()
 
     @staticmethod
     def position_not_within_zone():
+        """Raise PositionNotWithinZoneError."""
         raise PositionNotWithinZoneError()
 
     @staticmethod
     def invalid_position():
+        """Raise InvalidPositionError."""
         raise InvalidPositionError()
 
     @staticmethod
     def invalid_position_type():
+        """Raise InvalidPositionTypeError."""
         raise InvalidPositionTypeError()
 
     @staticmethod
     def invalid_position_length():
+        """Raise InvalidPositionLengthError."""
         raise InvalidPositionLengthError()
 
     @staticmethod
     def invalid_position_coordinates():
+        """Raise InvalidPositionCoordinatesError."""
         raise InvalidPositionCoordinatesError()
 
     @staticmethod
     def moving_or_charging():
+        """Raise MovingOrChargingError."""
         raise MovingOrChargingError()

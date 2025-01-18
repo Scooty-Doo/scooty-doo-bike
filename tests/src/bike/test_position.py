@@ -1,8 +1,12 @@
+"""Tests for the Position class."""
+
 from src.bike._position import Position
 
 class TestPosition:
+    """Tests for the Position class."""
 
     def test_is_position_with_valid_coordinates(self):
+        """Test is_position with valid coordinates."""
         valid_positions = [
             (0, 0),
             (1.5, 2.5),
@@ -12,6 +16,7 @@ class TestPosition:
             assert Position.is_position(position) is True, f"Failed for position: {position}"
 
     def test_is_position_with_invalid_coordinates(self):
+        """Test is_position with invalid coordinates."""
         invalid_positions = [
             ('a', 0),
             (0, 'b'),
@@ -24,6 +29,7 @@ class TestPosition:
             assert Position.is_position(position) is False, f"Failed for position: {position}"
 
     def test_is_position_with_non_tuple_or_list(self):
+        """Test is_position with non-tuple or non-list values."""
         non_position_types = [
             42,
             3.14,

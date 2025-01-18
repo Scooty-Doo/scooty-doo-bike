@@ -1,11 +1,15 @@
+"""Tests for the Map class."""
+
 import json
 from unittest.mock import patch
 import pytest
 from src._utils._map import Map
 
 class TestMap:
+    """Tests for the Map class."""
 
     def test_get_parking_zones(self, sample_zones_for_test_map):
+        """Test that get_parking_zones returns only parking zones."""
         parking_zones = Map.Zones.get_parking_zones(sample_zones_for_test_map)
         assert len(parking_zones) == 2
         for zone in parking_zones:
@@ -13,6 +17,7 @@ class TestMap:
 
     @patch('src._utils._map.random.choice')
     def test_get_deployment_zone(self, mock_random_choice, sample_zones_for_test_map):
+        """Test that get_deployment_zone returns a random parking zone."""
         parking_zones = Map.Zones.get_parking_zones(sample_zones_for_test_map)
         mock_choice_zone = parking_zones[0]
         mock_random_choice.return_value = mock_choice_zone
@@ -21,6 +26,7 @@ class TestMap:
         assert deployment_zone == mock_choice_zone
 
     def test_get_deployment_zone_no_parking_zones(self, sample_zones_for_test_map):
+        """Test that get_deployment_zone raises an IndexError when there are no parking zones."""
         non_parking_zones = \
             [zone for zone in sample_zones_for_test_map if zone["zone_type"] != "parking"]
         with pytest.raises(IndexError):
@@ -42,6 +48,7 @@ class TestMap:
         assert new_position == expected_position
 
     def test_get_position_after_minutes_travelled_exact(self):
+        """Tests the case where the bike reaches the end position exactly."""
         start_position = (0.0, 0.0)
         end_position = (1.0, 1.0)
         # Distance between start and end is sqrt(2) km assuming coordinates are in km
@@ -53,9 +60,7 @@ class TestMap:
         assert new_position == end_position
 
     def test_get_position_after_minutes_travelled_over(self):
-        """
-        Test the case where the bike travels more than the distance to the end position.
-        """
+        """Test the case where the bike travels more than the distance to the end position."""
         start_position = (0.0, 0.0)
         end_position = (1.0, 1.0)
         speed_in_kmh = 60
@@ -65,9 +70,7 @@ class TestMap:
         assert new_position == end_position
 
     def test_get_position_after_minutes_travelled_zero_minutes(self):
-        """
-        Test the case where the bike doesn't travel at all.
-        """
+        """Test the case where the bike doesn't travel at all."""
         start_position = (2.0, 2.0)
         end_position = (3.0, 3.0)
         minutes_travelled = 0
@@ -77,9 +80,7 @@ class TestMap:
         assert new_position == start_position
 
     def test_get_position_after_minutes_travelled_zero_speed(self):
-        """
-        Test the case where the speed is zero, resulting in no movement.
-        """
+        """Test the case where the speed is zero, resulting in no movement."""
         start_position = (4.0, 4.0)
         end_position = (5.0, 5.0)
         minutes_travelled = 30
@@ -150,9 +151,7 @@ class TestMap:
         assert speed_limit == expected_speed_limit
 
     def test_is_charging_zone_true(self, sample_zones_for_test_map):
-        """
-        Test that is_charging_zone returns True for positions inside charging zones.
-        """
+        """Test that is_charging_zone returns True for positions inside charging zones."""
         position = (2.5, 0.5)  # Inside zone 2 (charging)
         assert Map.Zone.is_charging_zone(sample_zones_for_test_map, position) is True
 
@@ -183,9 +182,7 @@ class TestMap:
         assert centroid == expected_centroid
 
     def test_load_zones_empty_file(self, tmp_path):
-        """
-        Test that load returns an empty list when the zones file is empty.
-        """
+        """Test that load returns an empty list when the zones file is empty."""
         # Arrange: Create an empty _zones.json file
         zones_file = tmp_path / "_zones.json"
         zones_file.write_text('[]')
@@ -195,9 +192,7 @@ class TestMap:
             assert zones == []
 
     def test_load_zones_non_empty_file(self, tmp_path):
-        """
-        Test that load correctly loads zones from a non-empty file.
-        """
+        """Test that load correctly loads zones from a non-empty file."""
         # Arrange: Create a _zones.json file with sample data
         zones_data = [
             {
@@ -215,9 +210,7 @@ class TestMap:
             assert zones == zones_data
 
     def test_load_zone_types_empty_file(self, tmp_path):
-        """
-        Test that load returns an empty list when the zone types file is empty.
-        """
+        """Test that load returns an empty list when the zone types file is empty."""
         # Arrange: Create an empty _zone_types.json file
         zone_types_file = tmp_path / "_zone_types.json"
         zone_types_file.write_text('{}')
@@ -227,9 +220,7 @@ class TestMap:
             assert zone_types == {}
 
     def test_load_zone_types_non_empty_file(self, tmp_path):
-        """
-        Test that load correctly loads zone types from a non-empty file.
-        """
+        """Test that load correctly loads zone types from a non-empty file."""
         # Arrange: Create a _zone_types.json file with sample data
         zone_types_data = {
             "parking": {

@@ -1,10 +1,17 @@
+"""
+This module handles the initialization of the bike hivemind.
+"""
+
 import httpx
 from .._utils._settings import Settings
 
 def _url(url, endpoint):
+    """Concatenates the url and endpoint."""
     return f'{url.rstrip("/")}/{endpoint.lstrip("/")}'
 
 class Initialize:
+    """Class handling the initialization of the bike hivemind."""
+
     def __init__(self, token: str):
         self.endpoints = Settings.Endpoints()
         self.url = self.endpoints.backend_url
@@ -16,6 +23,7 @@ class Initialize:
         self.bikes = None # self._bikes().get('data', [])
 
     async def _load_bikes(self):
+        """Loads bikes from the backend."""
         if self.bikes is None:
             url = _url(self.url, self.endpoints.Bikes.get_all())
             async with httpx.AsyncClient() as client:
@@ -34,28 +42,35 @@ class Initialize:
             print(f'Bikes already loaded. First five bikes: {self.bikes[0:5]}')
 
     async def bike_ids(self):
+        """Returns bike ids in a serialized format."""
         await self._load_bikes()
         return Serialize.bike_ids(Extract.Bike.ids(self.bikes))
 
     async def bike_positions(self):
+        """Returns bike positions in a serialized format."""
         await self._load_bikes()
         return Serialize.positions(Extract.Bike.positions(self.bikes))
 
 class Extract:
+    """Class handling the extraction of data from the bikes."""
     class Bike:
+        """Class handling the extraction of bike data."""
         @staticmethod
         def ids(bikes):
+            """Extracts the bike ids."""
             return [bike['id'] for bike in bikes]
 
         @staticmethod
         def positions(bikes):
             """Extracts the last position e.g. "POINT(13.06782 55.577859)" and converts to tuple."""
             def _point_to_tuple(point):
+                """Converts a point string to a tuple."""
                 point = point.replace("POINT(", "").replace(")", "")
                 return tuple(map(float, point.split()))
             return [_point_to_tuple(bike['attributes']['last_position']) for bike in bikes]
 
 class Serialize:
+    """Class handling the serialization of data."""
     @staticmethod
     def positions(positions: list[tuple[float, float]]) -> list[str]:
         """
