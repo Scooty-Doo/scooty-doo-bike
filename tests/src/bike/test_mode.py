@@ -79,3 +79,22 @@ class TestMode:
             Mode(mode=invalid_mode)
 
         assert str(exc_info.value) == "Invalid mode."
+
+    def test_initial_submodes(self):
+        mode = Mode()
+        assert mode.submodes.usage.moving is False
+        assert mode.submodes.usage.charging is False
+
+    def test_is_moving(self):
+        mode = Mode()
+        mode.submodes.usage.moving = True
+        assert mode.submodes.usage.is_moving()
+        mode.submodes.usage.moving = False
+        assert not mode.submodes.usage.is_moving()
+
+    def test_is_charging(self):
+        mode = Mode()
+        mode.submodes.usage.charging = True
+        assert mode.submodes.usage.is_charging()
+        mode.submodes.usage.charging = False
+        assert not mode.submodes.usage.is_charging()

@@ -85,5 +85,6 @@ def mock_environment(monkeypatch):
 # python -m pytest
 # python -m pytest -s
 # python -m pytest --cov=src --cov-report=html
+# python -m pytest --cov=src --cov-report=html --cov-report=term-missing
 # python -m pytest -W error --cov=src --cov-report=html
 # python -m pytest --cov=src --cov-report=html --verbose -vv

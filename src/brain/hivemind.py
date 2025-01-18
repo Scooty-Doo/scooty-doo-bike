@@ -14,8 +14,7 @@ class Hivemind:
             if not brain:
                 raise ValueError(f"Brain with bike_id {bike_id} does not exist.")
             return brain
-        else:
-            if not self.brains:
-                raise ValueError("No Brain instances available.")
-            lowest_id = min(self.brains.keys())
-            return self.brains[lowest_id]
+        if not self.brains:
+            raise ValueError("No Brain instances available.")
+        lowest_id = min(self.brains.keys())
+        return self.brains[lowest_id]

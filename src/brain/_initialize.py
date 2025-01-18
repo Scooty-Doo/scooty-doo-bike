@@ -20,7 +20,11 @@ class Initialize:
             url = _url(self.url, self.endpoints.Bikes.get_all())
             async with httpx.AsyncClient() as client:
                 try:
-                    response = await client.get(url, params={"limit": Settings.Endpoints.bike_limit}, headers=self.headers, timeout=20.0)
+                    response = await client.get(
+                        url,
+                        params={"limit": Settings.Endpoints.bike_limit},
+                        headers=self.headers, timeout=20.0
+                        )
                     response.raise_for_status()
                     self.bikes = response.json().get('data', [])
                     print(f'Bikes loaded. First five bikes: {self.bikes[0:5]}')

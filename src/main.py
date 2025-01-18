@@ -1,7 +1,7 @@
 import asyncio
 import os
-import uvicorn
 from typing import List
+import uvicorn
 from dotenv import load_dotenv
 from ._utils._errors import Errors
 from ._utils._clock import Clock
@@ -31,8 +31,6 @@ def show_help():
             - BIKE_IDS and POSITIONS must be of the same length (or POSITIONS can be omitted).
           """)
 
-# TODO: Configure logging and write logs to file (1 per bike_id/brain + 1 general log file).
-
 async def main():
     TOKEN = os.getenv("TOKEN", "")
     BIKE_IDS = os.getenv("BIKE_IDS", "")
@@ -45,7 +43,8 @@ async def main():
     #else:
     try:
         seconds_to_wait_for_backend = 0
-        print(f"BIKE: Waiting {seconds_to_wait_for_backend} seconds in order for the backend to start.")
+        print(f"BIKE: Waiting {seconds_to_wait_for_backend} seconds "
+              "in order for the backend to start.")
         await Clock.sleep(seconds_to_wait_for_backend)
         initialize = Initialize(TOKEN)
         BIKE_IDS = await initialize.bike_ids()
@@ -76,7 +75,8 @@ async def main():
             POSITIONS = [tuple(map(float, position.split(":"))) for position in POSITIONS]
         except ValueError as e:
             show_help()
-            print(f"ERROR: POSITIONS must be a comma-separated list of longitude:latitude pairs: {e}")
+            print(f"ERROR: POSITIONS must be a comma-separated list "
+                  f"of longitude:latitude pairs: {e}")
             raise Errors.initialization_error()
 
     if not POSITIONS:
@@ -122,5 +122,3 @@ if __name__ == "__main__":
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):
         print("Application has been shut down.")
-
-# INIT_BIKES_REMOTELY=false BACKEND_URL='http://localhost:8000/' BIKE_IDS=1,2,3 TOKEN=token POSITIONS=13.45:54.124,13.46:54.125,13.47:54.126 python -m src.main

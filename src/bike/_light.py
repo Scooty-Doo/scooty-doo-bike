@@ -7,9 +7,9 @@ class Light:
             self.red()
         else:
             self.green()
-    
+
     def green(self):
         self.color = 'green'
-    
+
     def red(self):
         self.color = 'red'

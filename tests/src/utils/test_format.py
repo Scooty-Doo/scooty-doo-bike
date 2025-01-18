@@ -91,3 +91,17 @@ class TestFormatter:
             "end_position": "POINT(0.001 0.001)"
         }
         assert formatted == expected
+
+    def test_format_empty_route_with_start_position(self):
+        entry = {
+            "trip_id": 456,
+            "route": None,  # Route is None
+            "start_position": (0.0, 0.0)  # Start position is provided
+        }
+        formatted = Format._apply_all_formatting(entry)
+        expected = {
+            "trip_id": 456,
+            "start_position": "POINT(0 0)",
+            "path_taken": "LINESTRING(0 0, 0 0)"  # LineString from start_position repeated
+        }
+        assert formatted == expected

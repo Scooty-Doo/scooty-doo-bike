@@ -5,7 +5,7 @@ class Clock:
 
     @staticmethod
     def now():
-        return datetime.now(timezone.utc).isoformat() # TODO: correct format?
+        return datetime.now(timezone.utc).isoformat()
 
     @staticmethod
     async def sleep(seconds):

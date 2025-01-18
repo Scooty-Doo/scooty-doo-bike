@@ -41,9 +41,9 @@ class _Usage:
         self.submodes = ['is_moving', 'is_charging']
         self.moving = False
         self.charging = False
-    
+
     def is_moving(self):
-        return self.is_moving
+        return self.moving
 
     def is_charging(self):
-        return self.is_charging
+        return self.charging

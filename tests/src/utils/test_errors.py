@@ -1,6 +1,9 @@
 import pytest
-from src._utils._errors import (Errors, InitializationError,
-                                InvalidPositionError, InvalidPositionCoordinatesError)
+from src._utils._errors import (Errors,
+                                InitializationError,
+                                InvalidPositionError,
+                                InvalidPositionCoordinatesError,
+                                MovingOrChargingError)
 
 class TestErrors:
     def test_initialization_error_message_default(self):
@@ -44,3 +47,17 @@ class TestErrors:
             Errors.invalid_position_coordinates()
         assert str(exc_info.value) == \
             "Each coordinate in position must be an int or float."
+
+    def test_moving_or_charging_error_message_default(self):
+        with pytest.raises(MovingOrChargingError) as exc_info:
+            raise MovingOrChargingError()
+        assert str(exc_info.value) == \
+            "Bike is moving or charging and cannot accept further requests " \
+            "until moving or charging is completed."
+
+    def test_errors_moving_or_charging_error_raises_exception(self):
+        with pytest.raises(MovingOrChargingError) as exc_info:
+            Errors.moving_or_charging()
+        assert str(exc_info.value) == \
+            "Bike is moving or charging and cannot accept further requests " \
+            "until moving or charging is completed."

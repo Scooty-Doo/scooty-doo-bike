@@ -1,7 +1,7 @@
 from typing import Union, Optional
+import asyncio
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException, Depends, Query, Request, BackgroundTasks
-import asyncio
 from .brain import Brain
 from .hivemind import Hivemind
 from .._utils._errors import (AlreadyUnlockedError,
@@ -56,9 +56,12 @@ async def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
 class MoveRequest(BaseModel):
     position_or_linestring: Union[tuple, list[tuple]]
 
-# TODO: gör så att den kan hantera tuple + Point WKR + list[tuple] + LineString WKR
 @app.post("/move")
-async def move(request: MoveRequest, background_tasks: BackgroundTasks, brain = Depends(get_brain)):
+async def move(
+    request: MoveRequest,
+    background_tasks: BackgroundTasks, # pylint: disable=unused-argument
+    brain = Depends(get_brain)
+    ):
     try:
         if brain.bike.is_moving_or_charging():
             raise MovingOrChargingError()

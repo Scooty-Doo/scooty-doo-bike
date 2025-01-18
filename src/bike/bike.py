@@ -147,7 +147,7 @@ class Bike:
 
     def check(self, maintenance=False):
         """Check if the bike needs maintenance."""
-        if maintenance: # TODO: if this one is used a trip should be ended gracefully in some way...
+        if maintenance:
             self.mode.maintenance()
             self.light.set(self.mode.current)
             self.report()

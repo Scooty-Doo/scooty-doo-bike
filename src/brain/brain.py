@@ -1,11 +1,10 @@
 from random import randint
+import logging
+import httpx
 from ._outgoing import Outgoing
 from ..bike.bike import Bike
 from .._utils._settings import Settings
 from .._utils._clock import Clock
-import logging
-import httpx
-
 
 class Brain:
     def __init__(self, bike_id,
@@ -39,11 +38,11 @@ class Brain:
             try:
                 await self.send_report()
             except httpx.HTTPStatusError as e:
-                self.logger.error(f"HTTPStatusError while sending report: {e}")
-                raise e
+                self.logger.error("HTTPStatusError while sending report: %s", e)
+                raise print(f"HTTPStatusError while sending report: {e}") from e
             except Exception as e:
-                self.logger.error(f"Unexpected error while sending report: {e}")
-                raise e
+                self.logger.error("Unexpected error while sending report: %s", e)
+                raise print(f"Unexpected error while sending report: {e}") from e
 
     async def terminate(self):
         self.running = False
