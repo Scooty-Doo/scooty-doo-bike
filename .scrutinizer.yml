@@ -1,0 +1,8 @@
+tools:
+    pylint:
+        config:
+            disable:
+                - R0902  # too-many-instance-attributes
+                - R0913  # too-many-arguments
+                - W0201  # attribute-defined-outside-init
+                - W0212  # protected-access

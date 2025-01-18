@@ -38,9 +38,9 @@ def show_help():
 
 async def main():
     """Main function of the application."""
-    TOKEN = os.getenv("TOKEN", "")
-    BIKE_IDS = os.getenv("BIKE_IDS", "")
-    POSITIONS = os.getenv("POSITIONS", "")
+    token = os.getenv("TOKEN", "")
+    bike_ids = os.getenv("BIKE_IDS", "")
+    positions = os.getenv("POSITIONS", "")
     #INIT_BIKES_REMOTELY = os.getenv("INIT_BIKES_REMOTELY", "True").lower() == "true"
     #if not INIT_BIKES_REMOTELY:
     #    print("DEBUG: Initializing bikes locally.")
@@ -52,56 +52,56 @@ async def main():
         print(f"BIKE: Waiting {seconds_to_wait_for_backend} seconds "
               "in order for the backend to start.")
         await Clock.sleep(seconds_to_wait_for_backend)
-        initialize = Initialize(TOKEN)
-        BIKE_IDS = await initialize.bike_ids()
-        POSITIONS = await initialize.bike_positions()
+        initialize = Initialize(token)
+        bike_ids = await initialize.bike_ids()
+        positions = await initialize.bike_positions()
     except Exception as e:
         print(f"ERROR: Failed to initialize: {e}")
         print("Getting bike IDs and positions from environment variables instead.")
 
-    if not BIKE_IDS:
+    if not bike_ids:
         show_help()
         print("ERROR: BIKE_IDS is required.")
         raise Errors.initialization_error()
 
     try:
-        BIKE_IDS: List[int] = [int(bike_id.strip()) for bike_id in BIKE_IDS.split(",")]
+        bike_ids: List[int] = [int(bike_id.strip()) for bike_id in bike_ids.split(",")]
     except ValueError as e:
         show_help()
         print(f"ERROR: BIKE_IDS must be a comma-separated list of integers: {e}")
         raise Errors.initialization_error()
 
-    if POSITIONS:
-        POSITIONS = [position.strip() for position in POSITIONS.split(",")]
-        if len(BIKE_IDS) != len(POSITIONS):
+    if positions:
+        positions = [position.strip() for position in positions.split(",")]
+        if len(bike_ids) != len(positions):
             show_help()
             print("ERROR: BIKE_IDS and POSITIONS must be of the same length.")
             raise Errors.initialization_error()
         try:
-            POSITIONS = [tuple(map(float, position.split(":"))) for position in POSITIONS]
+            positions = [tuple(map(float, position.split(":"))) for position in positions]
         except ValueError as e:
             show_help()
             print(f"ERROR: POSITIONS must be a comma-separated list "
                   f"of longitude:latitude pairs: {e}")
             raise Errors.initialization_error()
 
-    if not POSITIONS:
-        POSITIONS = list(zip([1.1] * len(BIKE_IDS), [1.1] * len(BIKE_IDS)))
+    if not positions:
+        positions = list(zip([1.1] * len(bike_ids), [1.1] * len(bike_ids)))
 
     hivemind = Hivemind()
 
     brains = []
-    for bike_id, (longitude, latitude) in zip(BIKE_IDS, POSITIONS):
+    for bike_id, (longitude, latitude) in zip(bike_ids, positions):
         brain = Brain(
             bike_id=bike_id,
             longitude=longitude,
             latitude=latitude,
-            token=TOKEN
+            token=token
         )
         await brain.initialize()
         hivemind.add_brain(bike_id, brain)
         brains.append(brain)
-    print(f"Number of bikes: {len(BIKE_IDS)}")
+    print(f"Number of bikes: {len(bike_ids)}")
     app.state.hivemind = hivemind
 
     host = "0.0.0.0" # NOTE: This is for it to work in Docker.

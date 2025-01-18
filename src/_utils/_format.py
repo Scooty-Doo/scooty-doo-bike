@@ -73,7 +73,7 @@ class Format:
             pass
         if is_report:
             if 'mode' in entry:
-                entry['is_available'] = (entry['mode'] == 'sleep')
+                entry['is_available'] = entry['mode'] == 'sleep'
                 entry.pop('mode')
         return entry
 
