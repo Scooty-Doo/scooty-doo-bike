@@ -172,6 +172,6 @@ class TestBrain:
         with patch.object(Settings.Position, 'default_longitude', 0.0), \
             patch.object(Settings.Position, 'default_latitude', 0.0):
             brain_matching = Brain(1, 0.0, 0.0, "token")
-            assert brain_matching._is_not_deployed() is True
+            assert brain_matching.is_not_deployed() is True
             brain_diff = Brain(2, 10.0, 10.0, "token")
-            assert brain_diff._is_not_deployed() is False
+            assert brain_diff.is_not_deployed() is False

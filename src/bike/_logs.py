@@ -13,7 +13,7 @@ class Logs:
         """Add a log entry."""
         log = trip
         if self._exists(log):
-            index = self._get_log_index(log)
+            index = self.get_log_index(log)
             self.logs[index] = log
         else:
             self.logs.append(log)
@@ -34,6 +34,6 @@ class Logs:
         """Check if a log entry exists."""
         return any(log["trip_id"] == entry["trip_id"] for entry in self.logs)
 
-    def _get_log_index(self, log):
+    def get_log_index(self, log):
         """Get the index of a log entry."""
         return [log["trip_id"] == entry["trip_id"] for entry in self.logs].index(True)

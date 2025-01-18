@@ -43,7 +43,7 @@ class TestInitialize:
             mock_client_class.return_value.__aenter__.return_value = mock_client_instance
             mock_client_instance.get = AsyncMock(
                 return_value=_mock_response(json_data=mock_bike_data))
-            await init._load_bikes()
+            await init.load_bikes()
             assert init.bikes == mock_bike_data["data"]
             mock_client_instance.get.assert_awaited_once()
 
@@ -56,7 +56,7 @@ class TestInitialize:
             mock_client_instance = MagicMock()
             mock_client_class.return_value.__aenter__.return_value = mock_client_instance
             mock_client_instance.get = AsyncMock()
-            await init._load_bikes()
+            await init.load_bikes()
             mock_client_instance.get.assert_not_awaited()
             assert init.bikes == [{"bikes_already_loaded": 999}]
 
@@ -75,7 +75,7 @@ class TestInitialize:
             with pytest.raises(
                 httpx.RequestError,
                 match="Failed to request bikes: Connection failed"):
-                await init._load_bikes()
+                await init.load_bikes()
             assert init.bikes is None
 
     @pytest.mark.asyncio

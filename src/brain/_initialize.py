@@ -22,7 +22,7 @@ class Initialize:
         }
         self.bikes = None # self._bikes().get('data', [])
 
-    async def _load_bikes(self):
+    async def load_bikes(self):
         """Loads bikes from the backend."""
         if self.bikes is None:
             url = _url(self.url, self.endpoints.Bikes.get_all())
@@ -43,12 +43,12 @@ class Initialize:
 
     async def bike_ids(self):
         """Returns bike ids in a serialized format."""
-        await self._load_bikes()
+        await self.load_bikes()
         return Serialize.bike_ids(Extract.Bike.ids(self.bikes))
 
     async def bike_positions(self):
         """Returns bike positions in a serialized format."""
-        await self._load_bikes()
+        await self.load_bikes()
         return Serialize.positions(Extract.Bike.positions(self.bikes))
 
 class Extract:

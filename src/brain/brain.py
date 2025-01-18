@@ -34,7 +34,7 @@ class Brain:
         if self.bike.zone_types is None:
             self.bike.zone_types = await self.request_zone_types()
 
-    def _is_not_deployed(self):
+    def is_not_deployed(self):
         """Check if the bike is not deployed."""
         return self.bike.position.current == (
             Settings.Position.default_longitude,

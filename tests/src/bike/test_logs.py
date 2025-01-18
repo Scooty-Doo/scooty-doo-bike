@@ -62,7 +62,7 @@ class TestLogs:
         logs = Logs()
         trip = {"trip_id": 1, "user_id": 123}
         logs.add(trip)
-        index = logs._get_log_index(trip)
+        index = logs.get_log_index(trip)
         assert index == 0
 
     def test_get_log_index_not_exists(self):
@@ -70,4 +70,4 @@ class TestLogs:
         logs = Logs()
         trip = {"trip_id": 1, "user_id": 123}
         with pytest.raises(ValueError):
-            logs._get_log_index(trip)
+            logs.get_log_index(trip)
