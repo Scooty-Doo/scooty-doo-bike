@@ -57,7 +57,7 @@ class TestLogs:
         expected = Format.log(trip2)
         assert last_log == expected
 
-    def test_get_log_index_exists(self): # @SuppressWarnings("protected-access")
+    def test_get_log_index_exists(self):
         """Test getting the index of an existing log."""
         logs = Logs()
         trip = {"trip_id": 1, "user_id": 123}
@@ -65,7 +65,7 @@ class TestLogs:
         index = logs._get_log_index(trip)
         assert index == 0
 
-    def test_get_log_index_not_exists(self): # @SuppressWarnings("protected-access")
+    def test_get_log_index_not_exists(self):
         """Test getting the index of a non-existing log."""
         logs = Logs()
         trip = {"trip_id": 1, "user_id": 123}

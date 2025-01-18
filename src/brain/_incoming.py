@@ -57,6 +57,8 @@ async def start_trip(request: StartTripRequest, brain = Depends(get_brain)):
                 "log": brain.bike.logs.last()}}
     except AlreadyUnlockedError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+    except MovingOrChargingError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
@@ -104,6 +106,12 @@ async def relocate(request: RelocateRequest, brain = Depends(get_brain)):
             "message": "Relocated. Report sent.", 
             "data": {
                 "report": brain.bike.reports.last()}}
+    except AlreadyLockedError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    except InvalidPositionError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    except MovingOrChargingError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
@@ -127,6 +135,8 @@ async def end_trip(request: EndTripRequest, brain = Depends(get_brain)):
                 "report": brain.bike.reports.last()}}
     except AlreadyLockedError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+    except MovingOrChargingError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
@@ -146,6 +156,8 @@ async def check(request: CheckRequest, brain = Depends(get_brain)):
             "message": "Bike checked. Report sent",
             "data": {
                 "report": brain.bike.reports.last()}}
+    except MovingOrChargingError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e
 
@@ -190,7 +202,9 @@ async def update(brain = Depends(get_brain)): # request: UpdateRequest
             raise MovingOrChargingError()
         zones = await brain.request_zones()
         zone_types = await brain.request_zone_types()
-        await brain.bike.update(zones=zones, zone_types=zone_types)
+        brain.bike.update(zones=zones, zone_types=zone_types)
         return {"message": "Zones and zone types updated"}
+    except MovingOrChargingError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error. Details: {e}") from e

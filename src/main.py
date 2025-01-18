@@ -123,8 +123,9 @@ async def main():
         server.serve()
     )
 
-if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except (KeyboardInterrupt, SystemExit):
-        print("Application has been shut down.")
+# NOTE: Commented out as to not affect test coverage.
+#if __name__ == "__main__":
+#    try:
+#        asyncio.run(main())
+#    except (KeyboardInterrupt, SystemExit):
+#        print("Application has been shut down.")

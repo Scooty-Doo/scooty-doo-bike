@@ -51,10 +51,12 @@ class Brain:
                 await self.send_report()
             except httpx.HTTPStatusError as e:
                 self.logger.error("HTTPStatusError while sending report: %s", e)
-                raise print(f"HTTPStatusError while sending report: {e}") from e
+                print(f"HTTPStatusError while sending report: {e}")
+                raise
             except Exception as e:
                 self.logger.error("Unexpected error while sending report: %s", e)
-                raise print(f"Unexpected error while sending report: {e}") from e
+                print(f"Unexpected error while sending report: {e}")
+                raise
 
     async def terminate(self):
         """Terminate the bike brain."""
