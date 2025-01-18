@@ -18,9 +18,9 @@ class TestInitialize:
     """Tests for the Initialize class."""
 
     @pytest.mark.asyncio
-    async def test_load_bikes_successful(self):
+    async def test_load_bikes_successful(self, monkeypatch):
         """Test that _load_bikes() loads bikes from the backend."""
-        MonkeyPatch().setenv("BACKEND_URL", "http://localhost:8000")
+        monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
 
         init = Initialize(token="token")
         init.bikes = None
@@ -61,9 +61,9 @@ class TestInitialize:
             assert init.bikes == [{"bikes_already_loaded": 999}]
 
     @pytest.mark.asyncio
-    async def test_load_bikes_request_error(self):
+    async def test_load_bikes_request_error(self, monkeypatch):
         """Test that _load_bikes() raises a RequestError if the request fails."""
-        MonkeyPatch().setenv("BACKEND_URL", "http://localhost:8000")
+        monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
         init = Initialize(token="token")
         init.bikes = None
         with patch("httpx.AsyncClient", autospec=True) as mock_client_class:
@@ -77,9 +77,9 @@ class TestInitialize:
             assert init.bikes is None
 
     @pytest.mark.asyncio
-    async def test_bike_ids_calls_load_bikes(self):
+    async def test_bike_ids_calls_load_bikes(self, monkeypatch):
         """Test that bike_ids() calls _load_bikes() and returns a serialized list of bike IDs."""
-        MonkeyPatch().setenv("BACKEND_URL", "http://localhost:8000")
+        monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
         init = Initialize(token="token")
         init.bikes = None
 
@@ -106,10 +106,10 @@ class TestInitialize:
             assert init.bikes == mock_bike_data["data"]
 
     @pytest.mark.asyncio
-    async def test_bike_positions(self):
+    async def test_bike_positions(self, monkeypatch):
         """Test that bike_positions() calls _load_bikes() and 
         returns a serialized list of bike positions."""
-        MonkeyPatch().setenv("BACKEND_URL", "http://localhost:8000")
+        monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
         init = Initialize(token="token")
         init.bikes = None
 
