@@ -12,6 +12,7 @@ from ._mode import Mode
 from ._speed import Speed
 from ._city import City
 from ._status import Status
+from ._light import Light
 
 class Bike:
     def __init__(self, bike_id,
@@ -34,6 +35,8 @@ class Bike:
         #    self.deploy()
         self.check(maintenance=False)
         self.status = Status(self)
+        self.light = Light()
+        self.light.set(self.mode.current)
         self.report()
 
     def unlock(self, user_id, trip_id):
@@ -49,6 +52,7 @@ class Bike:
         trip = self.user.trip.get()
         self.logs.add(trip)
         self.speed.limit(self.city.zones, self.zone_types, self.position.current)
+        self.light.set(self.mode.current)
         self.report()
 
     def lock(self, maintenance=False, ignore_zone=True):
@@ -69,6 +73,7 @@ class Bike:
             self.mode.maintenance()
         if not maintenance:
             self.mode.sleep()
+        self.light.set(self.mode.current)
         self.report()
 
     async def move(self, position_or_linestring):
@@ -95,6 +100,7 @@ class Bike:
             self.user.trip.add_movement(self.position.current)
             self.logs.update(self.user.trip.get())
             self.check()
+            self.light.set(self.mode.current)
             self.mode.submodes.usage.moving = False
         if self.mode.is_locked():
             raise Errors.already_locked()
@@ -120,6 +126,7 @@ class Bike:
         self.position.change(position[0], position[1])
         self.city.switch(self.zones, self.position.current)
         self.speed.limit(self.city.zones, self.zone_types, self.position.current)
+        self.light.set(self.mode.current)
         self.report()
 
     def deploy(self):
@@ -127,6 +134,7 @@ class Bike:
         deployment_zone = Map.Zone.get_deployment_zone(self.city.zones)
         deployment_position = Map.Zone.get_centroid_position(deployment_zone)
         self.position.change(deployment_position[0], deployment_position[1])
+        self.light.set(self.mode.current)
 
     def relocate_to_charging_zone(self):
         """Relocate the bike to a charging zone."""
@@ -134,20 +142,24 @@ class Bike:
         charging_position = Map.Zone.get_centroid_position(charging_zone)
         self.position.change(charging_position[0], charging_position[1])
         self.speed.limit(self.city.zones, self.zone_types, self.position.current)
+        self.light.set(self.mode.current)
         self.report()
 
     def check(self, maintenance=False):
         """Check if the bike needs maintenance."""
         if maintenance: # TODO: if this one is used a trip should be ended gracefully in some way...
             self.mode.maintenance()
+            self.light.set(self.mode.current)
             self.report()
             return
         if self.battery.is_low() and self.mode.is_sleep():
             self.mode.maintenance()
+            self.light.set(self.mode.current)
             self.report()
         if not Map.Zone.has_city_id(
             Map.Position.get_closest_zone(self.city.zones, self.position.current), self.city.id):
             self.mode.maintenance()
+            self.light.set(self.mode.current)
             self.report()
             raise Errors.out_of_bounds()
 
@@ -165,6 +177,7 @@ class Bike:
                 total_duration_in_minutes, total_reports)
             await Clock.sleep(leg_duration_in_seconds)
         self.mode.submodes.usage.charging = False
+        self.light.set(self.mode.current)
 
     def report(self):
         """Add a report."""
