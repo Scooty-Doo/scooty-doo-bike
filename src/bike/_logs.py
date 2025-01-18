@@ -34,6 +34,6 @@ class Logs:
         """Check if a log entry exists."""
         return any(log["trip_id"] == entry["trip_id"] for entry in self.logs)
 
-    def _get_log_index(self, log): # @SuppressWarnings("protected-access")
+    def _get_log_index(self, log):
         """Get the index of a log entry."""
         return [log["trip_id"] == entry["trip_id"] for entry in self.logs].index(True)
