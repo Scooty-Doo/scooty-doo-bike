@@ -43,7 +43,7 @@ class TestLogs:
         logs.add(trip1)
         logs.add(trip2)
         formatted_logs = logs.get()
-        expected = [Format._apply_all_formatting(trip1), Format._apply_all_formatting(trip2)]
+        expected = [Format.log(trip1), Format.log(trip2)]
         assert formatted_logs == expected
 
     def test_last_log(self):
@@ -54,7 +54,7 @@ class TestLogs:
         logs.add(trip1)
         logs.add(trip2)
         last_log = logs.last()
-        expected = Format._apply_all_formatting(trip2)
+        expected = Format.log(trip2)
         assert last_log == expected
 
     def test_get_log_index_exists(self):

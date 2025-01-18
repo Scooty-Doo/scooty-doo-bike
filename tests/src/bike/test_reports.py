@@ -27,7 +27,7 @@ class TestReports:
         reports.add(report1)
         reports.add(report2)
         formatted = reports.get()
-        expected = [Format._apply_all_formatting(report1), Format._apply_all_formatting(report2)]
+        expected = [Format.report(report1), Format.report(report2)]
         assert formatted == expected
 
     def test_last_report(self):
@@ -38,7 +38,7 @@ class TestReports:
         reports.add(report1)
         reports.add(report2)
         last = reports.last()
-        expected = Format._apply_all_formatting(report2)
+        expected = Format.report(report2)
         assert last == expected
 
     def test_reports_needed_zero(self):
