@@ -76,7 +76,7 @@ def sample_zone_types_for_test_map():
         }
     }
 
-@pytest_asyncio.fixture
+@pytest_asyncio.fixture(autouse=True)
 def mock_environment(monkeypatch):
     """Mock environment variables required for the application."""
     monkeypatch.setenv("BIKE_ID", "test_bike")
