@@ -19,8 +19,9 @@ class TestInitialize:
     async def test_load_bikes_successful(self, monkeypatch):
         """Test that _load_bikes() loads bikes from the backend."""
         monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
+        from src._utils._settings import Settings
+        monkeypatch.setattr("src._utils._settings.Settings.Endpoints.backend_url", "http://localhost:8000/")
         from src.brain._initialize import Initialize
-
         init = Initialize(token="token")
         init.bikes = None
 
@@ -65,6 +66,8 @@ class TestInitialize:
         """Test that _load_bikes() raises a RequestError if the request fails."""
         monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
         from src.brain._initialize import Initialize
+        from src._utils._settings import Settings
+        monkeypatch.setattr("src._utils._settings.Settings.Endpoints.backend_url", "http://localhost:8000/")
         init = Initialize(token="token")
         init.bikes = None
         with patch("httpx.AsyncClient", autospec=True) as mock_client_class:
@@ -82,6 +85,8 @@ class TestInitialize:
         """Test that bike_ids() calls _load_bikes() and returns a serialized list of bike IDs."""
         monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
         from src.brain._initialize import Initialize
+        from src._utils._settings import Settings
+        monkeypatch.setattr("src._utils._settings.Settings.Endpoints.backend_url", "http://localhost:8000/")
         init = Initialize(token="token")
         init.bikes = None
 
@@ -113,6 +118,8 @@ class TestInitialize:
         returns a serialized list of bike positions."""
         monkeypatch.setenv("BACKEND_URL", "http://localhost:8000")
         from src.brain._initialize import Initialize
+        from src._utils._settings import Settings
+        monkeypatch.setattr("src._utils._settings.Settings.Endpoints.backend_url", "http://localhost:8000/")
         init = Initialize(token="token")
         init.bikes = None
 
