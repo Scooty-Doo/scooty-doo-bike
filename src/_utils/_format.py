@@ -12,12 +12,12 @@ class Format:
     @staticmethod
     def log(entry):
         """Format a log entry."""
-        return Format._apply_all_formatting(entry)
+        return Format.log(entry)
 
     @staticmethod
     def report(entry):
         """Format a report entry."""
-        return Format._apply_all_formatting(entry)
+        return Format.report(entry)
 
     @staticmethod
     def _apply_all_formatting(entry):
