@@ -1,3 +1,17 @@
 tools:
     pylint:
-        config_file: .pylintrc
+        config:
+            basic:
+                disable:
+                    - W0201  # attribute-defined-outside-init
+            design:
+                disable:
+                    - R0902  # too-many-instance-attributes
+                    - R0913  # too-many-arguments
+                    - R0917  # too-many-positional-arguments
+            variables:
+                disable:
+                    - W0212  # protected-access
+            type:
+                disable:
+                    - E1136  # unexpected-keyword-arg
