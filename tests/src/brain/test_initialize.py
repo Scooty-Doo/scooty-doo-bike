@@ -50,6 +50,7 @@ class TestInitialize:
     @pytest.mark.asyncio
     async def test_load_bikes_already_loaded(self):
         """Test that _load_bikes() does not reload bikes if they're already loaded."""
+        from src.brain._initialize import Initialize
         init = Initialize(token="token")
         init.bikes = [{"bikes_already_loaded": 999}]
         with patch("httpx.AsyncClient", autospec=True) as mock_client_class:
