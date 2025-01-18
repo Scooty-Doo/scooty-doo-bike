@@ -14,7 +14,7 @@ class Settings:
 
     class Speed:
         """Class handling all settings for the speed of the bike."""
-        default_speed_limit = int(os.getenv("DEFAULT_SPEED", 20.0))
+        default_speed_limit = int(os.getenv("DEFAULT_SPEED", "20"))
 
     class Battery:
         """Class handling all settings for the battery of the bike."""
@@ -29,7 +29,7 @@ class Settings:
         """Class handling all settings for the endpoints of the application."""
         backend_url = os.getenv("BACKEND_URL")
         bike_id = os.getenv("BIKE_ID")
-        bike_limit = os.getenv("BIKE_LIMIT", 9999)
+        bike_limit = int(os.getenv("BIKE_LIMIT", "9999"))
 
         # NOTE: Endpoints need to get the values through parameters
         # (convert attribute to method) or environment (if BIKE_ID).
