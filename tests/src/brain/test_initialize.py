@@ -2,6 +2,7 @@
 
 from unittest.mock import patch, AsyncMock, MagicMock
 import pytest
+from pytest import MonkeyPatch
 import httpx
 from src.brain._initialize import Initialize, Extract, Serialize
 
@@ -13,13 +14,14 @@ def _mock_response(json_data=None, status_code=200):
     mock_response.raise_for_status.side_effect = None
     return mock_response
 
-@pytest.mark.usefixtures("mock_environment")
 class TestInitialize:
     """Tests for the Initialize class."""
 
     @pytest.mark.asyncio
     async def test_load_bikes_successful(self):
         """Test that _load_bikes() loads bikes from the backend."""
+        MonkeyPatch().setenv("BACKEND_URL", "http://localhost:8000")
+
         init = Initialize(token="token")
         init.bikes = None
 
@@ -61,6 +63,7 @@ class TestInitialize:
     @pytest.mark.asyncio
     async def test_load_bikes_request_error(self):
         """Test that _load_bikes() raises a RequestError if the request fails."""
+        MonkeyPatch().setenv("BACKEND_URL", "http://localhost:8000")
         init = Initialize(token="token")
         init.bikes = None
         with patch("httpx.AsyncClient", autospec=True) as mock_client_class:
@@ -76,6 +79,7 @@ class TestInitialize:
     @pytest.mark.asyncio
     async def test_bike_ids_calls_load_bikes(self):
         """Test that bike_ids() calls _load_bikes() and returns a serialized list of bike IDs."""
+        MonkeyPatch().setenv("BACKEND_URL", "http://localhost:8000")
         init = Initialize(token="token")
         init.bikes = None
 
@@ -105,6 +109,7 @@ class TestInitialize:
     async def test_bike_positions(self):
         """Test that bike_positions() calls _load_bikes() and 
         returns a serialized list of bike positions."""
+        MonkeyPatch().setenv("BACKEND_URL", "http://localhost:8000")
         init = Initialize(token="token")
         init.bikes = None
 
