@@ -452,7 +452,7 @@ disable=raw-checker-failed,
         W0718,  # Catching too general exception Exception (broad-exception-caught)
         W1508,  # os.getenv default type is builtins.float. Expected str or None. (invalid-envvar-default)
         C0325,  # Unnecessary parens after '=' keyword (superfluous-parens)
-        W0621   # redefined-outer-name
+        # W0621   # redefined-outer-name
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

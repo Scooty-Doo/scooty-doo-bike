@@ -4,11 +4,24 @@ import json
 import os
 import pytest
 import pytest_asyncio
+from fastapi.testclient import TestClient
+from src.brain._incoming import app
+from src.brain.brain import Brain
 
 @pytest.fixture(scope="function", autouse=True)
 def set_default_speed(monkeypatch):
     """Fixture to set DEFAULT_SPEED to 2000 for tests."""
     monkeypatch.setenv("DEFAULT_SPEED", "2000.0")
+
+@pytest.fixture(scope="module")
+def test_client():
+    """Create a test client for the FastAPI app."""
+    return TestClient(app)
+
+@pytest.fixture(scope="module")
+def mock_brain():
+    """Create a mock Brain instance for testing."""
+    return Brain(bike_id=1, longitude=12.34, latitude=56.78, token="fake-token")
 
 @pytest_asyncio.fixture(scope="session")
 def mock_zones():
