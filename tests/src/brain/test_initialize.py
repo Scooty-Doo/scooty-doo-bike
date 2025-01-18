@@ -18,7 +18,7 @@ class TestInitialize:
 
     @pytest.mark.asyncio
     async def test_load_bikes_successful(self, monkeypatch):
-        """Test that _load_bikes() loads bikes from the backend."""
+        """Test that load_bikes() loads bikes from the backend."""
         monkeypatch.setattr(
             "src._utils._settings.Settings.Endpoints.backend_url",
             "http://localhost:8000/")
@@ -49,7 +49,7 @@ class TestInitialize:
 
     @pytest.mark.asyncio
     async def test_load_bikes_already_loaded(self):
-        """Test that _load_bikes() does not reload bikes if they're already loaded."""
+        """Test that load_bikes() does not reload bikes if they're already loaded."""
         init = Initialize(token="token")
         init.bikes = [{"bikes_already_loaded": 999}]
         with patch("httpx.AsyncClient", autospec=True) as mock_client_class:
@@ -62,7 +62,7 @@ class TestInitialize:
 
     @pytest.mark.asyncio
     async def test_load_bikes_request_error(self, monkeypatch):
-        """Test that _load_bikes() raises a RequestError if the request fails."""
+        """Test that load_bikes() raises a RequestError if the request fails."""
         monkeypatch.setattr(
             "src._utils._settings.Settings.Endpoints.backend_url",
             "http://localhost:8000/")
@@ -80,7 +80,7 @@ class TestInitialize:
 
     @pytest.mark.asyncio
     async def test_bike_ids_calls_load_bikes(self, monkeypatch):
-        """Test that bike_ids() calls _load_bikes() and returns a serialized list of bike IDs."""
+        """Test that bike_ids() calls load_bikes() and returns a serialized list of bike IDs."""
         monkeypatch.setattr(
             "src._utils._settings.Settings.Endpoints.backend_url",
             "http://localhost:8000/")
@@ -111,7 +111,7 @@ class TestInitialize:
 
     @pytest.mark.asyncio
     async def test_bike_positions(self, monkeypatch):
-        """Test that bike_positions() calls _load_bikes() and 
+        """Test that bike_positions() calls load_bikes() and 
         returns a serialized list of bike positions."""
         monkeypatch.setattr(
             "src._utils._settings.Settings.Endpoints.backend_url",

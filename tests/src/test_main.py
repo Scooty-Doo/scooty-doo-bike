@@ -16,7 +16,7 @@ async def test_main_success(monkeypatch):
     with patch.object(Clock, "sleep", new=AsyncMock()) as _:
         with patch("uvicorn.Server.serve", new_callable=AsyncMock) as mock_serve:
             with patch("src.brain.brain.Brain.run", new_callable=AsyncMock) as mock_brain_run:
-                with patch.object(Initialize, "_load_bikes", new=AsyncMock()) as mock_load_bikes:
+                with patch.object(Initialize, "load_bikes", new=AsyncMock()) as mock_load_bikes:
                     mock_load_bikes.return_value = None
                     await main()
                     mock_serve.assert_awaited_once()
@@ -25,14 +25,14 @@ async def test_main_success(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_main_fallback_init_failure(monkeypatch):
-    """Test main() when _load_bikes() fails and fallback is used."""
+    """Test main() when load_bikes() fails and fallback is used."""
     monkeypatch.setenv("BIKE_IDS", "201,202")
     monkeypatch.setenv("POSITIONS", "20.0:30.0,21.0:31.0")
     monkeypatch.setenv("TOKEN", "fallback-token")
     with patch.object(Clock, "sleep", new=AsyncMock()):
         with patch("uvicorn.Server.serve", new_callable=AsyncMock) as mock_serve:
             with patch("src.brain.brain.Brain.run", new_callable=AsyncMock) as mock_brain_run:
-                with patch.object(Initialize, "_load_bikes", side_effect=Exception("Backend down")):
+                with patch.object(Initialize, "load_bikes", side_effect=Exception("Backend down")):
                     await main()
                     mock_serve.assert_awaited_once()
                     mock_brain_run.assert_awaited()
@@ -96,7 +96,7 @@ async def test_main_default_positions(monkeypatch):
     with patch.object(Clock, "sleep", new=AsyncMock()):
         with patch("uvicorn.Server.serve", new_callable=AsyncMock):
             with patch("src.brain.brain.Brain.run", new_callable=AsyncMock):
-                with patch("src.brain._initialize.Initialize._load_bikes", new=AsyncMock()):
+                with patch("src.brain._initialize.Initialize.load_bikes", new=AsyncMock()):
                     await main()
 
 @pytest.mark.asyncio
