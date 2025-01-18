@@ -15,7 +15,7 @@ class TestFormatter:
             "start_position": (0.0, 0.0),
             "end_position": (0.001, 0.001)
         }
-        formatted = Format._apply_all_formatting(log_entry)
+        formatted = Format.log(log_entry)
 
         expected = {
             "trip_id": 456,
@@ -38,7 +38,7 @@ class TestFormatter:
             "timestamp": "2024-12-23T12:00:00+00:00",
             "distance": 5
         }
-        formatted = Format._apply_all_formatting(report_entry)
+        formatted = Format.report(report_entry)
 
         expected = {
             "last_position": "POINT(0.002 0.002)",
@@ -56,7 +56,7 @@ class TestFormatter:
             "duration": 30,
             "distance": 10
         }
-        formatted = Format._apply_all_formatting(entry)
+        formatted = Format.log(entry)
         expected = {
             "trip_id": 456,
             "path_taken": "LINESTRING(0 0, 0.001 0.001)"
@@ -69,7 +69,7 @@ class TestFormatter:
             "trip_id": 456,
             "route": [(0.0, 0.0)]
         }
-        formatted = Format._apply_all_formatting(entry)
+        formatted = Format.log(entry)
         expected = {
             "trip_id": 456,
             "path_taken": "LINESTRING(0 0, 0 0)"
@@ -88,7 +88,7 @@ class TestFormatter:
             "start_position": (0.0, 0.0),
             "end_position": (0.001, 0.001)
         }
-        formatted = Format._apply_all_formatting(log_entry)
+        formatted = Format.log(log_entry)
         expected = {
             "trip_id": 456,
             "user_id": 123,
@@ -106,7 +106,7 @@ class TestFormatter:
             "route": None,  # Route is None
             "start_position": (0.0, 0.0)  # Start position is provided
         }
-        formatted = Format._apply_all_formatting(entry)
+        formatted = Format.log(entry)
         expected = {
             "trip_id": 456,
             "start_position": "POINT(0 0)",
