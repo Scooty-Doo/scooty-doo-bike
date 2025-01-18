@@ -13,6 +13,7 @@ def _mock_response(json_data=None, status_code=200):
     mock_response.raise_for_status.side_effect = None
     return mock_response
 
+@pytest.mark.usefixtures("mock_environment")
 class TestInitialize:
     """Tests for the Initialize class."""
 
