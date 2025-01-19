@@ -124,8 +124,8 @@ async def main():
     )
 
 # NOTE: Commented out as to not affect test coverage.
-#if __name__ == "__main__":
-#    try:
-#        asyncio.run(main())
-#    except (KeyboardInterrupt, SystemExit):
-#        print("Application has been shut down.")
+if __name__ == "__main__": # pragma: no cover
+    try:
+        asyncio.run(main())
+    except (KeyboardInterrupt, SystemExit):
+        print("Application has been shut down.")
