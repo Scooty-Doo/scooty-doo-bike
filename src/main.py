@@ -1,4 +1,4 @@
-# pylint: disable=broad-exception-caught
+# pylint: disable=broad-exception-caught, undefined-loop-variable
 """
 This is the main module of the application.
 """
