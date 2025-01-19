@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 """Tests for the main module."""
 
 from unittest.mock import patch, AsyncMock

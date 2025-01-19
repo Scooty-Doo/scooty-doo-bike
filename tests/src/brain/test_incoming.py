@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 """Tests for incoming routes."""
 
 from unittest.mock import MagicMock, AsyncMock

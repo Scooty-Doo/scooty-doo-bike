@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 """Tests for the Brain class."""
 
 from unittest.mock import patch, MagicMock, AsyncMock

@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 """Tests for the Initialize class and its helper classes."""
 
 from unittest.mock import patch, AsyncMock, MagicMock
