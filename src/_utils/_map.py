@@ -1,3 +1,4 @@
+# pylint: disable=too-few-public-methods
 """
 Module for handling logic related to the map and its zones.
 """

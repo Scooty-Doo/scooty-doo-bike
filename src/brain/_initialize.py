@@ -1,3 +1,4 @@
+# pylint: disable=too-few-public-methods
 """
 This module handles the initialization of the bike hivemind.
 """

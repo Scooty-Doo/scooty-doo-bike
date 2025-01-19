@@ -1,3 +1,4 @@
+# pylint: disable=too-few-public-methods, too-many-instance-attributes
 """
 This module handles outgoing communication to the backend.
 """

@@ -1,3 +1,4 @@
+# pylint: disable=too-few-public-methods
 """Tests for Clock class."""
 
 from unittest.mock import patch, AsyncMock

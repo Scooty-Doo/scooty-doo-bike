@@ -1,3 +1,4 @@
+# pylint: disable=too-many-instance-attributes
 """
 This module handles all the bike behavior.
 """

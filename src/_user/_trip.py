@@ -1,3 +1,4 @@
+# pylint: disable=too-many-instance-attributes, too-many-arguments, too-many-positional-arguments, attribute-defined-outside-init
 """
 This module contains the Trip class which contains information about a trip.
 This is also the contents of an unformatted log.

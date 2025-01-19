@@ -1,3 +1,4 @@
+# pylint: disable=broad-exception-caught
 """
 This is the main module of the application.
 """
